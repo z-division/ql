@@ -1,2 +1,2 @@
 # ql
-An experimental rational query language
+An experimental relational query language
