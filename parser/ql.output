@@ -1,0 +1,72 @@
+
+state 0
+	$accept: .statement_list $end 
+
+	SELECT  shift 4
+	.  error
+
+	statement_list  goto 1
+	statement  goto 2
+	query_statement  goto 3
+
+state 1
+	$accept:  statement_list.$end 
+	statement_list:  statement_list.statement 
+
+	$end  accept
+	SELECT  shift 4
+	.  error
+
+	statement  goto 5
+	query_statement  goto 3
+
+state 2
+	statement_list:  statement.    (1)
+
+	.  reduce 1 (src line 19)
+
+
+state 3
+	statement:  query_statement.    (3)
+
+	.  reduce 3 (src line 23)
+
+
+state 4
+	query_statement:  SELECT.FROM WHERE 
+
+	FROM  shift 6
+	.  error
+
+
+state 5
+	statement_list:  statement_list statement.    (2)
+
+	.  reduce 2 (src line 20)
+
+
+state 6
+	query_statement:  SELECT FROM.WHERE 
+
+	WHERE  shift 7
+	.  error
+
+
+state 7
+	query_statement:  SELECT FROM WHERE.    (4)
+
+	.  reduce 4 (src line 26)
+
+
+7 terminals, 4 nonterminals
+5 grammar rules, 8/8000 states
+0 shift/reduce, 0 reduce/reduce conflicts reported
+53 working sets used
+memory: parser 4/120000
+0 extra closures
+4 shift entries, 1 exceptions
+4 goto entries
+1 entries saved by goto default
+Optimizer space used: output 7/120000
+7 table entries, 0 zero
+maximum spread: 7, maximum offset: 7
