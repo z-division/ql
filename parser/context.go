@@ -5,13 +5,6 @@ import (
 	"io"
 )
 
-type Location struct {
-	FirstLine   int
-	FirstColumn int
-	LastLine    int
-	LastColumn  int
-}
-
 type parseContext struct {
 	*tokenizer
 
