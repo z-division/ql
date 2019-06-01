@@ -184,17 +184,22 @@ func (tok *tokenizer) parseIdentifier(lval *qlSymType) (int, error) {
 
 			count += 1
 		} else {
-			lval.Start = tok.Position
+			start := tok.Position
+			tok.Column += count
 
-			lval.str = string(bytes[:count])
+			lval.Token = &Token{
+				Location: Location{
+					Filename: tok.filename,
+					Start:    start,
+					End:      tok.Position,
+				},
+				Value: string(bytes[:count]),
+			}
 
 			err = tok.reader.Consume(count)
 			if err != nil {
 				return 0, err
 			}
-			tok.Column += count
-
-			lval.End = tok.Position
 
 			return IDENTIFIER, nil
 		}
@@ -218,15 +223,22 @@ func (tok *tokenizer) parseSingleCharToken(lval *qlSymType) (int, error) {
 		return 0, nil
 	}
 
-	lval.Start = tok.Position
+	start := tok.Position
+	tok.Column += 1
+
+	lval.Token = &Token{
+		Location: Location{
+			Filename: tok.filename,
+			Start:    start,
+			End:      tok.Position,
+		},
+		Value: string(bytes[:1]),
+	}
 
 	err = tok.reader.Consume(1)
 	if err != nil {
 		return LEX_ERROR, err
 	}
-	tok.Column += 1
-
-	lval.End = tok.Position
 
 	return token, nil
 }
@@ -247,7 +259,7 @@ func (tok *tokenizer) parseNextToken(lval *qlSymType) (int, error) {
 
 	if token == IDENTIFIER {
 		// The identifier may be a keyword
-		kwToken, ok := keywords[strings.ToLower(lval.str)]
+		kwToken, ok := keywords[strings.ToLower(lval.Token.Value)]
 		if ok {
 			return kwToken, nil
 		}

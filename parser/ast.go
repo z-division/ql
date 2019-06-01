@@ -1,7 +1,11 @@
+// NOTE(patrick): the parser ast intentionally preserves all parsed tokens,
+// which may be use to reconstruct / format the file.
+
 package parser
 
 import (
 	"fmt"
+	"path/filepath"
 	"reflect"
 )
 
@@ -21,6 +25,26 @@ func formatIdent(indent int) string {
 func prettyFormatNode(prefix string, node Node, indent int) string {
 	indentStr := formatIdent(indent)
 
+	token, ok := node.(*Token)
+	if ok {
+		return fmt.Sprintf(
+			"%s%s[Token %s (%v)]",
+			indentStr,
+			prefix,
+			token.Value,
+			node.Loc())
+	}
+
+	id, ok := node.(*Identifier)
+	if ok {
+		return fmt.Sprintf(
+			"%s%s[Identifier %s (%v)]",
+			indentStr,
+			prefix,
+			id.Value,
+			node.Loc())
+	}
+
 	nodeStruct := reflect.ValueOf(node).Elem()
 	structType := nodeStruct.Type()
 
@@ -29,13 +53,20 @@ func prettyFormatNode(prefix string, node Node, indent int) string {
 		indentStr,
 		prefix,
 		structType.Name(),
-		node.Position())
+		node.Loc())
 
+	addNewLine := false
 	for i := 0; i < nodeStruct.NumField(); i++ {
 		field := structType.Field(i)
 		if field.PkgPath != "" { // private field
 			continue
 		}
+
+		if field.Name == "Location" {
+			continue
+		}
+
+		addNewLine = true
 
 		fieldValue := nodeStruct.Field(i).Interface()
 		switch value := fieldValue.(type) {
@@ -54,7 +85,11 @@ func prettyFormatNode(prefix string, node Node, indent int) string {
 		}
 	}
 
-	result += "\n" + indentStr + "]"
+	if addNewLine {
+		result += "\n" + indentStr + "]"
+	} else {
+		result += "]"
+	}
 
 	return result
 }
@@ -74,25 +109,34 @@ type Location struct {
 	End      Position
 }
 
+func (loc Location) Loc() Location {
+	return loc
+}
+
+func (Location) isNode() {
+}
+
 func (loc Location) String() string {
-	return loc.Start.String()
+	return fmt.Sprintf(
+		"%s: %v-%v",
+		filepath.Base(loc.Filename),
+		loc.Start,
+		loc.End)
 }
 
 type Node interface {
-	Position() Location
+	Loc() Location
 	String() string
 	isNode()
 }
 
-type node struct {
+type Token struct {
 	Location
+	Value string
 }
 
-func (n node) Position() Location {
-	return n.Location
-}
-
-func (node) isNode() {
+func (op *Token) String() string {
+	return prettyFormatNode("", op, 0)
 }
 
 type Expr interface {
@@ -105,7 +149,7 @@ type expr struct{}
 func (expr) isExpr() {}
 
 type Identifier struct {
-	node
+	Location
 	expr
 
 	Value string
@@ -115,11 +159,38 @@ func (id *Identifier) String() string {
 	return prettyFormatNode("", id, 0)
 }
 
-type AssignExpr struct {
-	node
+type UnaryExpr struct {
+	Location
 	expr
 
-	Name       string
+	Op         *Token
+	Expression Expr
+}
+
+func (unary *UnaryExpr) String() string {
+	return prettyFormatNode("", unary, 0)
+}
+
+type BinaryExpr struct {
+	Location
+	expr
+
+	Left  Expr
+	Op    *Token
+	Right Expr
+}
+
+func (binary *BinaryExpr) String() string {
+	return prettyFormatNode("", binary, 0)
+}
+
+type AssignExpr struct {
+	Location
+	expr
+
+	Let        *Token
+	Name       *Token
+	Assign     *Token
 	Expression Expr
 }
 

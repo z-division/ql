@@ -15,7 +15,7 @@ func main() {
 		panic(err)
 	}
 
-	parsed, err := parser.Parse("file", bytes.NewReader(content))
+	parsed, err := parser.Parse(os.Args[1], bytes.NewReader(content))
 	if err != nil {
 		panic(err)
 	}
