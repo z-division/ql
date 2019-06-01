@@ -112,7 +112,7 @@ type AssignExpr struct {
 	node
 	expr
 
-	Name       *Identifier
+	Name       string
 	Expression Expr
 }
 

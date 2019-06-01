@@ -9,7 +9,13 @@ type parseContext struct {
 	*tokenizer
 
 	// TODO(patrick): define parse tree
+	parsed []Expr
+
 	err error
+}
+
+func (ctx *parseContext) setParsed(parsed []Expr) {
+	ctx.parsed = parsed
 }
 
 // TODO(patrick): implement
@@ -30,8 +36,8 @@ func (ctx *parseContext) Error(msg string) {
 	}
 }
 
-func Parse(reader io.Reader) (interface{}, error) {
-	tokenizer, err := newTokenizer(reader)
+func Parse(filename string, reader io.Reader) ([]Expr, error) {
+	tokenizer, err := newTokenizer(filename, reader)
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +47,7 @@ func Parse(reader io.Reader) (interface{}, error) {
 	}
 	qlParse(ctx)
 
-	return nil, ctx.err
+	return ctx.parsed, ctx.err
 }
 
 func init() {
