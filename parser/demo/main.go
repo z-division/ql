@@ -21,7 +21,7 @@ func main() {
 	}
 
 	fmt.Println("OK")
-	for _, expr := range parsed {
-		fmt.Println(expr)
+	for _, node := range parsed {
+		fmt.Println(node)
 	}
 }

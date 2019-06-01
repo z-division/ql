@@ -59,16 +59,23 @@ func prettyFormatNode(prefix string, node Node, indent int) string {
 	return result
 }
 
+type Position struct {
+	Line   int
+	Column int
+}
+
+func (pos Position) String() string {
+	return fmt.Sprintf("%d:%d", pos.Line, pos.Column)
+}
+
 type Location struct {
-	Filename    string
-	StartLine   int
-	StartColumn int
-	EndLine     int
-	EndColumn   int
+	Filename string
+	Start    Position
+	End      Position
 }
 
 func (loc Location) String() string {
-	return fmt.Sprintf("%d:%d", loc.StartLine, loc.StartColumn)
+	return loc.Start.String()
 }
 
 type Node interface {

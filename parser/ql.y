@@ -1,19 +1,22 @@
 %{
 package parser
+
+type strLoc struct {
+    str string
+    loc Location
+}
+
 %}
 
-// NOTE: We'll take advantage of the fact that goyacc generates qlSymType as
-// a struct rather than an union, and populate debugging information such as
-// Location into the struct.
 %union{
     Location
 
-    strVal string
+    strLoc
 
     *AssignExpr
     Expr
 
-    Exprs []Expr
+    Nodes []Node
 }
 
 %token LEX_ERROR
@@ -30,10 +33,10 @@ package parser
 %left MUL DIV MOD
 %right UNARY
 
-%token <strVal> IDENTIFIER
+%token <strLoc> IDENTIFIER
 
 // comments that are not directly next to any real tokens
-%token <strVal> COMMENT_GROUP
+%token <strLoc> COMMENT_GROUP
 
 %token LET
 
@@ -42,7 +45,7 @@ package parser
 
 // TODO(patrick): actual declarations
 %type <Expr> declaration
-%type <Exprs> declarations
+%type <Nodes> declarations
 
 %%
 
@@ -55,10 +58,7 @@ start:
 // TODO(patrick): handle newlines correctly, maybe by the tokenizer?
 declarations:
     declaration {
-        $$ = []Expr{$1}
-    }
-    | declaration SEMICOLON {
-        $$ = []Expr{$1}
+        $$ = []Node{$1}
     }
     | declarations SEMICOLON declaration {
         $$ = append($1, $3)
@@ -86,7 +86,7 @@ expr:
 unit_expr:
     IDENTIFIER {
         $$ = &Identifier {
-            Value: $1,
+            Value: $1.str,
         }
     }
     | expr_block {
@@ -187,7 +187,7 @@ nonempty_argument_list:
 assignment_expr:
     LET IDENTIFIER ASSIGN expr {
         $$ = &AssignExpr{
-            Name: $2,
+            Name: $2.str,
             Expression: $4,
         }
     }
