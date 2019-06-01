@@ -64,8 +64,7 @@ func newlineSensitive(token int) bool {
 type tokenizer struct {
 	filename string
 
-	currentLine   int
-	currentColumn int
+	Position
 
 	// \n is context sensitive
 	prevToken  int
@@ -78,12 +77,11 @@ func newTokenizer(filename string, reader io.Reader) (*tokenizer, error) {
 	// TODO(patrick): strip leading whitespaces before running
 
 	tok := &tokenizer{
-		filename:      filename,
-		currentLine:   1,
-		currentColumn: 1,
-		prevToken:     0,
-		parenCount:    0,
-		reader:        bufio2.NewLookAheadBuffer(reader, maxLookAheadSize),
+		filename:   filename,
+		Position:   Position{Line: 1, Column: 1},
+		prevToken:  0,
+		parenCount: 0,
+		reader:     bufio2.NewLookAheadBuffer(reader, maxLookAheadSize),
 	}
 
 	err := tok.stripMeaninglessWhitespaces()
@@ -132,7 +130,7 @@ func (tok *tokenizer) stripMeaninglessWhitespaces() error {
 				return err
 			}
 
-			tok.currentColumn += 1
+			tok.Column += 1
 		case '\n':
 			if tok.parenCount == 0 && newlineSensitive(tok.prevToken) {
 				return nil
@@ -143,8 +141,8 @@ func (tok *tokenizer) stripMeaninglessWhitespaces() error {
 				return err
 			}
 
-			tok.currentLine += 1
-			tok.currentColumn = 1
+			tok.Line += 1
+			tok.Column = 1
 		default:
 			return nil
 		}
@@ -186,19 +184,22 @@ func (tok *tokenizer) parseIdentifier(lval *qlSymType) (int, error) {
 
 			count += 1
 		} else {
-			lval.StartLine = tok.currentLine
-			lval.StartColumn = tok.currentColumn
+			start := tok.Position
+			tok.Column += count
 
-			lval.strVal = string(bytes[:count])
+			lval.Token = &Token{
+				Location: Location{
+					Filename: tok.filename,
+					Start:    start,
+					End:      tok.Position,
+				},
+				Value: string(bytes[:count]),
+			}
 
 			err = tok.reader.Consume(count)
 			if err != nil {
 				return 0, err
 			}
-			tok.currentColumn += count
-
-			lval.EndLine = tok.currentLine
-			lval.EndColumn = tok.currentColumn
 
 			return IDENTIFIER, nil
 		}
@@ -206,10 +207,9 @@ func (tok *tokenizer) parseIdentifier(lval *qlSymType) (int, error) {
 
 	// XXX(patrick): maybe handle this correctly ...
 	return LEX_ERROR, fmt.Errorf(
-		"%s:%s:%s: identifier is too long",
+		"%s:%v: identifier is too long",
 		filepath.Base(tok.filename),
-		tok.currentLine,
-		tok.currentColumn)
+		tok.Position)
 }
 
 func (tok *tokenizer) parseSingleCharToken(lval *qlSymType) (int, error) {
@@ -223,17 +223,22 @@ func (tok *tokenizer) parseSingleCharToken(lval *qlSymType) (int, error) {
 		return 0, nil
 	}
 
-	lval.StartLine = tok.currentLine
-	lval.StartColumn = tok.currentColumn
+	start := tok.Position
+	tok.Column += 1
+
+	lval.Token = &Token{
+		Location: Location{
+			Filename: tok.filename,
+			Start:    start,
+			End:      tok.Position,
+		},
+		Value: string(bytes[:1]),
+	}
 
 	err = tok.reader.Consume(1)
 	if err != nil {
 		return LEX_ERROR, err
 	}
-	tok.currentColumn += 1
-
-	lval.EndLine = tok.currentLine
-	lval.EndColumn = tok.currentColumn
 
 	return token, nil
 }
@@ -254,7 +259,7 @@ func (tok *tokenizer) parseNextToken(lval *qlSymType) (int, error) {
 
 	if token == IDENTIFIER {
 		// The identifier may be a keyword
-		kwToken, ok := keywords[strings.ToLower(lval.strVal)]
+		kwToken, ok := keywords[strings.ToLower(lval.Token.Value)]
 		if ok {
 			return kwToken, nil
 		}
@@ -268,9 +273,8 @@ func (tok *tokenizer) parseNextToken(lval *qlSymType) (int, error) {
 	}
 
 	return LEX_ERROR, fmt.Errorf(
-		"%s:%d:%d: unknown character: %c",
+		"%s:%v: unknown character: %c",
 		filepath.Base(tok.filename),
-		tok.currentLine,
-		tok.currentColumn,
+		tok.Position,
 		bytes[0])
 }

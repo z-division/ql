@@ -15,13 +15,13 @@ func main() {
 		panic(err)
 	}
 
-	parsed, err := parser.Parse("file", bytes.NewReader(content))
+	parsed, err := parser.Parse(os.Args[1], bytes.NewReader(content))
 	if err != nil {
 		panic(err)
 	}
 
 	fmt.Println("OK")
-	for _, expr := range parsed {
-		fmt.Println(expr)
+	for _, node := range parsed {
+		fmt.Println(node)
 	}
 }

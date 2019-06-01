@@ -1,48 +1,45 @@
 %{
 package parser
+
 %}
 
-// NOTE: We'll take advantage of the fact that goyacc generates qlSymType as
-// a struct rather than an union, and populate debugging information such as
-// Location into the struct.
 %union{
-    Location
-
-    strVal string
+    *Token
 
     *AssignExpr
     Expr
 
-    Exprs []Expr
+    Nodes []Node
 }
 
 %token LEX_ERROR
-%token ASSIGN L_BRACE R_BRACE L_PAREN R_PAREN SEMICOLON NEWLINE COMMA DOT
+%token <Token> L_BRACE R_BRACE L_PAREN R_PAREN
+%token <Token> ASSIGN SEMICOLON NEWLINE COMMA DOT
 
-%left OR
-%left AND
-%right NOT
-%left LT GT EQ NE LE GE
-%left BITWISE_OR
-%left BITWISE_AND
-%left SHIFT_LEFT SHIFT_RIGHT
-%left ADD SUB
-%left MUL DIV MOD
+%token <Token> LET
+
+%left <Token> OR
+%left <Token> AND
+%right <Token> NOT
+%left <Token> LT GT EQ NE LE GE
+%left <Token> BITWISE_OR
+%left <Token> BITWISE_AND
+%left <Token> SHIFT_LEFT SHIFT_RIGHT
+%left <Token> ADD SUB
+%left <Token> MUL DIV MOD
 %right UNARY
 
-%token <strVal> IDENTIFIER
+%token <Token> IDENTIFIER
 
 // comments that are not directly next to any real tokens
-%token <strVal> COMMENT_GROUP
-
-%token LET
+%token <Token> COMMENT_GROUP
 
 %type <AssignExpr> assignment_expr
-%type <Expr> expr unit_expr
+%type <Expr> expr unit_expr composable_expr
 
 // TODO(patrick): actual declarations
 %type <Expr> declaration
-%type <Exprs> declarations
+%type <Nodes> declarations
 
 %%
 
@@ -55,10 +52,7 @@ start:
 // TODO(patrick): handle newlines correctly, maybe by the tokenizer?
 declarations:
     declaration {
-        $$ = []Expr{$1}
-    }
-    | declaration SEMICOLON {
-        $$ = []Expr{$1}
+        $$ = []Node{$1}
     }
     | declarations SEMICOLON declaration {
         $$ = append($1, $3)
@@ -86,7 +80,8 @@ expr:
 unit_expr:
     IDENTIFIER {
         $$ = &Identifier {
-            Value: $1,
+            Location: $1.Location,
+            Value: $1.Value,
         }
     }
     | expr_block {
@@ -109,42 +104,230 @@ composable_expr:
     unit_expr {
     }
     | composable_expr OR composable_expr {
+        $$ = &BinaryExpr{
+            Location: Location{
+                Filename: $1.Loc().Filename,
+                Start: $1.Loc().Start,
+                End: $3.Loc().End,
+            },
+            Left: $1,
+            Op: $2,
+            Right: $3,
+        }
     }
     | composable_expr AND composable_expr {
+        $$ = &BinaryExpr{
+            Location: Location{
+                Filename: $1.Loc().Filename,
+                Start: $1.Loc().Start,
+                End: $3.Loc().End,
+            },
+            Left: $1,
+            Op: $2,
+            Right: $3,
+        }
     }
     | composable_expr LT composable_expr {
+        $$ = &BinaryExpr{
+            Location: Location{
+                Filename: $1.Loc().Filename,
+                Start: $1.Loc().Start,
+                End: $3.Loc().End,
+            },
+            Left: $1,
+            Op: $2,
+            Right: $3,
+        }
     }
     | composable_expr GT composable_expr {
+        $$ = &BinaryExpr{
+            Location: Location{
+                Filename: $1.Loc().Filename,
+                Start: $1.Loc().Start,
+                End: $3.Loc().End,
+            },
+            Left: $1,
+            Op: $2,
+            Right: $3,
+        }
     }
     | composable_expr EQ composable_expr {
+        $$ = &BinaryExpr{
+            Location: Location{
+                Filename: $1.Loc().Filename,
+                Start: $1.Loc().Start,
+                End: $3.Loc().End,
+            },
+            Left: $1,
+            Op: $2,
+            Right: $3,
+        }
     }
     | composable_expr NE composable_expr {
+        $$ = &BinaryExpr{
+            Location: Location{
+                Filename: $1.Loc().Filename,
+                Start: $1.Loc().Start,
+                End: $3.Loc().End,
+            },
+            Left: $1,
+            Op: $2,
+            Right: $3,
+        }
     }
     | composable_expr LE composable_expr {
+        $$ = &BinaryExpr{
+            Location: Location{
+                Filename: $1.Loc().Filename,
+                Start: $1.Loc().Start,
+                End: $3.Loc().End,
+            },
+            Left: $1,
+            Op: $2,
+            Right: $3,
+        }
     }
     | composable_expr GE composable_expr {
+        $$ = &BinaryExpr{
+            Location: Location{
+                Filename: $1.Loc().Filename,
+                Start: $1.Loc().Start,
+                End: $3.Loc().End,
+            },
+            Left: $1,
+            Op: $2,
+            Right: $3,
+        }
     }
     | composable_expr BITWISE_OR composable_expr {
+        $$ = &BinaryExpr{
+            Location: Location{
+                Filename: $1.Loc().Filename,
+                Start: $1.Loc().Start,
+                End: $3.Loc().End,
+            },
+            Left: $1,
+            Op: $2,
+            Right: $3,
+        }
     }
     | composable_expr BITWISE_AND composable_expr {
+        $$ = &BinaryExpr{
+            Location: Location{
+                Filename: $1.Loc().Filename,
+                Start: $1.Loc().Start,
+                End: $3.Loc().End,
+            },
+            Left: $1,
+            Op: $2,
+            Right: $3,
+        }
     }
     | composable_expr SHIFT_LEFT composable_expr {
+        $$ = &BinaryExpr{
+            Location: Location{
+                Filename: $1.Loc().Filename,
+                Start: $1.Loc().Start,
+                End: $3.Loc().End,
+            },
+            Left: $1,
+            Op: $2,
+            Right: $3,
+        }
     }
     | composable_expr SHIFT_RIGHT composable_expr {
+        $$ = &BinaryExpr{
+            Location: Location{
+                Filename: $1.Loc().Filename,
+                Start: $1.Loc().Start,
+                End: $3.Loc().End,
+            },
+            Left: $1,
+            Op: $2,
+            Right: $3,
+        }
     }
     | composable_expr ADD composable_expr {
+        $$ = &BinaryExpr{
+            Location: Location{
+                Filename: $1.Loc().Filename,
+                Start: $1.Loc().Start,
+                End: $3.Loc().End,
+            },
+            Left: $1,
+            Op: $2,
+            Right: $3,
+        }
     }
     | composable_expr SUB composable_expr {
+        $$ = &BinaryExpr{
+            Location: Location{
+                Filename: $1.Loc().Filename,
+                Start: $1.Loc().Start,
+                End: $3.Loc().End,
+            },
+            Left: $1,
+            Op: $2,
+            Right: $3,
+        }
     }
     | composable_expr MUL composable_expr {
+        $$ = &BinaryExpr{
+            Location: Location{
+                Filename: $1.Loc().Filename,
+                Start: $1.Loc().Start,
+                End: $3.Loc().End,
+            },
+            Left: $1,
+            Op: $2,
+            Right: $3,
+        }
     }
     | composable_expr DIV composable_expr {
+        $$ = &BinaryExpr{
+            Location: Location{
+                Filename: $1.Loc().Filename,
+                Start: $1.Loc().Start,
+                End: $3.Loc().End,
+            },
+            Left: $1,
+            Op: $2,
+            Right: $3,
+        }
     }
     | composable_expr MOD composable_expr {
+        $$ = &BinaryExpr{
+            Location: Location{
+                Filename: $1.Loc().Filename,
+                Start: $1.Loc().Start,
+                End: $3.Loc().End,
+            },
+            Left: $1,
+            Op: $2,
+            Right: $3,
+        }
     }
     | SUB composable_expr %prec UNARY {
+        $$ = &UnaryExpr{
+            Location: Location{
+                Filename: $1.Loc().Filename,
+                Start: $1.Loc().Start,
+                End: $2.Loc().End,
+            },
+            Op: $1,
+            Expression: $2,
+        }
     }
     | NOT composable_expr {
+        $$ = &UnaryExpr{
+            Location: Location{
+                Filename: $1.Loc().Filename,
+                Start: $1.Loc().Start,
+                End: $2.Loc().End,
+            },
+            Op: $1,
+            Expression: $2,
+        }
     }
     ;
 
@@ -187,7 +370,14 @@ nonempty_argument_list:
 assignment_expr:
     LET IDENTIFIER ASSIGN expr {
         $$ = &AssignExpr{
+            Location: Location{
+                Filename: $1.Loc().Filename,
+                Start: $1.Loc().Start,
+                End: $4.Loc().End,
+            },
+            Let: $1,
             Name: $2,
+            Assign: $3,
             Expression: $4,
         }
     }

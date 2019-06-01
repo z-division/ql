@@ -9,12 +9,12 @@ type parseContext struct {
 	*tokenizer
 
 	// TODO(patrick): define parse tree
-	parsed []Expr
+	parsed []Node
 
 	err error
 }
 
-func (ctx *parseContext) setParsed(parsed []Expr) {
+func (ctx *parseContext) setParsed(parsed []Node) {
 	ctx.parsed = parsed
 }
 
@@ -36,7 +36,7 @@ func (ctx *parseContext) Error(msg string) {
 	}
 }
 
-func Parse(filename string, reader io.Reader) ([]Expr, error) {
+func Parse(filename string, reader io.Reader) ([]Node, error) {
 	tokenizer, err := newTokenizer(filename, reader)
 	if err != nil {
 		return nil, err
