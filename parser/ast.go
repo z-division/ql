@@ -13,6 +13,10 @@ const (
 	indentLevel = "  "
 )
 
+type customFormatter interface {
+    prettyFormat(prefix string, indent int) string
+}
+
 func formatIdent(indent int) string {
 	indentStr := ""
 	for i := 0; i < indent; i++ {
@@ -23,27 +27,12 @@ func formatIdent(indent int) string {
 }
 
 func prettyFormatNode(prefix string, node Node, indent int) string {
+    formatter, ok := node.(customFormatter)
+    if ok {
+        return formatter.prettyFormat(prefix, indent)
+    }
+
 	indentStr := formatIdent(indent)
-
-	token, ok := node.(*Token)
-	if ok {
-		return fmt.Sprintf(
-			"%s%s[Token %s (%v)]",
-			indentStr,
-			prefix,
-			token.Value,
-			node.Loc())
-	}
-
-	id, ok := node.(*Identifier)
-	if ok {
-		return fmt.Sprintf(
-			"%s%s[Identifier %s (%v)]",
-			indentStr,
-			prefix,
-			id.Value,
-			node.Loc())
-	}
 
 	nodeStruct := reflect.ValueOf(node).Elem()
 	structType := nodeStruct.Type()
@@ -135,6 +124,15 @@ type Token struct {
 	Value string
 }
 
+func (token *Token) prettyFormat(prefix string, indent int) string {
+    return fmt.Sprintf(
+        "%s%s[Token %s (%v)]",
+	    formatIdent(indent),
+        prefix,
+        token.Value,
+        token.Location)
+}
+
 func (op *Token) String() string {
 	return prettyFormatNode("", op, 0)
 }
@@ -153,6 +151,15 @@ type Identifier struct {
 	expr
 
 	Value string
+}
+
+func (id *Identifier) prettyFormat(prefix string, indent int) string {
+    return fmt.Sprintf(
+        "%s%s[Identifier %s (%v)]",
+	    formatIdent(indent),
+        prefix,
+        id.Value,
+        id.Location)
 }
 
 func (id *Identifier) String() string {
