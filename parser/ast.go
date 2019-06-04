@@ -14,7 +14,7 @@ const (
 )
 
 type customFormatter interface {
-    prettyFormat(prefix string, indent int) string
+	prettyFormat(prefix string, indent int) string
 }
 
 func formatIdent(indent int) string {
@@ -27,10 +27,10 @@ func formatIdent(indent int) string {
 }
 
 func prettyFormatNode(prefix string, node Node, indent int) string {
-    formatter, ok := node.(customFormatter)
-    if ok {
-        return formatter.prettyFormat(prefix, indent)
-    }
+	formatter, ok := node.(customFormatter)
+	if ok {
+		return formatter.prettyFormat(prefix, indent)
+	}
 
 	indentStr := formatIdent(indent)
 
@@ -125,12 +125,12 @@ type Token struct {
 }
 
 func (token *Token) prettyFormat(prefix string, indent int) string {
-    return fmt.Sprintf(
-        "%s%s[Token %s (%v)]",
-	    formatIdent(indent),
-        prefix,
-        token.Value,
-        token.Location)
+	return fmt.Sprintf(
+		"%s%s[Token %s (%v)]",
+		formatIdent(indent),
+		prefix,
+		token.Value,
+		token.Location)
 }
 
 func (op *Token) String() string {
@@ -154,12 +154,12 @@ type Identifier struct {
 }
 
 func (id *Identifier) prettyFormat(prefix string, indent int) string {
-    return fmt.Sprintf(
-        "%s%s[Identifier %s (%v)]",
-	    formatIdent(indent),
-        prefix,
-        id.Value,
-        id.Location)
+	return fmt.Sprintf(
+		"%s%s[Identifier %s (%v)]",
+		formatIdent(indent),
+		prefix,
+		id.Value,
+		id.Location)
 }
 
 func (id *Identifier) String() string {

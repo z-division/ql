@@ -5,12 +5,10 @@ import (
 	"io"
 	"path/filepath"
 	"strings"
-
-	"github.com/dropbox/godropbox/bufio2"
 )
 
 const (
-	maxLookAheadSize = 256
+	chunkSize = 1024
 )
 
 var (
@@ -27,18 +25,16 @@ var (
 		'%':  MOD,
 
 		// TODO(patrick): deal with ambiguous symbols
-		/*
-		   '=':  // = vs ==
-		   '<': // < vs <= vs <<
-		   '>': // > vs >= vs >>
-		   '&': // & vs &&
-		   '|': // | vs ||
-		   '!': // ! vs !=
-		   '.': DOT vs float
-		   '-': SUB vs number literal
-		   '+': ADD vs number literal
-		   '*': MUL vs STAR STAR ?
-		*/
+		// '=':  // = vs ==
+		// '<': // < vs <= vs <<
+		// '>': // > vs >= vs >>
+		// '&': // & vs &&
+		// '|': // | vs ||
+		// '!': // ! vs !=
+		// '.': DOT vs float
+		// '-': SUB vs number literal
+		// '+': ADD vs number literal
+		// '*': MUL vs STAR STAR ?
 		'=': ASSIGN,
 		'<': LT,
 		'>': GT,
@@ -63,6 +59,7 @@ func newlineSensitive(token int) bool {
 
 type tokenizer struct {
 	filename string
+	reader   io.Reader
 
 	Position
 
@@ -70,29 +67,52 @@ type tokenizer struct {
 	prevToken  int
 	parenCount int
 
-	reader *bufio2.LookAheadBuffer
+	buffered []byte
 }
 
 func newTokenizer(filename string, reader io.Reader) (*tokenizer, error) {
-	// TODO(patrick): strip leading whitespaces before running
-
-	tok := &tokenizer{
-		filename:   filename,
-		Position:   Position{Line: 1, Column: 1},
-		prevToken:  0,
-		parenCount: 0,
-		reader:     bufio2.NewLookAheadBuffer(reader, maxLookAheadSize),
-	}
-
-	err := tok.stripMeaninglessWhitespaces()
-	if err != nil {
-		return nil, err
-	}
-
-	return tok, nil
+	return &tokenizer{
+		filename: filename,
+		reader:   reader,
+	}, nil
 }
 
-// This assumes that leading whitespace are stripped
+func (tok *tokenizer) peek() (byte, error) {
+	if len(tok.buffered) == 0 {
+		buffer := make([]byte, chunkSize)
+		n, err := tok.reader.Read(buffer)
+		if err != nil {
+			return 0, err
+		}
+
+		tok.buffered = buffer[:n]
+	}
+
+	return tok.buffered[0], nil
+}
+
+func (tok *tokenizer) consume() {
+	if len(tok.buffered) == 0 {
+		panic("Invalid consume")
+	}
+
+	char := tok.buffered[0]
+	if char == '(' {
+		tok.parenCount += 1
+	} else if char == ')' {
+		tok.parenCount -= 1
+	}
+
+	if char == '\n' {
+		tok.Column = 1
+		tok.Line += 1
+	} else {
+		tok.Column += 1
+	}
+
+	tok.buffered = tok.buffered[1:]
+}
+
 func (tok *tokenizer) nextToken(lval *qlSymType) (int, error) {
 	// TODO(patrick): parse leading comment
 
@@ -114,7 +134,7 @@ func (tok *tokenizer) nextToken(lval *qlSymType) (int, error) {
 
 func (tok *tokenizer) stripMeaninglessWhitespaces() error {
 	for {
-		bytes, err := tok.reader.Peek(1)
+		char, err := tok.peek()
 		if err == io.EOF {
 			return nil
 		}
@@ -123,26 +143,15 @@ func (tok *tokenizer) stripMeaninglessWhitespaces() error {
 			return err
 		}
 
-		switch bytes[0] {
+		switch char {
 		case ' ', '\t':
-			err = tok.reader.Consume(1)
-			if err != nil {
-				return err
-			}
-
-			tok.Column += 1
+			tok.consume()
 		case '\n':
 			if tok.parenCount == 0 && newlineSensitive(tok.prevToken) {
 				return nil
 			}
 
-			err = tok.reader.Consume(1)
-			if err != nil {
-				return err
-			}
-
-			tok.Line += 1
-			tok.Column = 1
+			tok.consume()
 		default:
 			return nil
 		}
@@ -151,74 +160,53 @@ func (tok *tokenizer) stripMeaninglessWhitespaces() error {
 
 // Identifiers (/ keywords) are of the form [_a-zA-Z][_a-zA-Z0-9]*
 func (tok *tokenizer) parseIdentifier(lval *qlSymType) (int, error) {
-	bytes, err := tok.reader.Peek(1)
-	if err != nil {
-		return LEX_ERROR, err
+	var value []byte
+
+	start := tok.Position
+	for {
+		char, err := tok.peek()
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+			return LEX_ERROR, err
+		}
+
+		if !(('a' <= char && char <= 'z') ||
+			('A' <= char && char <= 'Z') ||
+			'_' == char) {
+
+			break
+		}
+
+		value = append(value, char)
+		tok.consume()
 	}
 
-	if !(('a' <= bytes[0] && bytes[0] <= 'z') ||
-		('A' <= bytes[0] && bytes[0] <= 'Z') ||
-		'_' == bytes[0]) {
-
+	if len(value) == 0 {
 		// Not an identifier
 		return 0, nil
 	}
 
-	bytes, err = tok.reader.PeekAll()
-	if err != nil {
-		if err == io.EOF {
-			// Not enough bytes left to full the entire buffer.  just use
-			// whatever is in the buffer
-			bytes = tok.reader.Buffer()
-		} else {
-			return LEX_ERROR, err
-		}
+	lval.Token = &Token{
+		Location: Location{
+			Filename: tok.filename,
+			Start:    start,
+			End:      tok.Position,
+		},
+		Value: string(value),
 	}
 
-	count := 1
-	for count < len(bytes) {
-		if ('a' <= bytes[count] && bytes[count] <= 'z') ||
-			('A' <= bytes[count] && bytes[count] <= 'Z') ||
-			('0' <= bytes[count] && bytes[count] <= '9') ||
-			'_' == bytes[count] {
-
-			count += 1
-		} else {
-			start := tok.Position
-			tok.Column += count
-
-			lval.Token = &Token{
-				Location: Location{
-					Filename: tok.filename,
-					Start:    start,
-					End:      tok.Position,
-				},
-				Value: string(bytes[:count]),
-			}
-
-			err = tok.reader.Consume(count)
-			if err != nil {
-				return 0, err
-			}
-
-			return IDENTIFIER, nil
-		}
-	}
-
-	// XXX(patrick): maybe handle this correctly ...
-	return LEX_ERROR, fmt.Errorf(
-		"%s:%v: identifier is too long",
-		filepath.Base(tok.filename),
-		tok.Position)
+	return IDENTIFIER, nil
 }
 
 func (tok *tokenizer) parseSingleCharToken(lval *qlSymType) (int, error) {
-	bytes, err := tok.reader.Peek(1)
+	char, err := tok.peek()
 	if err != nil {
 		return LEX_ERROR, err
 	}
 
-	token, ok := singleCharTokens[bytes[0]]
+	token, ok := singleCharTokens[char]
 	if !ok {
 		return 0, nil
 	}
@@ -232,29 +220,25 @@ func (tok *tokenizer) parseSingleCharToken(lval *qlSymType) (int, error) {
 			Start:    start,
 			End:      tok.Position,
 		},
-		Value: string(bytes[:1]),
+		Value: string(char),
 	}
 
-	err = tok.reader.Consume(1)
-	if err != nil {
-		return LEX_ERROR, err
-	}
-
+	tok.consume()
 	return token, nil
 }
 
 func (tok *tokenizer) parseNextToken(lval *qlSymType) (int, error) {
-	bytes, err := tok.reader.Peek(1)
+	char, err := tok.peek()
 	if err != nil {
 		if err == io.EOF {
 			return 0, nil
 		}
-		return 0, err
+		return LEX_ERROR, err
 	}
 
 	token, err := tok.parseIdentifier(lval)
 	if err != nil {
-		return token, err
+		return LEX_ERROR, err
 	}
 
 	if token == IDENTIFIER {
@@ -276,5 +260,5 @@ func (tok *tokenizer) parseNextToken(lval *qlSymType) (int, error) {
 		"%s:%v: unknown character: %c",
 		filepath.Base(tok.filename),
 		tok.Position,
-		bytes[0])
+		char)
 }
