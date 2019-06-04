@@ -1,5 +1,5 @@
-// NOTE(patrick): the parser ast intentionally preserves all parsed tokens,
-// which may be use to reconstruct / format the file.
+// NOTE(patrick): the concrete syntax parse tree intentionally preserves all
+// parsed tokens, which may be use to reconstruct / format the file.
 
 package parser
 
