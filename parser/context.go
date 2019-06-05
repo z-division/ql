@@ -31,8 +31,15 @@ func (ctx *parseContext) Lex(lval *qlSymType) int {
 
 func (ctx *parseContext) Error(msg string) {
 	if ctx.err == nil {
-		// TODO(patrick): include location info from lexer
-		ctx.err = fmt.Errorf(msg)
+		pos := Location{
+			Filename: ctx.filename,
+			Start:    Position{1, 1},
+			End:      Position{1, 1},
+		}
+		if ctx.prevToken != nil {
+			pos = ctx.prevToken.Location
+		}
+		ctx.err = fmt.Errorf("%v: %s", pos, msg)
 	}
 }
 

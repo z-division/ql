@@ -64,8 +64,9 @@ type tokenizer struct {
 	Position
 
 	// \n is context sensitive
-	prevToken  int
-	parenCount int
+	prevTokenType int
+	prevToken     *Token
+	parenCount    int
 
 	buffered []byte
 }
@@ -74,43 +75,82 @@ func newTokenizer(filename string, reader io.Reader) (*tokenizer, error) {
 	return &tokenizer{
 		filename: filename,
 		reader:   reader,
+		Position: Position{
+			Column: 1,
+			Line:   1,
+		},
 	}, nil
 }
 
-func (tok *tokenizer) peek() (byte, error) {
-	if len(tok.buffered) == 0 {
+func (tok *tokenizer) fillN(n int) error {
+	if n < 1 {
+		panic(fmt.Sprintf("Invalid peek: %d", n))
+	}
+
+	for len(tok.buffered) < n {
 		buffer := make([]byte, chunkSize)
 		n, err := tok.reader.Read(buffer)
 		if err != nil {
-			return 0, err
+			if err == io.EOF {
+				break
+			}
+
+			return err
 		}
 
-		tok.buffered = buffer[:n]
+		tok.buffered = append(tok.buffered, buffer[:n]...)
+	}
+
+	if len(tok.buffered) < n {
+		return io.EOF
+	}
+
+	return nil
+}
+
+func (tok *tokenizer) peekN(n int) ([]byte, error) {
+	err := tok.fillN(n)
+	if err != nil {
+		return nil, err
+	}
+
+	return tok.buffered[:n], nil
+}
+
+func (tok *tokenizer) peek() (byte, error) {
+	err := tok.fillN(1)
+	if err != nil {
+		return 0, err
 	}
 
 	return tok.buffered[0], nil
 }
 
+func (tok *tokenizer) consumeN(n int) {
+	if len(tok.buffered) < n {
+		panic(fmt.Sprintf("Invalid consume: %d", n))
+	}
+
+	for _, char := range tok.buffered[:n] {
+		if char == '(' {
+			tok.parenCount += 1
+		} else if char == ')' {
+			tok.parenCount -= 1
+		}
+
+		if char == '\n' {
+			tok.Column = 1
+			tok.Line += 1
+		} else {
+			tok.Column += 1
+		}
+	}
+
+	tok.buffered = tok.buffered[n:]
+}
+
 func (tok *tokenizer) consume() {
-	if len(tok.buffered) == 0 {
-		panic("Invalid consume")
-	}
-
-	char := tok.buffered[0]
-	if char == '(' {
-		tok.parenCount += 1
-	} else if char == ')' {
-		tok.parenCount -= 1
-	}
-
-	if char == '\n' {
-		tok.Column = 1
-		tok.Line += 1
-	} else {
-		tok.Column += 1
-	}
-
-	tok.buffered = tok.buffered[1:]
+	tok.consumeN(1)
 }
 
 func (tok *tokenizer) nextToken(lval *qlSymType) (int, error) {
@@ -128,7 +168,9 @@ func (tok *tokenizer) nextToken(lval *qlSymType) (int, error) {
 		return 0, err
 	}
 
-	tok.prevToken = tokenType
+	tok.prevTokenType = tokenType
+	tok.prevToken = lval.Token
+
 	return tokenType, nil
 }
 
@@ -147,7 +189,7 @@ func (tok *tokenizer) stripMeaninglessWhitespaces() error {
 		case ' ', '\t':
 			tok.consume()
 		case '\n':
-			if tok.parenCount == 0 && newlineSensitive(tok.prevToken) {
+			if tok.parenCount == 0 && newlineSensitive(tok.prevTokenType) {
 				return nil
 			}
 
@@ -212,7 +254,6 @@ func (tok *tokenizer) parseSingleCharToken(lval *qlSymType) (int, error) {
 	}
 
 	start := tok.Position
-	tok.Column += 1
 
 	lval.Token = &Token{
 		Location: Location{
