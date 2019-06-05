@@ -6,7 +6,8 @@ import (
 )
 
 type parseContext struct {
-	*tokenizer
+	// TODO(patrick): switch to yet to be written tokenizer
+	*rawTokenizer
 
 	// TODO(patrick): define parse tree
 	parsed []Node
@@ -44,13 +45,13 @@ func (ctx *parseContext) Error(msg string) {
 }
 
 func Parse(filename string, reader io.Reader) ([]Node, error) {
-	tokenizer, err := newTokenizer(filename, reader)
+	tokenizer, err := newRawTokenizer(filename, reader)
 	if err != nil {
 		return nil, err
 	}
 
 	ctx := &parseContext{
-		tokenizer: tokenizer,
+		rawTokenizer: tokenizer,
 	}
 	qlParse(ctx)
 

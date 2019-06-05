@@ -1,3 +1,5 @@
+// A standard (mostly) regex based tokenizer.
+
 package parser
 
 import (
@@ -57,7 +59,7 @@ func newlineSensitive(token int) bool {
 	return false
 }
 
-type tokenizer struct {
+type rawTokenizer struct {
 	filename string
 	reader   io.Reader
 
@@ -71,8 +73,8 @@ type tokenizer struct {
 	buffered []byte
 }
 
-func newTokenizer(filename string, reader io.Reader) (*tokenizer, error) {
-	return &tokenizer{
+func newRawTokenizer(filename string, reader io.Reader) (*rawTokenizer, error) {
+	return &rawTokenizer{
 		filename: filename,
 		reader:   reader,
 		Position: Position{
@@ -82,7 +84,7 @@ func newTokenizer(filename string, reader io.Reader) (*tokenizer, error) {
 	}, nil
 }
 
-func (tok *tokenizer) fillN(n int) error {
+func (tok *rawTokenizer) fillN(n int) error {
 	if n < 1 {
 		panic(fmt.Sprintf("Invalid peek: %d", n))
 	}
@@ -108,7 +110,7 @@ func (tok *tokenizer) fillN(n int) error {
 	return nil
 }
 
-func (tok *tokenizer) peekN(n int) ([]byte, error) {
+func (tok *rawTokenizer) peekN(n int) ([]byte, error) {
 	err := tok.fillN(n)
 	if err != nil {
 		return nil, err
@@ -117,7 +119,7 @@ func (tok *tokenizer) peekN(n int) ([]byte, error) {
 	return tok.buffered[:n], nil
 }
 
-func (tok *tokenizer) peek() (byte, error) {
+func (tok *rawTokenizer) peek() (byte, error) {
 	err := tok.fillN(1)
 	if err != nil {
 		return 0, err
@@ -126,7 +128,7 @@ func (tok *tokenizer) peek() (byte, error) {
 	return tok.buffered[0], nil
 }
 
-func (tok *tokenizer) consumeN(n int) {
+func (tok *rawTokenizer) consumeN(n int) {
 	if len(tok.buffered) < n {
 		panic(fmt.Sprintf("Invalid consume: %d", n))
 	}
@@ -149,11 +151,11 @@ func (tok *tokenizer) consumeN(n int) {
 	tok.buffered = tok.buffered[n:]
 }
 
-func (tok *tokenizer) consume() {
+func (tok *rawTokenizer) consume() {
 	tok.consumeN(1)
 }
 
-func (tok *tokenizer) nextToken(lval *qlSymType) (int, error) {
+func (tok *rawTokenizer) nextToken(lval *qlSymType) (int, error) {
 	// TODO(patrick): parse leading comment
 
 	tokenType, err := tok.parseNextToken(lval)
@@ -174,7 +176,7 @@ func (tok *tokenizer) nextToken(lval *qlSymType) (int, error) {
 	return tokenType, nil
 }
 
-func (tok *tokenizer) stripMeaninglessWhitespaces() error {
+func (tok *rawTokenizer) stripMeaninglessWhitespaces() error {
 	for {
 		char, err := tok.peek()
 		if err == io.EOF {
@@ -201,7 +203,7 @@ func (tok *tokenizer) stripMeaninglessWhitespaces() error {
 }
 
 // Identifiers (/ keywords) are of the form [_a-zA-Z][_a-zA-Z0-9]*
-func (tok *tokenizer) parseIdentifier(lval *qlSymType) (int, error) {
+func (tok *rawTokenizer) parseIdentifier(lval *qlSymType) (int, error) {
 	var value []byte
 
 	start := tok.Position
@@ -242,7 +244,7 @@ func (tok *tokenizer) parseIdentifier(lval *qlSymType) (int, error) {
 	return IDENTIFIER, nil
 }
 
-func (tok *tokenizer) parseSingleCharToken(lval *qlSymType) (int, error) {
+func (tok *rawTokenizer) parseSingleCharToken(lval *qlSymType) (int, error) {
 	char, err := tok.peek()
 	if err != nil {
 		return LEX_ERROR, err
@@ -268,7 +270,7 @@ func (tok *tokenizer) parseSingleCharToken(lval *qlSymType) (int, error) {
 	return token, nil
 }
 
-func (tok *tokenizer) parseNextToken(lval *qlSymType) (int, error) {
+func (tok *rawTokenizer) parseNextToken(lval *qlSymType) (int, error) {
 	char, err := tok.peek()
 	if err != nil {
 		if err == io.EOF {
