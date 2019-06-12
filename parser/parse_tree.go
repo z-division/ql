@@ -13,6 +13,15 @@ const (
 	indentLevel = "  "
 )
 
+func getTokenName(token int) string {
+	diff := token - LEX_ERROR + 3
+	if 0 <= diff && diff < len(qlToknames) {
+		return qlToknames[diff]
+	}
+
+	return fmt.Sprintf("UNKNOWN(%d)", token)
+}
+
 type customFormatter interface {
 	prettyFormat(prefix string, indent int) string
 }
@@ -120,15 +129,17 @@ type Node interface {
 }
 
 type Token struct {
+	Type int
 	Location
 	Value string
 }
 
 func (token *Token) prettyFormat(prefix string, indent int) string {
 	return fmt.Sprintf(
-		"%s%s[Token %s (%v)]",
+		"%s%s[%s %s (%v)]",
 		formatIdent(indent),
 		prefix,
+		getTokenName(token.Type),
 		token.Value,
 		token.Location)
 }

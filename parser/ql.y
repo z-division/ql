@@ -1,6 +1,5 @@
 %{
 package parser
-
 %}
 
 %union{
@@ -13,8 +12,8 @@ package parser
 }
 
 %token LEX_ERROR
-%token <Token> L_BRACE R_BRACE L_PAREN R_PAREN
-%token <Token> ASSIGN SEMICOLON NEWLINE COMMA DOT
+%token <Token> L_BRACE R_BRACE L_PAREN R_PAREN L_BRACKET R_BRACKET
+%token <Token> ASSIGN COLON SEMICOLON NEWLINE COMMA DOT STAR_STAR
 
 %token <Token> LET
 
@@ -24,7 +23,8 @@ package parser
 %left <Token> LT GT EQ NE LE GE
 %left <Token> BITWISE_OR
 %left <Token> BITWISE_AND
-%left <Token> SHIFT_LEFT SHIFT_RIGHT
+%left <Token> XOR
+%left <Token> L_SHIFT R_SHIFT
 %left <Token> ADD SUB
 %left <Token> MUL DIV MOD
 %right UNARY
@@ -223,7 +223,7 @@ composable_expr:
             Right: $3,
         }
     }
-    | composable_expr SHIFT_LEFT composable_expr {
+    | composable_expr L_SHIFT composable_expr {
         $$ = &BinaryExpr{
             Location: Location{
                 Filename: $1.Loc().Filename,
@@ -235,7 +235,7 @@ composable_expr:
             Right: $3,
         }
     }
-    | composable_expr SHIFT_RIGHT composable_expr {
+    | composable_expr R_SHIFT composable_expr {
         $$ = &BinaryExpr{
             Location: Location{
                 Filename: $1.Loc().Filename,

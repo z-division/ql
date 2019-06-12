@@ -126,8 +126,8 @@ state 14
 	composable_expr:  composable_expr.GE composable_expr 
 	composable_expr:  composable_expr.BITWISE_OR composable_expr 
 	composable_expr:  composable_expr.BITWISE_AND composable_expr 
-	composable_expr:  composable_expr.SHIFT_LEFT composable_expr 
-	composable_expr:  composable_expr.SHIFT_RIGHT composable_expr 
+	composable_expr:  composable_expr.L_SHIFT composable_expr 
+	composable_expr:  composable_expr.R_SHIFT composable_expr 
 	composable_expr:  composable_expr.ADD composable_expr 
 	composable_expr:  composable_expr.SUB composable_expr 
 	composable_expr:  composable_expr.MUL composable_expr 
@@ -144,8 +144,8 @@ state 14
 	GE  shift 30
 	BITWISE_OR  shift 31
 	BITWISE_AND  shift 32
-	SHIFT_LEFT  shift 33
-	SHIFT_RIGHT  shift 34
+	L_SHIFT  shift 33
+	R_SHIFT  shift 34
 	ADD  shift 35
 	SUB  shift 36
 	MUL  shift 37
@@ -397,7 +397,7 @@ state 32
 	nested_identifier  goto 20
 
 state 33
-	composable_expr:  composable_expr SHIFT_LEFT.composable_expr 
+	composable_expr:  composable_expr L_SHIFT.composable_expr 
 
 	L_BRACE  shift 22
 	L_PAREN  shift 21
@@ -412,7 +412,7 @@ state 33
 	nested_identifier  goto 20
 
 state 34
-	composable_expr:  composable_expr SHIFT_RIGHT.composable_expr 
+	composable_expr:  composable_expr R_SHIFT.composable_expr 
 
 	L_BRACE  shift 22
 	L_PAREN  shift 21
@@ -537,8 +537,8 @@ state 42
 	composable_expr:  composable_expr.GE composable_expr 
 	composable_expr:  composable_expr.BITWISE_OR composable_expr 
 	composable_expr:  composable_expr.BITWISE_AND composable_expr 
-	composable_expr:  composable_expr.SHIFT_LEFT composable_expr 
-	composable_expr:  composable_expr.SHIFT_RIGHT composable_expr 
+	composable_expr:  composable_expr.L_SHIFT composable_expr 
+	composable_expr:  composable_expr.R_SHIFT composable_expr 
 	composable_expr:  composable_expr.ADD composable_expr 
 	composable_expr:  composable_expr.SUB composable_expr 
 	composable_expr:  composable_expr.MUL composable_expr 
@@ -560,8 +560,8 @@ state 43
 	composable_expr:  composable_expr.GE composable_expr 
 	composable_expr:  composable_expr.BITWISE_OR composable_expr 
 	composable_expr:  composable_expr.BITWISE_AND composable_expr 
-	composable_expr:  composable_expr.SHIFT_LEFT composable_expr 
-	composable_expr:  composable_expr.SHIFT_RIGHT composable_expr 
+	composable_expr:  composable_expr.L_SHIFT composable_expr 
+	composable_expr:  composable_expr.R_SHIFT composable_expr 
 	composable_expr:  composable_expr.ADD composable_expr 
 	composable_expr:  composable_expr.SUB composable_expr 
 	composable_expr:  composable_expr.MUL composable_expr 
@@ -577,8 +577,8 @@ state 43
 	GE  shift 30
 	BITWISE_OR  shift 31
 	BITWISE_AND  shift 32
-	SHIFT_LEFT  shift 33
-	SHIFT_RIGHT  shift 34
+	L_SHIFT  shift 33
+	R_SHIFT  shift 34
 	ADD  shift 35
 	SUB  shift 36
 	MUL  shift 37
@@ -599,8 +599,8 @@ state 44
 	composable_expr:  composable_expr.GE composable_expr 
 	composable_expr:  composable_expr.BITWISE_OR composable_expr 
 	composable_expr:  composable_expr.BITWISE_AND composable_expr 
-	composable_expr:  composable_expr.SHIFT_LEFT composable_expr 
-	composable_expr:  composable_expr.SHIFT_RIGHT composable_expr 
+	composable_expr:  composable_expr.L_SHIFT composable_expr 
+	composable_expr:  composable_expr.R_SHIFT composable_expr 
 	composable_expr:  composable_expr.ADD composable_expr 
 	composable_expr:  composable_expr.SUB composable_expr 
 	composable_expr:  composable_expr.MUL composable_expr 
@@ -618,8 +618,8 @@ state 44
 	GE  shift 30
 	BITWISE_OR  shift 31
 	BITWISE_AND  shift 32
-	SHIFT_LEFT  shift 33
-	SHIFT_RIGHT  shift 34
+	L_SHIFT  shift 33
+	R_SHIFT  shift 34
 	ADD  shift 35
 	SUB  shift 36
 	MUL  shift 37
@@ -669,8 +669,8 @@ state 49
 	composable_expr:  composable_expr.GE composable_expr 
 	composable_expr:  composable_expr.BITWISE_OR composable_expr 
 	composable_expr:  composable_expr.BITWISE_AND composable_expr 
-	composable_expr:  composable_expr.SHIFT_LEFT composable_expr 
-	composable_expr:  composable_expr.SHIFT_RIGHT composable_expr 
+	composable_expr:  composable_expr.L_SHIFT composable_expr 
+	composable_expr:  composable_expr.R_SHIFT composable_expr 
 	composable_expr:  composable_expr.ADD composable_expr 
 	composable_expr:  composable_expr.SUB composable_expr 
 	composable_expr:  composable_expr.MUL composable_expr 
@@ -686,8 +686,8 @@ state 49
 	GE  shift 30
 	BITWISE_OR  shift 31
 	BITWISE_AND  shift 32
-	SHIFT_LEFT  shift 33
-	SHIFT_RIGHT  shift 34
+	L_SHIFT  shift 33
+	R_SHIFT  shift 34
 	ADD  shift 35
 	SUB  shift 36
 	MUL  shift 37
@@ -708,8 +708,8 @@ state 50
 	composable_expr:  composable_expr.GE composable_expr 
 	composable_expr:  composable_expr.BITWISE_OR composable_expr 
 	composable_expr:  composable_expr.BITWISE_AND composable_expr 
-	composable_expr:  composable_expr.SHIFT_LEFT composable_expr 
-	composable_expr:  composable_expr.SHIFT_RIGHT composable_expr 
+	composable_expr:  composable_expr.L_SHIFT composable_expr 
+	composable_expr:  composable_expr.R_SHIFT composable_expr 
 	composable_expr:  composable_expr.ADD composable_expr 
 	composable_expr:  composable_expr.SUB composable_expr 
 	composable_expr:  composable_expr.MUL composable_expr 
@@ -724,8 +724,8 @@ state 50
 	GE  shift 30
 	BITWISE_OR  shift 31
 	BITWISE_AND  shift 32
-	SHIFT_LEFT  shift 33
-	SHIFT_RIGHT  shift 34
+	L_SHIFT  shift 33
+	R_SHIFT  shift 34
 	ADD  shift 35
 	SUB  shift 36
 	MUL  shift 37
@@ -746,8 +746,8 @@ state 51
 	composable_expr:  composable_expr.GE composable_expr 
 	composable_expr:  composable_expr.BITWISE_OR composable_expr 
 	composable_expr:  composable_expr.BITWISE_AND composable_expr 
-	composable_expr:  composable_expr.SHIFT_LEFT composable_expr 
-	composable_expr:  composable_expr.SHIFT_RIGHT composable_expr 
+	composable_expr:  composable_expr.L_SHIFT composable_expr 
+	composable_expr:  composable_expr.R_SHIFT composable_expr 
 	composable_expr:  composable_expr.ADD composable_expr 
 	composable_expr:  composable_expr.SUB composable_expr 
 	composable_expr:  composable_expr.MUL composable_expr 
@@ -756,8 +756,8 @@ state 51
 
 	BITWISE_OR  shift 31
 	BITWISE_AND  shift 32
-	SHIFT_LEFT  shift 33
-	SHIFT_RIGHT  shift 34
+	L_SHIFT  shift 33
+	R_SHIFT  shift 34
 	ADD  shift 35
 	SUB  shift 36
 	MUL  shift 37
@@ -778,8 +778,8 @@ state 52
 	composable_expr:  composable_expr.GE composable_expr 
 	composable_expr:  composable_expr.BITWISE_OR composable_expr 
 	composable_expr:  composable_expr.BITWISE_AND composable_expr 
-	composable_expr:  composable_expr.SHIFT_LEFT composable_expr 
-	composable_expr:  composable_expr.SHIFT_RIGHT composable_expr 
+	composable_expr:  composable_expr.L_SHIFT composable_expr 
+	composable_expr:  composable_expr.R_SHIFT composable_expr 
 	composable_expr:  composable_expr.ADD composable_expr 
 	composable_expr:  composable_expr.SUB composable_expr 
 	composable_expr:  composable_expr.MUL composable_expr 
@@ -788,8 +788,8 @@ state 52
 
 	BITWISE_OR  shift 31
 	BITWISE_AND  shift 32
-	SHIFT_LEFT  shift 33
-	SHIFT_RIGHT  shift 34
+	L_SHIFT  shift 33
+	R_SHIFT  shift 34
 	ADD  shift 35
 	SUB  shift 36
 	MUL  shift 37
@@ -810,8 +810,8 @@ state 53
 	composable_expr:  composable_expr.GE composable_expr 
 	composable_expr:  composable_expr.BITWISE_OR composable_expr 
 	composable_expr:  composable_expr.BITWISE_AND composable_expr 
-	composable_expr:  composable_expr.SHIFT_LEFT composable_expr 
-	composable_expr:  composable_expr.SHIFT_RIGHT composable_expr 
+	composable_expr:  composable_expr.L_SHIFT composable_expr 
+	composable_expr:  composable_expr.R_SHIFT composable_expr 
 	composable_expr:  composable_expr.ADD composable_expr 
 	composable_expr:  composable_expr.SUB composable_expr 
 	composable_expr:  composable_expr.MUL composable_expr 
@@ -820,8 +820,8 @@ state 53
 
 	BITWISE_OR  shift 31
 	BITWISE_AND  shift 32
-	SHIFT_LEFT  shift 33
-	SHIFT_RIGHT  shift 34
+	L_SHIFT  shift 33
+	R_SHIFT  shift 34
 	ADD  shift 35
 	SUB  shift 36
 	MUL  shift 37
@@ -842,8 +842,8 @@ state 54
 	composable_expr:  composable_expr.GE composable_expr 
 	composable_expr:  composable_expr.BITWISE_OR composable_expr 
 	composable_expr:  composable_expr.BITWISE_AND composable_expr 
-	composable_expr:  composable_expr.SHIFT_LEFT composable_expr 
-	composable_expr:  composable_expr.SHIFT_RIGHT composable_expr 
+	composable_expr:  composable_expr.L_SHIFT composable_expr 
+	composable_expr:  composable_expr.R_SHIFT composable_expr 
 	composable_expr:  composable_expr.ADD composable_expr 
 	composable_expr:  composable_expr.SUB composable_expr 
 	composable_expr:  composable_expr.MUL composable_expr 
@@ -852,8 +852,8 @@ state 54
 
 	BITWISE_OR  shift 31
 	BITWISE_AND  shift 32
-	SHIFT_LEFT  shift 33
-	SHIFT_RIGHT  shift 34
+	L_SHIFT  shift 33
+	R_SHIFT  shift 34
 	ADD  shift 35
 	SUB  shift 36
 	MUL  shift 37
@@ -874,8 +874,8 @@ state 55
 	composable_expr:  composable_expr.GE composable_expr 
 	composable_expr:  composable_expr.BITWISE_OR composable_expr 
 	composable_expr:  composable_expr.BITWISE_AND composable_expr 
-	composable_expr:  composable_expr.SHIFT_LEFT composable_expr 
-	composable_expr:  composable_expr.SHIFT_RIGHT composable_expr 
+	composable_expr:  composable_expr.L_SHIFT composable_expr 
+	composable_expr:  composable_expr.R_SHIFT composable_expr 
 	composable_expr:  composable_expr.ADD composable_expr 
 	composable_expr:  composable_expr.SUB composable_expr 
 	composable_expr:  composable_expr.MUL composable_expr 
@@ -884,8 +884,8 @@ state 55
 
 	BITWISE_OR  shift 31
 	BITWISE_AND  shift 32
-	SHIFT_LEFT  shift 33
-	SHIFT_RIGHT  shift 34
+	L_SHIFT  shift 33
+	R_SHIFT  shift 34
 	ADD  shift 35
 	SUB  shift 36
 	MUL  shift 37
@@ -906,8 +906,8 @@ state 56
 	composable_expr:  composable_expr GE composable_expr.    (22)
 	composable_expr:  composable_expr.BITWISE_OR composable_expr 
 	composable_expr:  composable_expr.BITWISE_AND composable_expr 
-	composable_expr:  composable_expr.SHIFT_LEFT composable_expr 
-	composable_expr:  composable_expr.SHIFT_RIGHT composable_expr 
+	composable_expr:  composable_expr.L_SHIFT composable_expr 
+	composable_expr:  composable_expr.R_SHIFT composable_expr 
 	composable_expr:  composable_expr.ADD composable_expr 
 	composable_expr:  composable_expr.SUB composable_expr 
 	composable_expr:  composable_expr.MUL composable_expr 
@@ -916,8 +916,8 @@ state 56
 
 	BITWISE_OR  shift 31
 	BITWISE_AND  shift 32
-	SHIFT_LEFT  shift 33
-	SHIFT_RIGHT  shift 34
+	L_SHIFT  shift 33
+	R_SHIFT  shift 34
 	ADD  shift 35
 	SUB  shift 36
 	MUL  shift 37
@@ -938,8 +938,8 @@ state 57
 	composable_expr:  composable_expr.BITWISE_OR composable_expr 
 	composable_expr:  composable_expr BITWISE_OR composable_expr.    (23)
 	composable_expr:  composable_expr.BITWISE_AND composable_expr 
-	composable_expr:  composable_expr.SHIFT_LEFT composable_expr 
-	composable_expr:  composable_expr.SHIFT_RIGHT composable_expr 
+	composable_expr:  composable_expr.L_SHIFT composable_expr 
+	composable_expr:  composable_expr.R_SHIFT composable_expr 
 	composable_expr:  composable_expr.ADD composable_expr 
 	composable_expr:  composable_expr.SUB composable_expr 
 	composable_expr:  composable_expr.MUL composable_expr 
@@ -947,8 +947,8 @@ state 57
 	composable_expr:  composable_expr.MOD composable_expr 
 
 	BITWISE_AND  shift 32
-	SHIFT_LEFT  shift 33
-	SHIFT_RIGHT  shift 34
+	L_SHIFT  shift 33
+	R_SHIFT  shift 34
 	ADD  shift 35
 	SUB  shift 36
 	MUL  shift 37
@@ -969,16 +969,16 @@ state 58
 	composable_expr:  composable_expr.BITWISE_OR composable_expr 
 	composable_expr:  composable_expr.BITWISE_AND composable_expr 
 	composable_expr:  composable_expr BITWISE_AND composable_expr.    (24)
-	composable_expr:  composable_expr.SHIFT_LEFT composable_expr 
-	composable_expr:  composable_expr.SHIFT_RIGHT composable_expr 
+	composable_expr:  composable_expr.L_SHIFT composable_expr 
+	composable_expr:  composable_expr.R_SHIFT composable_expr 
 	composable_expr:  composable_expr.ADD composable_expr 
 	composable_expr:  composable_expr.SUB composable_expr 
 	composable_expr:  composable_expr.MUL composable_expr 
 	composable_expr:  composable_expr.DIV composable_expr 
 	composable_expr:  composable_expr.MOD composable_expr 
 
-	SHIFT_LEFT  shift 33
-	SHIFT_RIGHT  shift 34
+	L_SHIFT  shift 33
+	R_SHIFT  shift 34
 	ADD  shift 35
 	SUB  shift 36
 	MUL  shift 37
@@ -998,9 +998,9 @@ state 59
 	composable_expr:  composable_expr.GE composable_expr 
 	composable_expr:  composable_expr.BITWISE_OR composable_expr 
 	composable_expr:  composable_expr.BITWISE_AND composable_expr 
-	composable_expr:  composable_expr.SHIFT_LEFT composable_expr 
-	composable_expr:  composable_expr SHIFT_LEFT composable_expr.    (25)
-	composable_expr:  composable_expr.SHIFT_RIGHT composable_expr 
+	composable_expr:  composable_expr.L_SHIFT composable_expr 
+	composable_expr:  composable_expr L_SHIFT composable_expr.    (25)
+	composable_expr:  composable_expr.R_SHIFT composable_expr 
 	composable_expr:  composable_expr.ADD composable_expr 
 	composable_expr:  composable_expr.SUB composable_expr 
 	composable_expr:  composable_expr.MUL composable_expr 
@@ -1026,9 +1026,9 @@ state 60
 	composable_expr:  composable_expr.GE composable_expr 
 	composable_expr:  composable_expr.BITWISE_OR composable_expr 
 	composable_expr:  composable_expr.BITWISE_AND composable_expr 
-	composable_expr:  composable_expr.SHIFT_LEFT composable_expr 
-	composable_expr:  composable_expr.SHIFT_RIGHT composable_expr 
-	composable_expr:  composable_expr SHIFT_RIGHT composable_expr.    (26)
+	composable_expr:  composable_expr.L_SHIFT composable_expr 
+	composable_expr:  composable_expr.R_SHIFT composable_expr 
+	composable_expr:  composable_expr R_SHIFT composable_expr.    (26)
 	composable_expr:  composable_expr.ADD composable_expr 
 	composable_expr:  composable_expr.SUB composable_expr 
 	composable_expr:  composable_expr.MUL composable_expr 
@@ -1054,8 +1054,8 @@ state 61
 	composable_expr:  composable_expr.GE composable_expr 
 	composable_expr:  composable_expr.BITWISE_OR composable_expr 
 	composable_expr:  composable_expr.BITWISE_AND composable_expr 
-	composable_expr:  composable_expr.SHIFT_LEFT composable_expr 
-	composable_expr:  composable_expr.SHIFT_RIGHT composable_expr 
+	composable_expr:  composable_expr.L_SHIFT composable_expr 
+	composable_expr:  composable_expr.R_SHIFT composable_expr 
 	composable_expr:  composable_expr.ADD composable_expr 
 	composable_expr:  composable_expr ADD composable_expr.    (27)
 	composable_expr:  composable_expr.SUB composable_expr 
@@ -1080,8 +1080,8 @@ state 62
 	composable_expr:  composable_expr.GE composable_expr 
 	composable_expr:  composable_expr.BITWISE_OR composable_expr 
 	composable_expr:  composable_expr.BITWISE_AND composable_expr 
-	composable_expr:  composable_expr.SHIFT_LEFT composable_expr 
-	composable_expr:  composable_expr.SHIFT_RIGHT composable_expr 
+	composable_expr:  composable_expr.L_SHIFT composable_expr 
+	composable_expr:  composable_expr.R_SHIFT composable_expr 
 	composable_expr:  composable_expr.ADD composable_expr 
 	composable_expr:  composable_expr.SUB composable_expr 
 	composable_expr:  composable_expr SUB composable_expr.    (28)
@@ -1106,8 +1106,8 @@ state 63
 	composable_expr:  composable_expr.GE composable_expr 
 	composable_expr:  composable_expr.BITWISE_OR composable_expr 
 	composable_expr:  composable_expr.BITWISE_AND composable_expr 
-	composable_expr:  composable_expr.SHIFT_LEFT composable_expr 
-	composable_expr:  composable_expr.SHIFT_RIGHT composable_expr 
+	composable_expr:  composable_expr.L_SHIFT composable_expr 
+	composable_expr:  composable_expr.R_SHIFT composable_expr 
 	composable_expr:  composable_expr.ADD composable_expr 
 	composable_expr:  composable_expr.SUB composable_expr 
 	composable_expr:  composable_expr.MUL composable_expr 
@@ -1129,8 +1129,8 @@ state 64
 	composable_expr:  composable_expr.GE composable_expr 
 	composable_expr:  composable_expr.BITWISE_OR composable_expr 
 	composable_expr:  composable_expr.BITWISE_AND composable_expr 
-	composable_expr:  composable_expr.SHIFT_LEFT composable_expr 
-	composable_expr:  composable_expr.SHIFT_RIGHT composable_expr 
+	composable_expr:  composable_expr.L_SHIFT composable_expr 
+	composable_expr:  composable_expr.R_SHIFT composable_expr 
 	composable_expr:  composable_expr.ADD composable_expr 
 	composable_expr:  composable_expr.SUB composable_expr 
 	composable_expr:  composable_expr.MUL composable_expr 
@@ -1152,8 +1152,8 @@ state 65
 	composable_expr:  composable_expr.GE composable_expr 
 	composable_expr:  composable_expr.BITWISE_OR composable_expr 
 	composable_expr:  composable_expr.BITWISE_AND composable_expr 
-	composable_expr:  composable_expr.SHIFT_LEFT composable_expr 
-	composable_expr:  composable_expr.SHIFT_RIGHT composable_expr 
+	composable_expr:  composable_expr.L_SHIFT composable_expr 
+	composable_expr:  composable_expr.R_SHIFT composable_expr 
 	composable_expr:  composable_expr.ADD composable_expr 
 	composable_expr:  composable_expr.SUB composable_expr 
 	composable_expr:  composable_expr.MUL composable_expr 
@@ -1190,8 +1190,8 @@ state 68
 	composable_expr:  composable_expr.GE composable_expr 
 	composable_expr:  composable_expr.BITWISE_OR composable_expr 
 	composable_expr:  composable_expr.BITWISE_AND composable_expr 
-	composable_expr:  composable_expr.SHIFT_LEFT composable_expr 
-	composable_expr:  composable_expr.SHIFT_RIGHT composable_expr 
+	composable_expr:  composable_expr.L_SHIFT composable_expr 
+	composable_expr:  composable_expr.R_SHIFT composable_expr 
 	composable_expr:  composable_expr.ADD composable_expr 
 	composable_expr:  composable_expr.SUB composable_expr 
 	composable_expr:  composable_expr.MUL composable_expr 
@@ -1209,8 +1209,8 @@ state 68
 	GE  shift 30
 	BITWISE_OR  shift 31
 	BITWISE_AND  shift 32
-	SHIFT_LEFT  shift 33
-	SHIFT_RIGHT  shift 34
+	L_SHIFT  shift 33
+	R_SHIFT  shift 34
 	ADD  shift 35
 	SUB  shift 36
 	MUL  shift 37
@@ -1319,8 +1319,8 @@ state 78
 	composable_expr:  composable_expr.GE composable_expr 
 	composable_expr:  composable_expr.BITWISE_OR composable_expr 
 	composable_expr:  composable_expr.BITWISE_AND composable_expr 
-	composable_expr:  composable_expr.SHIFT_LEFT composable_expr 
-	composable_expr:  composable_expr.SHIFT_RIGHT composable_expr 
+	composable_expr:  composable_expr.L_SHIFT composable_expr 
+	composable_expr:  composable_expr.R_SHIFT composable_expr 
 	composable_expr:  composable_expr.ADD composable_expr 
 	composable_expr:  composable_expr.SUB composable_expr 
 	composable_expr:  composable_expr.MUL composable_expr 
@@ -1338,8 +1338,8 @@ state 78
 	GE  shift 30
 	BITWISE_OR  shift 31
 	BITWISE_AND  shift 32
-	SHIFT_LEFT  shift 33
-	SHIFT_RIGHT  shift 34
+	L_SHIFT  shift 33
+	R_SHIFT  shift 34
 	ADD  shift 35
 	SUB  shift 36
 	MUL  shift 37
@@ -1348,7 +1348,7 @@ state 78
 	.  reduce 43 (src line 366)
 
 
-35 terminals, 14 nonterminals
+40 terminals, 14 nonterminals
 45 grammar rules, 79/8000 states
 0 shift/reduce, 0 reduce/reduce conflicts reported
 63 working sets used
@@ -1357,6 +1357,6 @@ memory: parser 153/120000
 351 shift entries, 1 exceptions
 40 goto entries
 84 entries saved by goto default
-Optimizer space used: output 163/120000
-163 table entries, 0 zero
-maximum spread: 35, maximum offset: 75
+Optimizer space used: output 168/120000
+168 table entries, 5 zero
+maximum spread: 40, maximum offset: 75
