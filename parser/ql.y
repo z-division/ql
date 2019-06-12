@@ -29,7 +29,7 @@ package parser
 %left <Token> MUL DIV MOD
 %right UNARY
 
-%token <Token> IDENTIFIER CHARACTER STRING
+%token <Token> IDENT CHAR STRING INT FLOAT
 
 // comments that are not directly next to any real tokens
 %token <Token> COMMENT_GROUP
@@ -78,13 +78,13 @@ expr:
 
 // TODO(patrick): literals / tuples.  maybe list slicing
 unit_expr:
-    IDENTIFIER {
+    IDENT {
         $$ = &Identifier{
             Location: $1.Location,
             Value: $1,
         }
     }
-    | CHARACTER {
+    | CHAR {
         $$ = &Literal{
             Location: $1.Location,
             Value: $1,
@@ -96,9 +96,31 @@ unit_expr:
             Value: $1,
         }
     }
+    | INT {
+        $$ = &Literal{
+            Location: $1.Location,
+            Value: $1,
+        }
+    }
+    | FLOAT {
+        $$ = &Literal{
+            Location: $1.Location,
+            Value: $1,
+        }
+    }
     | expr_block {
     }
-    | nested_identifier {
+    | unit_expr DOT IDENT {
+        $$ = &Accessor{
+            Location: Location{
+                Filename: $1.Loc().Filename,
+                Start: $1.Loc().Start,
+                End: $3.Loc().End,
+            },
+            PrimaryExpr: $1,
+            Dot: $2,
+            Name: $3,
+        }
     }
     | unit_expr L_PAREN argument_list R_PAREN {
     }
@@ -106,14 +128,10 @@ unit_expr:
     }
     ;
 
-nested_identifier:
-    unit_expr DOT IDENTIFIER {
-    }
-    ;
-
 // TODO(patrick): maybe in/like expr.  conditional expr
 composable_expr:
     unit_expr {
+        $$ = $1
     }
     | composable_expr OR composable_expr {
         $$ = &BinaryExpr{
@@ -392,7 +410,7 @@ nonempty_argument_list:
     ;
 
 assignment_expr:
-    LET IDENTIFIER ASSIGN expr {
+    LET IDENT ASSIGN expr {
         $$ = &AssignExpr{
             Location: Location{
                 Filename: $1.Loc().Filename,

@@ -204,6 +204,19 @@ func (binary *BinaryExpr) String() string {
 	return prettyFormatNode("", binary, 0)
 }
 
+type Accessor struct {
+	Location
+	expr
+
+	PrimaryExpr Expr
+	Dot         *Token
+	Name        *Token
+}
+
+func (accessor *Accessor) String() string {
+	return prettyFormatNode("", accessor, 0)
+}
+
 type AssignExpr struct {
 	Location
 	expr

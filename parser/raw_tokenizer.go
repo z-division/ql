@@ -119,7 +119,7 @@ var (
 		'[': parseSymbol(map[string]int{"[": L_BRACKET}),
 		']': parseSymbol(map[string]int{"]": R_BRACKET}),
 
-		// Unused symbols: @ # $ ~ ` ? \
+		// Unused leading characters: @ # $ ~ ` ? \
 
 		// NOTE(patrick): ' ' and '\t' are ignored
 	}
@@ -184,7 +184,7 @@ func parseIdentifierOrKeyword(tok *rawTokenizer, lval *qlSymType) (int, error) {
 	}
 
 	lval.Token = &Token{
-		Type: IDENTIFIER,
+		Type: IDENT,
 		Location: Location{
 			Filename: tok.filename,
 			Start:    start,
@@ -200,21 +200,310 @@ func parseIdentifierOrKeyword(tok *rawTokenizer, lval *qlSymType) (int, error) {
 		return kwToken, nil
 	}
 
-	return IDENTIFIER, nil
+	return IDENT, nil
+}
+
+// return (nil, nil) if it doesn't match.
+func maybeParseDecimal(tok *rawTokenizer) ([]byte, error) {
+    var value []byte
+    for {
+        char, err := tok.peek()
+        if err != nil {
+            if err == io.EOF {
+                break
+            }
+            return nil, err
+        }
+
+        if !('0' <= char && char <= '9') {
+            break
+        }
+
+        value = append(value, char)
+        tok.consume()
+    }
+
+	return value, nil
+}
+
+// return (nil, nil) if it doesn't match.
+func maybeParseFloatFractional(tok *rawTokenizer) ([]byte, error) {
+    char, err := tok.peek()
+    if err != nil {
+        if err == io.EOF {
+            return nil, nil
+        }
+        return nil, err
+    }
+
+    if char != '.' {
+        return nil, nil
+    }
+
+    tok.consume()
+
+    value, err := maybeParseDecimal(tok)
+    if err != nil {
+        return nil, err
+    }
+
+    return append([]byte{'.'}, value...), nil
+}
+
+// return (nil, nil) if it doesn't match.
+func maybeParseFloatExponent(tok *rawTokenizer) ([]byte, error) {
+    bytes, err := tok.peekN(2)
+    if err != nil {
+        if err == io.EOF {
+            return nil, nil
+        }
+        return nil, err
+    }
+
+    if bytes[0] != 'e' && bytes[0] != 'E' {
+        return nil, nil
+    }
+
+    if bytes[1] == '+' || bytes[1] == '-' {
+        bytes, err = tok.peekN(3)
+        if err != nil {
+            if err == io.EOF {
+                return nil, nil
+            }
+            return nil, err
+        }
+    }
+
+    dig := bytes[len(bytes)-1]
+    if !('0' <= dig && dig <= '9') {
+        return nil, nil
+    }
+
+    tok.consumeN(len(bytes)-1)
+
+    value, err := maybeParseDecimal(tok)
+    if err != nil {
+        return nil, err
+    }
+
+    if len(value) == 0 {
+        return nil, fmt.Errorf(
+			"%s:%v: invaild exponent",
+			filepath.Base(tok.filename),
+			tok.Position)
+    }
+
+    return append(bytes[:len(bytes)-1], value...), nil
+}
+
+func parseHex(tok *rawTokenizer, lval *qlSymType) (int, error) {
+    start := tok.Position
+
+    value, err := tok.peekN(2)
+    if err != nil {
+        if err != io.EOF {
+            return LEX_ERROR, fmt.Errorf(
+                "%s:%v: invaild hexadecimal",
+                filepath.Base(tok.filename),
+                tok.Position)
+        }
+
+        return LEX_ERROR, err
+    }
+
+    if !(value[0] == '0' &&
+        (value[1] == 'x' || value[1] == 'X')) {
+
+        return LEX_ERROR, fmt.Errorf(
+            "%s:%v: invaild hexadecimal",
+            filepath.Base(tok.filename),
+            tok.Position)
+    }
+
+    tok.consumeN(2)
+
+    for {
+        char, err := tok.peek()
+        if err != nil {
+            if err == io.EOF {
+                break
+            }
+            return LEX_ERROR, err
+        }
+
+        if ('0' <= char && char <= '9') ||
+            ('a' <= char && char <= 'f') ||
+            ('A' <= char && char <= 'F') {
+
+            value = append(value, char)
+            tok.consume()
+        } else {
+            break
+        }
+    }
+
+    if len(value) == 2 {
+        return LEX_ERROR, fmt.Errorf(
+			"%s:%v: invaild number",
+			filepath.Base(tok.filename),
+			tok.Position)
+    }
+
+    lval.Token = &Token{
+        Type: INT,
+        Location: Location{
+            Filename: tok.filename,
+            Start:    start,
+            End:      tok.Position,
+        },
+        Value: string(value),
+    }
+
+    return INT, nil
+}
+
+func parseOct(tok *rawTokenizer, lval *qlSymType) (int, error) {
+    start := tok.Position
+
+    var value []byte
+    for {
+        char, err := tok.peek()
+        if err != nil {
+            if err == io.EOF {
+                break
+            }
+            return LEX_ERROR, err
+        }
+
+        if !('0' <= char && char <= '7') {
+            break
+        }
+
+        value = append(value, char)
+        tok.consume()
+    }
+
+    if len(value) == 0 {
+        return LEX_ERROR, fmt.Errorf(
+			"%s:%v: invaild number",
+			filepath.Base(tok.filename),
+			tok.Position)
+    }
+
+    lval.Token = &Token{
+        Type: INT,
+        Location: Location{
+            Filename: tok.filename,
+            Start:    start,
+            End:      tok.Position,
+        },
+        Value: string(value),
+    }
+
+    return INT, nil
 }
 
 func parseNumber(tok *rawTokenizer, lval *qlSymType) (int, error) {
-	return LEX_ERROR, fmt.Errorf(
-		"%s:%v: TODO(patrick): implement number parser",
-		filepath.Base(tok.filename),
-		tok.Position)
+    bytes, err := tok.peekN(2)
+    if err != nil && err != io.EOF {
+        return LEX_ERROR, err
+    }
+
+    if err != io.EOF && bytes[0] == '0' {
+        if bytes[1] == 'x' || bytes[1] == 'X' {  // hex
+            return parseHex(tok, lval)
+        } else { // oct
+            return parseOct(tok, lval)
+        }
+    }
+
+    start := tok.Position
+
+    value, err := maybeParseDecimal(tok)
+    if err != nil {
+        return LEX_ERROR, err
+    }
+
+    if len(value) == 0 {
+        return LEX_ERROR, fmt.Errorf(
+			"%s:%v: invaild number",
+			filepath.Base(tok.filename),
+			tok.Position)
+    }
+
+	fractional, err := maybeParseFloatFractional(tok)
+	if err != nil {
+		return LEX_ERROR, err
+	}
+
+    exponent, err := maybeParseFloatExponent(tok)
+    if err != nil {
+        return LEX_ERROR, err
+    }
+
+    numType := INT
+    if len(fractional) > 0 || len(exponent) > 0 {
+        numType = FLOAT
+        value = append(value, fractional...)
+        value = append(value, exponent...)
+    }
+
+    lval.Token = &Token{
+        Type: numType,
+        Location: Location{
+            Filename: tok.filename,
+            Start:    start,
+            End:      tok.Position,
+        },
+        Value: string(value),
+    }
+
+    return numType, nil
 }
 
 func parseDot(tok *rawTokenizer, lval *qlSymType) (int, error) {
-	return LEX_ERROR, fmt.Errorf(
-		"%s:%v: TODO(patrick): implement dot parser",
-		filepath.Base(tok.filename),
-		tok.Position)
+	start := tok.Position
+
+	fractional, err := maybeParseFloatFractional(tok)
+	if err != nil {
+		return LEX_ERROR, err
+	}
+
+    if len(fractional) == 0 {
+		return LEX_ERROR, fmt.Errorf(
+			"%s:%v: invaild symbol",
+			filepath.Base(tok.filename),
+			tok.Position)
+    } else if len(fractional) == 1 {  // single dot
+        lval.Token = &Token{
+            Type: DOT,
+            Location: Location{
+                Filename: tok.filename,
+                Start:    start,
+                End:      tok.Position,
+            },
+            Value: ".",
+        }
+
+        return DOT, nil
+    } else { // dot follow by digit is a float
+		exponent, err := maybeParseFloatExponent(tok)
+		if err != nil {
+			return LEX_ERROR, err
+		}
+
+		lval.Token = &Token{
+			Type: FLOAT,
+			Location: Location{
+				Filename: tok.filename,
+				Start:    start,
+				End:      tok.Position,
+			},
+			Value: string(append(fractional, exponent...)),
+		}
+
+		return FLOAT, nil
+	}
 }
 
 func parseChar(tok *rawTokenizer, lval *qlSymType) (int, error) {
@@ -255,7 +544,7 @@ func parseChar(tok *rawTokenizer, lval *qlSymType) (int, error) {
 
 		tok.consumeN(4)
 		lval.Token = &Token{
-			Type: CHARACTER,
+			Type: CHAR,
 			Location: Location{
 				Filename: tok.filename,
 				Start:    start,
@@ -264,7 +553,7 @@ func parseChar(tok *rawTokenizer, lval *qlSymType) (int, error) {
 			Value: string(value),
 		}
 
-		return CHARACTER, nil
+		return CHAR, nil
 	}
 
 	_, ok := invalidLiteralChars[value[1]]
@@ -277,7 +566,7 @@ func parseChar(tok *rawTokenizer, lval *qlSymType) (int, error) {
 
 	tok.consumeN(3)
 	lval.Token = &Token{
-		Type: CHARACTER,
+		Type: CHAR,
 		Location: Location{
 			Filename: tok.filename,
 			Start:    start,
@@ -286,7 +575,7 @@ func parseChar(tok *rawTokenizer, lval *qlSymType) (int, error) {
 		Value: string(value),
 	}
 
-	return CHARACTER, nil
+	return CHAR, nil
 }
 
 func parseString(tok *rawTokenizer, lval *qlSymType) (int, error) {
