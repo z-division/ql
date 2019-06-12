@@ -12,6 +12,7 @@ package parser
 }
 
 %token LEX_ERROR
+%token <Token> COMMENT
 %token <Token> L_BRACE R_BRACE L_PAREN R_PAREN L_BRACKET R_BRACKET
 %token <Token> ASSIGN COLON SEMICOLON NEWLINE COMMA DOT STAR_STAR
 
@@ -76,7 +77,7 @@ expr:
     }
     ;
 
-// TODO(patrick): literals / tuples.  maybe list slicing
+// TODO(patrick): tuples.  maybe list slicing
 unit_expr:
     IDENT {
         $$ = &Identifier{

@@ -25,25 +25,25 @@ state 2
 
 	SEMICOLON  shift 7
 	NEWLINE  shift 8
-	.  reduce 1 (src line 46)
+	.  reduce 1 (src line 47)
 
 
 state 3
 	declarations:  declaration.    (2)
 
-	.  reduce 2 (src line 53)
+	.  reduce 2 (src line 54)
 
 
 state 4
 	declaration:  assignment_expr.    (5)
 
-	.  reduce 5 (src line 66)
+	.  reduce 5 (src line 67)
 
 
 state 5
 	declaration:  COMMENT_GROUP.    (6)
 
-	.  reduce 6 (src line 70)
+	.  reduce 6 (src line 71)
 
 
 state 6
@@ -83,13 +83,13 @@ state 9
 state 10
 	declarations:  declarations SEMICOLON declaration.    (3)
 
-	.  reduce 3 (src line 57)
+	.  reduce 3 (src line 58)
 
 
 state 11
 	declarations:  declarations NEWLINE declaration.    (4)
 
-	.  reduce 4 (src line 60)
+	.  reduce 4 (src line 61)
 
 
 state 12
@@ -114,7 +114,7 @@ state 12
 state 13
 	assignment_expr:  LET IDENT ASSIGN expr.    (48)
 
-	.  reduce 48 (src line 412)
+	.  reduce 48 (src line 413)
 
 
 state 14
@@ -156,7 +156,7 @@ state 14
 	MUL  shift 41
 	DIV  shift 42
 	MOD  shift 43
-	.  reduce 7 (src line 74)
+	.  reduce 7 (src line 75)
 
 
 state 15
@@ -166,7 +166,7 @@ state 15
 
 	L_PAREN  shift 45
 	DOT  shift 44
-	.  reduce 17 (src line 132)
+	.  reduce 17 (src line 133)
 
 
 state 16
@@ -208,37 +208,37 @@ state 17
 state 18
 	unit_expr:  IDENT.    (8)
 
-	.  reduce 8 (src line 80)
+	.  reduce 8 (src line 81)
 
 
 state 19
 	unit_expr:  CHAR.    (9)
 
-	.  reduce 9 (src line 87)
+	.  reduce 9 (src line 88)
 
 
 state 20
 	unit_expr:  STRING.    (10)
 
-	.  reduce 10 (src line 93)
+	.  reduce 10 (src line 94)
 
 
 state 21
 	unit_expr:  INT.    (11)
 
-	.  reduce 11 (src line 99)
+	.  reduce 11 (src line 100)
 
 
 state 22
 	unit_expr:  FLOAT.    (12)
 
-	.  reduce 12 (src line 105)
+	.  reduce 12 (src line 106)
 
 
 state 23
 	unit_expr:  expr_block.    (13)
 
-	.  reduce 13 (src line 111)
+	.  reduce 13 (src line 112)
 
 
 state 24
@@ -625,7 +625,7 @@ state 45
 	STRING  shift 20
 	INT  shift 21
 	FLOAT  shift 22
-	.  reduce 44 (src line 398)
+	.  reduce 44 (src line 399)
 
 	unit_expr  goto 15
 	composable_expr  goto 74
@@ -654,7 +654,7 @@ state 46
 	composable_expr:  composable_expr.MOD composable_expr 
 	composable_expr:  SUB composable_expr.    (36)
 
-	.  reduce 36 (src line 352)
+	.  reduce 36 (src line 353)
 
 
 state 47
@@ -694,7 +694,7 @@ state 47
 	MUL  shift 41
 	DIV  shift 42
 	MOD  shift 43
-	.  reduce 37 (src line 363)
+	.  reduce 37 (src line 364)
 
 
 state 48
@@ -754,19 +754,19 @@ state 50
 
 	SEMICOLON  shift 77
 	NEWLINE  shift 78
-	.  reduce 39 (src line 382)
+	.  reduce 39 (src line 383)
 
 
 state 51
 	expr_or_comment:  expr.    (42)
 
-	.  reduce 42 (src line 391)
+	.  reduce 42 (src line 392)
 
 
 state 52
 	expr_or_comment:  COMMENT_GROUP.    (43)
 
-	.  reduce 43 (src line 394)
+	.  reduce 43 (src line 395)
 
 
 state 53
@@ -807,7 +807,7 @@ state 53
 	MUL  shift 41
 	DIV  shift 42
 	MOD  shift 43
-	.  reduce 18 (src line 136)
+	.  reduce 18 (src line 137)
 
 
 state 54
@@ -847,7 +847,7 @@ state 54
 	MUL  shift 41
 	DIV  shift 42
 	MOD  shift 43
-	.  reduce 19 (src line 148)
+	.  reduce 19 (src line 149)
 
 
 state 55
@@ -881,7 +881,7 @@ state 55
 	MUL  shift 41
 	DIV  shift 42
 	MOD  shift 43
-	.  reduce 20 (src line 160)
+	.  reduce 20 (src line 161)
 
 
 state 56
@@ -915,7 +915,7 @@ state 56
 	MUL  shift 41
 	DIV  shift 42
 	MOD  shift 43
-	.  reduce 21 (src line 172)
+	.  reduce 21 (src line 173)
 
 
 state 57
@@ -949,7 +949,7 @@ state 57
 	MUL  shift 41
 	DIV  shift 42
 	MOD  shift 43
-	.  reduce 22 (src line 184)
+	.  reduce 22 (src line 185)
 
 
 state 58
@@ -983,7 +983,7 @@ state 58
 	MUL  shift 41
 	DIV  shift 42
 	MOD  shift 43
-	.  reduce 23 (src line 196)
+	.  reduce 23 (src line 197)
 
 
 state 59
@@ -1017,7 +1017,7 @@ state 59
 	MUL  shift 41
 	DIV  shift 42
 	MOD  shift 43
-	.  reduce 24 (src line 208)
+	.  reduce 24 (src line 209)
 
 
 state 60
@@ -1051,7 +1051,7 @@ state 60
 	MUL  shift 41
 	DIV  shift 42
 	MOD  shift 43
-	.  reduce 25 (src line 220)
+	.  reduce 25 (src line 221)
 
 
 state 61
@@ -1084,7 +1084,7 @@ state 61
 	MUL  shift 41
 	DIV  shift 42
 	MOD  shift 43
-	.  reduce 26 (src line 232)
+	.  reduce 26 (src line 233)
 
 
 state 62
@@ -1116,7 +1116,7 @@ state 62
 	MUL  shift 41
 	DIV  shift 42
 	MOD  shift 43
-	.  reduce 27 (src line 244)
+	.  reduce 27 (src line 245)
 
 
 state 63
@@ -1147,7 +1147,7 @@ state 63
 	MUL  shift 41
 	DIV  shift 42
 	MOD  shift 43
-	.  reduce 28 (src line 256)
+	.  reduce 28 (src line 257)
 
 
 state 64
@@ -1176,7 +1176,7 @@ state 64
 	MUL  shift 41
 	DIV  shift 42
 	MOD  shift 43
-	.  reduce 29 (src line 268)
+	.  reduce 29 (src line 269)
 
 
 state 65
@@ -1205,7 +1205,7 @@ state 65
 	MUL  shift 41
 	DIV  shift 42
 	MOD  shift 43
-	.  reduce 30 (src line 280)
+	.  reduce 30 (src line 281)
 
 
 state 66
@@ -1232,7 +1232,7 @@ state 66
 	MUL  shift 41
 	DIV  shift 42
 	MOD  shift 43
-	.  reduce 31 (src line 292)
+	.  reduce 31 (src line 293)
 
 
 state 67
@@ -1259,7 +1259,7 @@ state 67
 	MUL  shift 41
 	DIV  shift 42
 	MOD  shift 43
-	.  reduce 32 (src line 304)
+	.  reduce 32 (src line 305)
 
 
 state 68
@@ -1283,7 +1283,7 @@ state 68
 	composable_expr:  composable_expr.DIV composable_expr 
 	composable_expr:  composable_expr.MOD composable_expr 
 
-	.  reduce 33 (src line 316)
+	.  reduce 33 (src line 317)
 
 
 state 69
@@ -1307,7 +1307,7 @@ state 69
 	composable_expr:  composable_expr DIV composable_expr.    (34)
 	composable_expr:  composable_expr.MOD composable_expr 
 
-	.  reduce 34 (src line 328)
+	.  reduce 34 (src line 329)
 
 
 state 70
@@ -1331,13 +1331,13 @@ state 70
 	composable_expr:  composable_expr.MOD composable_expr 
 	composable_expr:  composable_expr MOD composable_expr.    (35)
 
-	.  reduce 35 (src line 340)
+	.  reduce 35 (src line 341)
 
 
 state 71
 	unit_expr:  unit_expr DOT IDENT.    (14)
 
-	.  reduce 14 (src line 113)
+	.  reduce 14 (src line 114)
 
 
 state 72
@@ -1352,7 +1352,7 @@ state 73
 	nonempty_argument_list:  nonempty_argument_list.COMMA composable_expr 
 
 	COMMA  shift 80
-	.  reduce 45 (src line 401)
+	.  reduce 45 (src line 402)
 
 
 state 74
@@ -1394,19 +1394,19 @@ state 74
 	MUL  shift 41
 	DIV  shift 42
 	MOD  shift 43
-	.  reduce 46 (src line 405)
+	.  reduce 46 (src line 406)
 
 
 state 75
 	unit_expr:  L_PAREN composable_expr R_PAREN.    (16)
 
-	.  reduce 16 (src line 127)
+	.  reduce 16 (src line 128)
 
 
 state 76
 	expr_block:  L_BRACE expr_or_comment_list R_BRACE.    (38)
 
-	.  reduce 38 (src line 376)
+	.  reduce 38 (src line 377)
 
 
 state 77
@@ -1456,7 +1456,7 @@ state 78
 state 79
 	unit_expr:  unit_expr L_PAREN argument_list R_PAREN.    (15)
 
-	.  reduce 15 (src line 125)
+	.  reduce 15 (src line 126)
 
 
 state 80
@@ -1480,13 +1480,13 @@ state 80
 state 81
 	expr_or_comment_list:  expr_or_comment SEMICOLON expr_or_comment_list.    (40)
 
-	.  reduce 40 (src line 385)
+	.  reduce 40 (src line 386)
 
 
 state 82
 	expr_or_comment_list:  expr_or_comment NEWLINE expr_or_comment_list.    (41)
 
-	.  reduce 41 (src line 387)
+	.  reduce 41 (src line 388)
 
 
 state 83
@@ -1528,10 +1528,10 @@ state 83
 	MUL  shift 41
 	DIV  shift 42
 	MOD  shift 43
-	.  reduce 47 (src line 408)
+	.  reduce 47 (src line 409)
 
 
-44 terminals, 13 nonterminals
+45 terminals, 13 nonterminals
 49 grammar rules, 84/8000 states
 0 shift/reduce, 0 reduce/reduce conflicts reported
 62 working sets used
@@ -1542,4 +1542,4 @@ memory: parser 134/120000
 61 entries saved by goto default
 Optimizer space used: output 214/120000
 214 table entries, 29 zero
-maximum spread: 44, maximum offset: 80
+maximum spread: 45, maximum offset: 80
