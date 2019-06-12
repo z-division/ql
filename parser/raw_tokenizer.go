@@ -128,37 +128,6 @@ var (
 	keywords = map[string]int{
 		"let": LET,
 	}
-
-	// tokens that can be determined by a single char look ahead
-	singleCharTokens = map[byte]int{
-		';':  SEMICOLON,
-		'\n': NEWLINE,
-		',':  COMMA,
-		'/':  DIV, // don't have to worry about comments
-		'%':  MOD,
-
-		// TODO(patrick): deal with ambiguous symbols
-		// '=':  // = vs ==
-		// '<': // < vs <= vs <<
-		// '>': // > vs >= vs >>
-		// '&': // & vs &&
-		// '|': // | vs ||
-		// '!': // ! vs !=
-		// '.': DOT vs float
-		// '-': SUB vs number literal
-		// '+': ADD vs number literal
-		// '*': MUL vs STAR STAR ?
-		'=': ASSIGN,
-		'<': LT,
-		'>': GT,
-		'&': AND,
-		'|': OR,
-		'!': NOT,
-		'.': DOT,
-		'-': SUB,
-		'+': ADD,
-		'*': MUL,
-	}
 )
 
 func parseIdentifierOrKeyword(tok *rawTokenizer, lval *qlSymType) (int, error) {
@@ -432,74 +401,6 @@ func (tok *rawTokenizer) stripMeaninglessWhitespaces() error {
 			return nil
 		}
 	}
-}
-
-// Identifiers (/ keywords) are of the form [_a-zA-Z][_a-zA-Z0-9]*
-func (tok *rawTokenizer) parseIdentifier(lval *qlSymType) (int, error) {
-	var value []byte
-
-	start := tok.Position
-	for {
-		char, err := tok.peek()
-		if err != nil {
-			if err == io.EOF {
-				break
-			}
-			return LEX_ERROR, err
-		}
-
-		if !(('a' <= char && char <= 'z') ||
-			('A' <= char && char <= 'Z') ||
-			'_' == char) {
-
-			break
-		}
-
-		value = append(value, char)
-		tok.consume()
-	}
-
-	if len(value) == 0 {
-		// Not an identifier
-		return 0, nil
-	}
-
-	lval.Token = &Token{
-		Location: Location{
-			Filename: tok.filename,
-			Start:    start,
-			End:      tok.Position,
-		},
-		Value: string(value),
-	}
-
-	return IDENTIFIER, nil
-}
-
-func (tok *rawTokenizer) parseSingleCharToken(lval *qlSymType) (int, error) {
-	char, err := tok.peek()
-	if err != nil {
-		return LEX_ERROR, err
-	}
-
-	token, ok := singleCharTokens[char]
-	if !ok {
-		return 0, nil
-	}
-
-	start := tok.Position
-
-	lval.Token = &Token{
-		Location: Location{
-			Filename: tok.filename,
-			Start:    start,
-			End:      tok.Position,
-		},
-		Value: string(char),
-	}
-
-	tok.consume()
-	return token, nil
 }
 
 func (tok *rawTokenizer) parseNextToken(lval *qlSymType) (int, error) {

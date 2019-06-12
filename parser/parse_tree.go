@@ -103,8 +103,8 @@ func (pos Position) String() string {
 
 type Location struct {
 	Filename string
-	Start    Position
-	End      Position
+	Start    Position // inclusive
+	End      Position // exclusive
 }
 
 func (loc Location) Loc() Location {
