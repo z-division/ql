@@ -126,6 +126,16 @@ unit_expr:
     | unit_expr L_PAREN argument_list R_PAREN {
     }
     | L_PAREN composable_expr R_PAREN {
+        $$ = &EvalOrderExpr{
+            Location: Location{
+                Filename: $1.Loc().Filename,
+                Start: $1.Loc().Start,
+                End: $3.Loc().End,
+            },
+            LParen: $1,
+            Expression: $2,
+            RParen: $3,
+        }
     }
     ;
 

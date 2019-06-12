@@ -1,5 +1,5 @@
 let /* block comment */ x
-    = a.b.c * 0 + 0xDeadBeef / - 01234567 * 123 *
+    = a.b.c * (0 + 0xDeadBeef) / - 01234567 * 123 *
         17. /*
                 /* scoped block */ comment
 
