@@ -29,7 +29,7 @@ package parser
 %left <Token> MUL DIV MOD
 %right UNARY
 
-%token <Token> IDENTIFIER CHARACTER
+%token <Token> IDENTIFIER CHARACTER STRING
 
 // comments that are not directly next to any real tokens
 %token <Token> COMMENT_GROUP
@@ -85,6 +85,12 @@ unit_expr:
         }
     }
     | CHARACTER {
+        $$ = &Literal{
+            Location: $1.Location,
+            Value: $1,
+        }
+    }
+    | STRING {
         $$ = &Literal{
             Location: $1.Location,
             Value: $1,
@@ -218,6 +224,18 @@ composable_expr:
         }
     }
     | composable_expr BITWISE_AND composable_expr {
+        $$ = &BinaryExpr{
+            Location: Location{
+                Filename: $1.Loc().Filename,
+                Start: $1.Loc().Start,
+                End: $3.Loc().End,
+            },
+            Left: $1,
+            Op: $2,
+            Right: $3,
+        }
+    }
+    | composable_expr XOR composable_expr {
         $$ = &BinaryExpr{
             Location: Location{
                 Filename: $1.Loc().Filename,
