@@ -161,20 +161,22 @@ type Identifier struct {
 	Location
 	expr
 
-	Value string
-}
-
-func (id *Identifier) prettyFormat(prefix string, indent int) string {
-	return fmt.Sprintf(
-		"%s%s[Identifier %s (%v)]",
-		formatIdent(indent),
-		prefix,
-		id.Value,
-		id.Location)
+	Value *Token
 }
 
 func (id *Identifier) String() string {
 	return prettyFormatNode("", id, 0)
+}
+
+type Literal struct {
+	Location
+	expr
+
+	Value *Token
+}
+
+func (literal *Literal) String() string {
+	return prettyFormatNode("", literal, 0)
 }
 
 type UnaryExpr struct {

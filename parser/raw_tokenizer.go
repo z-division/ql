@@ -128,6 +128,16 @@ var (
 	keywords = map[string]int{
 		"let": LET,
 	}
+
+	// NOTE(patrick): This is a subset of the standard C escape sequence.
+	// https://en.wikipedia.org/wiki/Escape_sequences_in_C
+	validEscapeChars = map[byte]struct{}{
+		'n':  struct{}{}, // \n
+		't':  struct{}{}, // \t
+		'\\': struct{}{}, // \\
+		'\'': struct{}{}, // \'
+		'"':  struct{}{}, // \"
+	}
 )
 
 func parseIdentifierOrKeyword(tok *rawTokenizer, lval *qlSymType) (int, error) {
@@ -197,10 +207,74 @@ func parseDot(tok *rawTokenizer, lval *qlSymType) (int, error) {
 }
 
 func parseChar(tok *rawTokenizer, lval *qlSymType) (int, error) {
-	return LEX_ERROR, fmt.Errorf(
-		"%s:%v: TODO(patrick): implement char parser",
-		filepath.Base(tok.filename),
-		tok.Position)
+	value, err := tok.peekN(3)
+	if err != nil || value[0] != '\'' {
+		return LEX_ERROR, fmt.Errorf(
+			"%s:%v: invalid char literal",
+			filepath.Base(tok.filename),
+			tok.Position)
+	}
+
+	// '' is invalid
+	if value[1] == '\'' {
+		return LEX_ERROR, fmt.Errorf(
+			"%s:%v: invalid char literal",
+			filepath.Base(tok.filename),
+			tok.Position)
+	}
+
+	start := tok.Position
+
+	if value[1] == '\\' {
+		_, ok := validEscapeChars[value[2]]
+		if !ok {
+			return LEX_ERROR, fmt.Errorf(
+				"%s:%v: invalid escaped character",
+				filepath.Base(tok.filename),
+				tok.Position)
+		}
+
+		value, err = tok.peekN(4)
+		if err != nil || value[3] != '\'' {
+			return LEX_ERROR, fmt.Errorf(
+				"%s:%v: invalid char literal",
+				filepath.Base(tok.filename),
+				tok.Position)
+		}
+
+		tok.consumeN(4)
+		lval.Token = &Token{
+			Type: CHARACTER,
+			Location: Location{
+				Filename: tok.filename,
+				Start:    start,
+				End:      tok.Position,
+			},
+			Value: string(value[1:3]),
+		}
+
+		return CHARACTER, nil
+	}
+
+	if value[2] != '\'' {
+		return LEX_ERROR, fmt.Errorf(
+			"%s:%v: invalid char literal",
+			filepath.Base(tok.filename),
+			tok.Position)
+	}
+
+	tok.consumeN(3)
+	lval.Token = &Token{
+		Type: CHARACTER,
+		Location: Location{
+			Filename: tok.filename,
+			Start:    start,
+			End:      tok.Position,
+		},
+		Value: string(value[1:2]),
+	}
+
+	return CHARACTER, nil
 }
 
 func parseString(tok *rawTokenizer, lval *qlSymType) (int, error) {

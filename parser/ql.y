@@ -29,7 +29,7 @@ package parser
 %left <Token> MUL DIV MOD
 %right UNARY
 
-%token <Token> IDENTIFIER
+%token <Token> IDENTIFIER CHARACTER
 
 // comments that are not directly next to any real tokens
 %token <Token> COMMENT_GROUP
@@ -79,9 +79,15 @@ expr:
 // TODO(patrick): literals / tuples.  maybe list slicing
 unit_expr:
     IDENTIFIER {
-        $$ = &Identifier {
+        $$ = &Identifier{
             Location: $1.Location,
-            Value: $1.Value,
+            Value: $1,
+        }
+    }
+    | CHARACTER {
+        $$ = &Literal{
+            Location: $1.Location,
+            Value: $1,
         }
     }
     | expr_block {

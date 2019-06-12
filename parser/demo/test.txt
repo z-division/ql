@@ -1,1 +1,1 @@
-let x = a * y + z * k > blah && bar == rab
+let x = a * y + z * k > blah && bar == 'a' || _ != '\t'
