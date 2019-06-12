@@ -1,1 +1,1 @@
-let x = a * y + z * k > blah && bar == 'a' || _ != '\t' ^ "blah blah" | "" & "\n\"'" - "abc\tdef"
+let x = a.b.c * 0 + 0xDeadBeef + - 01234567 * 123 * 17. + .3 + 47.213 * .1e5 + .2E-7 + 3e+9 + 5.7e12 - z * k > blah && bar == 'a' || _ != '\t' ^ "blah blah" | "" & "\n\"'" - "abc\tdef"
