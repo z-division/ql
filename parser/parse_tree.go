@@ -22,6 +22,10 @@ func getTokenName(token int) string {
 	return fmt.Sprintf("UNKNOWN(%d)", token)
 }
 
+type Tokenizer interface {
+	NextToken() (*Token, error)
+}
+
 type customFormatter interface {
 	prettyFormat(prefix string, indent int) string
 }
