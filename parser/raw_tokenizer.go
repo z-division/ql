@@ -962,7 +962,7 @@ func (tok *rawTokenizer) consume() {
 	tok.consumeN(1)
 }
 
-func (tok *rawTokenizer) NextToken() (*Token, error) {
+func (tok *rawTokenizer) Next() (*Token, error) {
 	token, err := tok.parseNextToken()
 	if err != nil {
 		return nil, err

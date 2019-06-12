@@ -5,6 +5,10 @@ import (
 	"io"
 )
 
+type Tokenizer interface {
+	Next() (*Token, error)
+}
+
 type parseContext struct {
 	filename string
 	Tokenizer
@@ -23,7 +27,7 @@ func (ctx *parseContext) setParsed(parsed []Node) {
 
 // TODO(patrick): implement
 func (ctx *parseContext) Lex(lval *qlSymType) int {
-	token, err := ctx.NextToken()
+	token, err := ctx.Next()
 	if err != nil {
 		if err == io.EOF {
 			return 0
