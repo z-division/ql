@@ -114,7 +114,7 @@ const qlEofCode = 1
 const qlErrCode = 2
 const qlInitialStackSize = 16
 
-//line ql.y:429
+//line ql.y:439
 
 //line yacctab:1
 var qlExca = [...]int{
@@ -676,16 +676,26 @@ qldefault:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
 //line ql.y:128
 		{
+			qlVAL.Expr = &EvalOrderExpr{
+				Location: Location{
+					Filename: qlDollar[1].Token.Loc().Filename,
+					Start:    qlDollar[1].Token.Loc().Start,
+					End:      qlDollar[3].Token.Loc().End,
+				},
+				LParen:     qlDollar[1].Token,
+				Expression: qlDollar[2].Expr,
+				RParen:     qlDollar[3].Token,
+			}
 		}
 	case 17:
 		qlDollar = qlS[qlpt-1 : qlpt+1]
-//line ql.y:134
+//line ql.y:144
 		{
 			qlVAL.Expr = qlDollar[1].Expr
 		}
 	case 18:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:137
+//line ql.y:147
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: Location{
@@ -700,7 +710,7 @@ qldefault:
 		}
 	case 19:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:149
+//line ql.y:159
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: Location{
@@ -715,7 +725,7 @@ qldefault:
 		}
 	case 20:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:161
+//line ql.y:171
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: Location{
@@ -730,7 +740,7 @@ qldefault:
 		}
 	case 21:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:173
+//line ql.y:183
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: Location{
@@ -745,7 +755,7 @@ qldefault:
 		}
 	case 22:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:185
+//line ql.y:195
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: Location{
@@ -760,7 +770,7 @@ qldefault:
 		}
 	case 23:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:197
+//line ql.y:207
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: Location{
@@ -775,7 +785,7 @@ qldefault:
 		}
 	case 24:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:209
+//line ql.y:219
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: Location{
@@ -790,7 +800,7 @@ qldefault:
 		}
 	case 25:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:221
+//line ql.y:231
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: Location{
@@ -805,7 +815,7 @@ qldefault:
 		}
 	case 26:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:233
+//line ql.y:243
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: Location{
@@ -820,7 +830,7 @@ qldefault:
 		}
 	case 27:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:245
+//line ql.y:255
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: Location{
@@ -835,7 +845,7 @@ qldefault:
 		}
 	case 28:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:257
+//line ql.y:267
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: Location{
@@ -850,7 +860,7 @@ qldefault:
 		}
 	case 29:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:269
+//line ql.y:279
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: Location{
@@ -865,7 +875,7 @@ qldefault:
 		}
 	case 30:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:281
+//line ql.y:291
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: Location{
@@ -880,7 +890,7 @@ qldefault:
 		}
 	case 31:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:293
+//line ql.y:303
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: Location{
@@ -895,7 +905,7 @@ qldefault:
 		}
 	case 32:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:305
+//line ql.y:315
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: Location{
@@ -910,7 +920,7 @@ qldefault:
 		}
 	case 33:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:317
+//line ql.y:327
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: Location{
@@ -925,7 +935,7 @@ qldefault:
 		}
 	case 34:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:329
+//line ql.y:339
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: Location{
@@ -940,7 +950,7 @@ qldefault:
 		}
 	case 35:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:341
+//line ql.y:351
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: Location{
@@ -955,7 +965,7 @@ qldefault:
 		}
 	case 36:
 		qlDollar = qlS[qlpt-2 : qlpt+1]
-//line ql.y:353
+//line ql.y:363
 		{
 			qlVAL.Expr = &UnaryExpr{
 				Location: Location{
@@ -969,7 +979,7 @@ qldefault:
 		}
 	case 37:
 		qlDollar = qlS[qlpt-2 : qlpt+1]
-//line ql.y:364
+//line ql.y:374
 		{
 			qlVAL.Expr = &UnaryExpr{
 				Location: Location{
@@ -983,57 +993,57 @@ qldefault:
 		}
 	case 38:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:378
+//line ql.y:388
 		{
 		}
 	case 39:
 		qlDollar = qlS[qlpt-1 : qlpt+1]
-//line ql.y:384
+//line ql.y:394
 		{
 		}
 	case 40:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:386
+//line ql.y:396
 		{
 		}
 	case 41:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:388
+//line ql.y:398
 		{
 		}
 	case 42:
 		qlDollar = qlS[qlpt-1 : qlpt+1]
-//line ql.y:393
+//line ql.y:403
 		{
 		}
 	case 43:
 		qlDollar = qlS[qlpt-1 : qlpt+1]
-//line ql.y:395
+//line ql.y:405
 		{
 		}
 	case 44:
 		qlDollar = qlS[qlpt-0 : qlpt+1]
-//line ql.y:400
+//line ql.y:410
 		{ // empty
 		}
 	case 45:
 		qlDollar = qlS[qlpt-1 : qlpt+1]
-//line ql.y:402
+//line ql.y:412
 		{
 		}
 	case 46:
 		qlDollar = qlS[qlpt-1 : qlpt+1]
-//line ql.y:407
+//line ql.y:417
 		{
 		}
 	case 47:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:409
+//line ql.y:419
 		{
 		}
 	case 48:
 		qlDollar = qlS[qlpt-4 : qlpt+1]
-//line ql.y:414
+//line ql.y:424
 		{
 			qlVAL.AssignExpr = &AssignExpr{
 				Location: Location{

@@ -157,6 +157,7 @@ type expr struct{}
 
 func (expr) isExpr() {}
 
+// <value>
 type Identifier struct {
 	Location
 	expr
@@ -168,6 +169,7 @@ func (id *Identifier) String() string {
 	return prettyFormatNode("", id, 0)
 }
 
+// <value>
 type Literal struct {
 	Location
 	expr
@@ -179,6 +181,7 @@ func (literal *Literal) String() string {
 	return prettyFormatNode("", literal, 0)
 }
 
+// <op> <expression>
 type UnaryExpr struct {
 	Location
 	expr
@@ -191,6 +194,7 @@ func (unary *UnaryExpr) String() string {
 	return prettyFormatNode("", unary, 0)
 }
 
+// <left> <op> <right>
 type BinaryExpr struct {
 	Location
 	expr
@@ -204,6 +208,7 @@ func (binary *BinaryExpr) String() string {
 	return prettyFormatNode("", binary, 0)
 }
 
+// <primary expr> . <name>
 type Accessor struct {
 	Location
 	expr
@@ -217,6 +222,21 @@ func (accessor *Accessor) String() string {
 	return prettyFormatNode("", accessor, 0)
 }
 
+// ( <expression> )
+type EvalOrderExpr struct {
+	Location
+	expr
+
+	LParen     *Token
+	Expression Expr
+	RParen     *Token
+}
+
+func (evalOrder *EvalOrderExpr) String() string {
+	return prettyFormatNode("", evalOrder, 0)
+}
+
+// let <name> = <expr>
 type AssignExpr struct {
 	Location
 	expr
