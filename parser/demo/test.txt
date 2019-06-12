@@ -1,1 +1,1 @@
-let x = a * y + z * k > blah && bar == 'a' || _ != '\t'
+let x = a * y + z * k > blah && bar == 'a' || _ != '\t' ^ "blah blah" | "" & "\n\"'" - "abc\tdef"

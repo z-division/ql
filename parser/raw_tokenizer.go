@@ -138,6 +138,17 @@ var (
 		'\'': struct{}{}, // \'
 		'"':  struct{}{}, // \"
 	}
+
+	// TODO(patrick): perform stricter check.
+	invalidLiteralChars = map[byte]struct{}{
+		'\a': struct{}{},
+		'\b': struct{}{},
+		'\f': struct{}{},
+		'\n': struct{}{},
+		'\r': struct{}{},
+		'\t': struct{}{},
+		'\v': struct{}{},
+	}
 )
 
 func parseIdentifierOrKeyword(tok *rawTokenizer, lval *qlSymType) (int, error) {
@@ -250,13 +261,14 @@ func parseChar(tok *rawTokenizer, lval *qlSymType) (int, error) {
 				Start:    start,
 				End:      tok.Position,
 			},
-			Value: string(value[1:3]),
+			Value: string(value),
 		}
 
 		return CHARACTER, nil
 	}
 
-	if value[2] != '\'' {
+	_, ok := invalidLiteralChars[value[1]]
+	if ok || value[2] != '\'' {
 		return LEX_ERROR, fmt.Errorf(
 			"%s:%v: invalid char literal",
 			filepath.Base(tok.filename),
@@ -271,17 +283,92 @@ func parseChar(tok *rawTokenizer, lval *qlSymType) (int, error) {
 			Start:    start,
 			End:      tok.Position,
 		},
-		Value: string(value[1:2]),
+		Value: string(value),
 	}
 
 	return CHARACTER, nil
 }
 
 func parseString(tok *rawTokenizer, lval *qlSymType) (int, error) {
-	return LEX_ERROR, fmt.Errorf(
-		"%s:%v: TODO(patrick): implement string parser",
-		filepath.Base(tok.filename),
-		tok.Position)
+	start := tok.Position
+
+	char, err := tok.peek()
+	if err != nil {
+		if err == io.EOF {
+			return LEX_ERROR, fmt.Errorf(
+				"%s:%v: invalid string literal",
+				filepath.Base(tok.filename),
+				tok.Position)
+		}
+		return LEX_ERROR, err
+	}
+
+	if char != '"' {
+		return LEX_ERROR, fmt.Errorf(
+			"%s:%v: invalid string literal",
+			filepath.Base(tok.filename),
+			tok.Position)
+	}
+
+	tok.consume()
+
+	value := []byte{'"'}
+	escaped := false
+	for {
+		char, err = tok.peek()
+		if err != nil {
+			if err == io.EOF {
+				return LEX_ERROR, fmt.Errorf(
+					"%s:%v: invalid string literal",
+					filepath.Base(tok.filename),
+					tok.Position)
+			}
+
+			return LEX_ERROR, err
+		}
+
+		_, ok := invalidLiteralChars[char]
+		if ok {
+			return LEX_ERROR, fmt.Errorf(
+				"%s:%v: invalid string literal",
+				filepath.Base(tok.filename),
+				tok.Position)
+		}
+
+		end := false
+		if escaped {
+			_, ok := validEscapeChars[char]
+			if !ok {
+				return LEX_ERROR, fmt.Errorf(
+					"%s:%v: invalid escaped character",
+					filepath.Base(tok.filename),
+					tok.Position)
+			}
+
+			escaped = false
+		} else if char == '"' {
+			end = true
+		} else if char == '\\' {
+			escaped = true
+		}
+
+		value = append(value, char)
+		tok.consume()
+
+		if end {
+			lval.Token = &Token{
+				Type: STRING,
+				Location: Location{
+					Filename: tok.filename,
+					Start:    start,
+					End:      tok.Position,
+				},
+				Value: string(value),
+			}
+
+			return STRING, nil
+		}
+	}
 }
 
 func parseSlash(tok *rawTokenizer, lval *qlSymType) (int, error) {
