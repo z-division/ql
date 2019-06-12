@@ -1,1 +1,1 @@
-let x = a * y + z * k > blah
+let x = a * y + z * k > blah && bar == rab
