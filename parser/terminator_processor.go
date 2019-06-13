@@ -20,15 +20,22 @@ var (
 	// token
 	leadingTerminatorSensitive = map[int]struct{}{
 		LET:     struct{}{},
+		IF:      struct{}{},
+		RETURN:  struct{}{},
 		L_PAREN: struct{}{}, // invocation vs expression grouping
+		L_BRACE: struct{}{},
 	}
 
 	// Tokens that are sensitive to terminators on the trailing side of the
 	// token
-	trailingTerminatorSensitive = map[int]struct{}{}
+	trailingTerminatorSensitive = map[int]struct{}{
+		R_BRACE: struct{}{},
+	}
 
 	// Tokens that are implicitly lead by a terminator
-	implicitLeadingTerminator = map[int]struct{}{}
+	implicitLeadingTerminator = map[int]struct{}{
+		R_BRACE: struct{}{},
+	}
 
 	// Tokens that are implicitly trail by a terminator
 	implicitTrailingTerminator = map[int]struct{}{

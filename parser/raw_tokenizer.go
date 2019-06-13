@@ -102,7 +102,8 @@ var (
 
 		'+': parseSymbol(map[string]int{"+": ADD}),
 		'-': parseSymbol(map[string]int{"-": SUB}),
-		'*': parseSymbol(map[string]int{"*": MUL, "**": STAR_STAR}),
+		'*': parseSymbol(
+			map[string]int{"*": MUL, "**": STAR_STAR, "*/": BLOCK_COMMENT_END}),
 		'%': parseSymbol(map[string]int{"%": MOD}),
 
 		',': parseSymbol(map[string]int{",": COMMA}),
@@ -126,9 +127,12 @@ var (
 
 	// keywords are case insensitive
 	keywords = map[string]int{
-		"let":   LET,
-		"true":  BOOL,
-		"false": BOOL,
+		"let":    LET,
+		"true":   BOOL,
+		"false":  BOOL,
+		"if":     IF,
+		"else":   ELSE,
+		"return": RETURN,
 	}
 
 	// NOTE(patrick): This is a subset of the standard C escape sequence.

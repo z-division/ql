@@ -1,0 +1,44 @@
+if blah == 5 {return 5}
+
+if i > 5 {
+    return 2
+} else {
+    return 3
+}
+
+if i > 5 {
+    return 2
+} else if i > 10 {
+    return
+        3
+}
+
+let
+x = if i > 5 {
+    let z = 2
+    return z * 2
+}
+else
+if
+i > 10 {
+    return 3
+} else if i > 15 {
+    return 4
+}
+
+{
+    if blah == 5 {
+        return true
+    } else {
+        return false
+    }
+}
+
+let blah = {
+    let x = 5
+    return x
+}
+
+let boring = {}
+
+// no-op
