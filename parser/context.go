@@ -7,6 +7,10 @@ import (
 
 type Tokenizer interface {
 	Next() (*Token, error)
+
+	Filename() string
+
+	Pos() Position
 }
 
 type parseContext struct {
@@ -55,13 +59,22 @@ func (ctx *parseContext) Error(msg string) {
 	}
 }
 
-func Parse(filename string, reader io.Reader) ([]Node, error) {
+func NewTokenizer(filename string, reader io.Reader) (Tokenizer, error) {
 	tokenizer, err := NewRawTokenizer(filename, reader)
 	if err != nil {
 		return nil, err
 	}
 
-	tokenizer, err = NewTerminatorProcessor(filename, tokenizer)
+	tokenizer, err = NewCommentProcessor(tokenizer)
+	if err != nil {
+		return nil, err
+	}
+
+	return NewTerminatorProcessor(tokenizer)
+}
+
+func Parse(filename string, reader io.Reader) ([]Node, error) {
+	tokenizer, err := NewTokenizer(filename, reader)
 	if err != nil {
 		return nil, err
 	}

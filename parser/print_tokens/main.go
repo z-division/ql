@@ -16,12 +16,7 @@ func main() {
 		panic(err)
 	}
 
-	tok, err := parser.NewRawTokenizer(os.Args[1], bytes.NewReader(content))
-	if err != nil {
-		panic(err)
-	}
-
-	tok, err = parser.NewTerminatorProcessor(os.Args[1], tok)
+	tok, err := parser.NewTokenizer(os.Args[1], bytes.NewReader(content))
 	if err != nil {
 		panic(err)
 	}
