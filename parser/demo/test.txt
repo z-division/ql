@@ -1,5 +1,21 @@
-let /* block comment */ x
-    = a.b.c * (0 + 0xDeadBeef) / - 01234567 * 123 *
+let
+     /* block comment */
+    x
+=
+    14
+
+let y =
+    a
+    .b.  // end of line comment
+    c
+
+
+let str = "string"; let i = 10;
+let k = blah
+    + 12
+    == 5
+
+let z = a.b.c * (0 + 0xDeadBeef) / - 01234567 * 123 *
         17. /*
                 /* scoped block */ comment
 

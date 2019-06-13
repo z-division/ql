@@ -135,6 +135,15 @@ type Token struct {
 }
 
 func (token *Token) prettyFormat(prefix string, indent int) string {
+	if token.Type == NEWLINE || token.Type == TERMINATOR {
+		return fmt.Sprintf(
+			"%s%s[%s (%v)]",
+			formatIdent(indent),
+			prefix,
+			getTokenName(token.Type),
+			token.Location)
+	}
+
 	return fmt.Sprintf(
 		"%s%s[%s %s (%v)]",
 		formatIdent(indent),
