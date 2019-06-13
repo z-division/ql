@@ -23,12 +23,14 @@ var (
 		IF:      struct{}{},
 		RETURN:  struct{}{},
 		L_PAREN: struct{}{}, // invocation vs expression grouping
-		L_BRACE: struct{}{},
+		L_BRACE: struct{}{}, // expression block needs special parser handling
+		R_BRACE: struct{}{},  // ensures statement terminates
 	}
 
 	// Tokens that are sensitive to terminators on the trailing side of the
 	// token
 	trailingTerminatorSensitive = map[int]struct{}{
+		R_PAREN: struct{}{},
 		R_BRACE: struct{}{},
 	}
 
@@ -43,8 +45,7 @@ var (
 	}
 )
 
-// This tokenizer drops context insensitive newline tokens, and convert
-// SEMICOLON and context sensitive NEWLINE into TERMINATOR
+// This tokenizer drops context insensitive newline tokens
 type terminatorProcessor struct {
 	Tokenizer
 
@@ -101,6 +102,7 @@ func (proc *terminatorProcessor) maybeFill() error {
 
 		if terminator == nil {
 			terminator = &Token{
+		        Type: NEWLINE,
 				Location: Location{
 					Filename: proc.Filename(),
 					Start:    proc.Pos(),
@@ -109,62 +111,52 @@ func (proc *terminatorProcessor) maybeFill() error {
 			}
 		}
 
-		terminator.Type = TERMINATOR
 		proc.buffered = []*Token{terminator}
 		return nil
 	}
 
 	if nextNonTerminator == nil { // EOF
-		if proc.prevToken.Type == TERMINATOR {
+		if proc.prevToken.Type == NEWLINE ||
+		    proc.prevToken.Type == SEMICOLON {
 			return io.EOF
 		}
 
 		if terminator == nil {
 			terminator = &Token{
+		        Type: NEWLINE,
 				Location: proc.prevToken.Location,
 			}
 			terminator.Start = terminator.End
 		}
 
-		terminator.Type = TERMINATOR
 		proc.buffered = []*Token{terminator}
 		return nil
 	}
 
 	// Always preserve explicit terminator
 	if terminator != nil && terminator.Type == SEMICOLON {
-		terminator.Type = TERMINATOR
 		proc.buffered = []*Token{terminator, nextNonTerminator}
 		return nil
 	}
 
-	if terminator != nil {
-		terminator.Type = TERMINATOR
-	}
-
 	// Insert mandatory implicit terminator
-	requireTerminator := false
+	implicitTerminator := false
 	_, ok := implicitTrailingTerminator[proc.prevToken.Type]
 	if ok {
-		requireTerminator = true
+		implicitTerminator = true
 	}
 
 	_, ok = implicitLeadingTerminator[nextNonTerminator.Type]
 	if ok {
-		requireTerminator = true
+		implicitTerminator = true
 	}
 
-	if requireTerminator {
-		if terminator == nil {
-			terminator = &Token{
-				Type:     TERMINATOR,
-				Location: nextNonTerminator.Location,
-			}
-			terminator.End = terminator.Start
-		}
-
-		proc.buffered = []*Token{terminator, nextNonTerminator}
-		return nil
+	if implicitTerminator && terminator == nil {
+        terminator = &Token{
+            Type: NEWLINE,
+            Location: nextNonTerminator.Location,
+        }
+        terminator.End = terminator.Start
 	}
 
 	// No newline in between prev and next tokens.  Don't insert terminator.

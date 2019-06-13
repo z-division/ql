@@ -208,7 +208,7 @@ func (token *Token) prettyFormat(prefix string, indent int) string {
 		return fmt.Sprintf("%s%s<nil>", formatIdent(indent), prefix)
 	}
 
-	if token.Type == NEWLINE || token.Type == TERMINATOR {
+	if token.Type == NEWLINE {
 		return fmt.Sprintf(
 			"%s%s[%s (%v)%v]",
 			formatIdent(indent),
