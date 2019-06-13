@@ -28,6 +28,10 @@ let y =
 let k = blah
     + 12
     == 5
+let x = true
+let a = false
+    ||
+    0 < x < 7
 
 let z = a.b.c * (0 + 0xDeadBeef) / - 01234567 * 123 *
         17. /*

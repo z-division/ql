@@ -126,7 +126,9 @@ var (
 
 	// keywords are case insensitive
 	keywords = map[string]int{
-		"let": LET,
+		"let":   LET,
+		"true":  BOOL,
+		"false": BOOL,
 	}
 
 	// NOTE(patrick): This is a subset of the standard C escape sequence.

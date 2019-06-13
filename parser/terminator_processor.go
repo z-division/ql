@@ -12,6 +12,7 @@ var (
 		STRING: struct{}{},
 		INT:    struct{}{},
 		FLOAT:  struct{}{},
+		BOOL:   struct{}{},
 		NOOP:   struct{}{},
 	}
 
