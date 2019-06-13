@@ -25,7 +25,6 @@ func (ctx *parseContext) setParsed(parsed []Node) {
 	ctx.parsed = parsed
 }
 
-// TODO(patrick): implement
 func (ctx *parseContext) Lex(lval *qlSymType) int {
 	token, err := ctx.Next()
 	if err != nil {
@@ -38,12 +37,6 @@ func (ctx *parseContext) Lex(lval *qlSymType) int {
 	}
 
 	ctx.prevToken = token
-
-	// TODO(patrick): remove hack
-	if token.Type == NEWLINE || token.Type == COMMENT {
-		return ctx.Lex(lval)
-	}
-
 	lval.Token = token
 	return token.Type
 }
@@ -64,6 +57,11 @@ func (ctx *parseContext) Error(msg string) {
 
 func Parse(filename string, reader io.Reader) ([]Node, error) {
 	tokenizer, err := NewRawTokenizer(filename, reader)
+	if err != nil {
+		return nil, err
+	}
+
+	tokenizer, err = NewTerminatorProcessor(filename, tokenizer)
 	if err != nil {
 		return nil, err
 	}
