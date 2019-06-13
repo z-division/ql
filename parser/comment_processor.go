@@ -26,9 +26,16 @@ type commentProcessor struct {
 }
 
 func NewCommentProcessor(base Tokenizer) (Tokenizer, error) {
-	return &commentProcessor{
+	proc := &commentProcessor{
 		Tokenizer: base,
-	}, nil
+	}
+
+	err := proc.maybeFill()
+	if err != nil {
+		return nil, err
+	}
+
+	return proc, nil
 }
 
 func (proc *commentProcessor) isTerminal(tok *Token) bool {
@@ -112,29 +119,21 @@ func (proc *commentProcessor) maybeFill() error {
 		return nil
 	}
 
-	// Number of non-terminal / non-comment tokens to fetch
-	lookAheadCount := 1
-	if len(proc.buffered) == 0 {
-		lookAheadCount = 2
-	}
-
 	var lookAhead []*Token
-	for i := 0; i < lookAheadCount; i++ {
-		for {
-			token, err := proc.Tokenizer.Next()
-			if err != nil {
-				if err == io.EOF {
-					break
-				}
-
-				return err
-			}
-
-			lookAhead = append(lookAhead, token)
-
-			if token.Type != COMMENT && !proc.isTerminal(token) {
+	for {
+		token, err := proc.Tokenizer.Next()
+		if err != nil {
+			if err == io.EOF {
 				break
 			}
+
+			return err
+		}
+
+		lookAhead = append(lookAhead, token)
+
+		if token.Type != COMMENT && !proc.isTerminal(token) {
+			break
 		}
 	}
 

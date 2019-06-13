@@ -1,4 +1,5 @@
-let
+ /* hello world */ let // not broken
+
      /* block comment */
     x
 =
