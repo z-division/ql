@@ -24,7 +24,7 @@ var (
 		RETURN:  struct{}{},
 		L_PAREN: struct{}{}, // invocation vs expression grouping
 		L_BRACE: struct{}{}, // expression block needs special parser handling
-		R_BRACE: struct{}{},  // ensures statement terminates
+		R_BRACE: struct{}{}, // ensures statement terminates
 	}
 
 	// Tokens that are sensitive to terminators on the trailing side of the
@@ -102,7 +102,7 @@ func (proc *terminatorProcessor) maybeFill() error {
 
 		if terminator == nil {
 			terminator = &Token{
-		        Type: NEWLINE,
+				Type: NEWLINE,
 				Location: Location{
 					Filename: proc.Filename(),
 					Start:    proc.Pos(),
@@ -117,13 +117,13 @@ func (proc *terminatorProcessor) maybeFill() error {
 
 	if nextNonTerminator == nil { // EOF
 		if proc.prevToken.Type == NEWLINE ||
-		    proc.prevToken.Type == SEMICOLON {
+			proc.prevToken.Type == SEMICOLON {
 			return io.EOF
 		}
 
 		if terminator == nil {
 			terminator = &Token{
-		        Type: NEWLINE,
+				Type:     NEWLINE,
 				Location: proc.prevToken.Location,
 			}
 			terminator.Start = terminator.End
@@ -152,11 +152,11 @@ func (proc *terminatorProcessor) maybeFill() error {
 	}
 
 	if implicitTerminator && terminator == nil {
-        terminator = &Token{
-            Type: NEWLINE,
-            Location: nextNonTerminator.Location,
-        }
-        terminator.End = terminator.Start
+		terminator = &Token{
+			Type:     NEWLINE,
+			Location: nextNonTerminator.Location,
+		}
+		terminator.End = terminator.Start
 	}
 
 	// No newline in between prev and next tokens.  Don't insert terminator.
