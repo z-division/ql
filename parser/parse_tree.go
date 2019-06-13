@@ -13,15 +13,6 @@ const (
 	indentLevel = "  "
 )
 
-func getTokenName(token int) string {
-	diff := token - LEX_ERROR + 3
-	if 0 <= diff && diff < len(qlToknames) {
-		return qlToknames[diff]
-	}
-
-	return fmt.Sprintf("UNKNOWN(%d)", token)
-}
-
 type customFormatter interface {
 	prettyFormat(prefix string, indent int) string
 }
@@ -128,29 +119,92 @@ type Node interface {
 	isNode()
 }
 
+// A list of comment token separated only by at most a single newline
+type CommentGroup []string
+
+// Similar to golang, a comment group g is associated with a non-comment token
+// n if:
+// - g starts on the same line as n ends
+// - g starts on the line immediately following n, and there is at least one
+//   empty line after g and before the next node
+// - g starts before n and is not associated to the node before n via
+//   the previous rules.
+//
+// NOTE: comments are never associated with NEWLINE, nor SEMICOLON
+type Comments struct {
+	Leading  []CommentGroup
+	Trailing CommentGroup
+}
+
+func (comments Comments) prettyFormat(indent int) string {
+	if len(comments.Leading) == 0 && len(comments.Trailing) == 0 {
+		return ""
+	}
+
+	indentStr := formatIdent(indent)
+
+	lines := "\n"
+
+	if len(comments.Leading) > 0 {
+		lines += indentStr + indentLevel + "Leading Comments:\n"
+		for i, group := range comments.Leading {
+			if i > 0 {
+				lines += indentStr + indentLevel + "===\n"
+			}
+
+			for _, comment := range group {
+				lines += indentStr + indentLevel + indentLevel + comment + "\n"
+			}
+		}
+	}
+
+	if len(comments.Trailing) > 0 {
+		lines += indentStr + indentLevel + "Trailing Comment:\n"
+		for _, comment := range comments.Trailing {
+			lines += indentStr + indentLevel + indentLevel + comment + "\n"
+		}
+	}
+
+	lines += indentStr
+	return lines
+}
+
 type Token struct {
 	Type int
 	Location
 	Value string
+
+	Comments
+}
+
+func (token *Token) Name() string {
+	diff := token.Type - LEX_ERROR + 3
+	if 0 <= diff && diff < len(qlToknames) {
+		return qlToknames[diff]
+	}
+
+	return fmt.Sprintf("UNKNOWN(%d)", token.Type)
 }
 
 func (token *Token) prettyFormat(prefix string, indent int) string {
 	if token.Type == NEWLINE || token.Type == TERMINATOR {
 		return fmt.Sprintf(
-			"%s%s[%s (%v)]",
+			"%s%s[%s (%v)%v]",
 			formatIdent(indent),
 			prefix,
-			getTokenName(token.Type),
-			token.Location)
+			token.Name(),
+			token.Location,
+			token.Comments.prettyFormat(indent))
 	}
 
 	return fmt.Sprintf(
-		"%s%s[%s %s (%v)]",
+		"%s%s[%s %s (%v)%v]",
 		formatIdent(indent),
 		prefix,
-		getTokenName(token.Type),
+		token.Name(),
 		token.Value,
-		token.Location)
+		token.Location,
+		token.Comments.prettyFormat(indent))
 }
 
 func (op *Token) String() string {
@@ -165,6 +219,18 @@ type Expr interface {
 type expr struct{}
 
 func (expr) isExpr() {}
+
+// Placeholder for comments at the end of file
+type Noop struct {
+	Location
+	expr
+
+	Value *Token
+}
+
+func (noop *Noop) String() string {
+	return prettyFormatNode("", noop, 0)
+}
 
 // <value>
 type Identifier struct {

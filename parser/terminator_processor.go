@@ -12,12 +12,14 @@ var (
 		STRING: struct{}{},
 		INT:    struct{}{},
 		FLOAT:  struct{}{},
+		NOOP:   struct{}{},
 	}
 
 	// Tokens that are sensitive to terminators on the leading side of the
 	// token
 	leadingTerminatorSensitive = map[int]struct{}{
-		LET: struct{}{},
+		LET:     struct{}{},
+		L_PAREN: struct{}{}, // invocation vs expression grouping
 	}
 
 	// Tokens that are sensitive to terminators on the trailing side of the
@@ -36,20 +38,15 @@ var (
 // This tokenizer drops context insensitive newline tokens, and convert
 // SEMICOLON and context sensitive NEWLINE into TERMINATOR
 type terminatorProcessor struct {
-	filename string
-	base     Tokenizer
+	Tokenizer
 
 	prevToken *Token
 	buffered  []*Token
 }
 
-func NewTerminatorProcessor(
-	filename string,
-	baseTokenizer Tokenizer) (Tokenizer, error) {
-
+func NewTerminatorProcessor(base Tokenizer) (Tokenizer, error) {
 	return &terminatorProcessor{
-		filename: filename,
-		base:     baseTokenizer,
+		Tokenizer: base,
 	}, nil
 }
 
@@ -61,17 +58,12 @@ func (proc *terminatorProcessor) maybeFill() error {
 	var terminator *Token
 	var nextNonTerminator *Token
 	for {
-		token, err := proc.base.Next()
+		token, err := proc.Tokenizer.Next()
 		if err != nil {
 			if err == io.EOF {
 				break
 			}
 			return err
-		}
-
-		// TODO(patrick): remove hack
-		if token.Type == COMMENT {
-			continue
 		}
 
 		if token.Type == NEWLINE {
@@ -102,9 +94,9 @@ func (proc *terminatorProcessor) maybeFill() error {
 		if terminator == nil {
 			terminator = &Token{
 				Location: Location{
-					Filename: proc.filename,
-					Start:    Position{1, 1},
-					End:      Position{1, 1},
+					Filename: proc.Filename(),
+					Start:    proc.Pos(),
+					End:      proc.Pos(),
 				},
 			}
 		}

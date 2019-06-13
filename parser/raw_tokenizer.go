@@ -897,6 +897,14 @@ func NewRawTokenizer(filename string, reader io.Reader) (Tokenizer, error) {
 	}, nil
 }
 
+func (tok *rawTokenizer) Filename() string {
+	return tok.filename
+}
+
+func (tok *rawTokenizer) Pos() Position {
+	return tok.Position
+}
+
 func (tok *rawTokenizer) fillN(n int) error {
 	if n < 1 {
 		panic(fmt.Sprintf("Invalid peek: %d", n))

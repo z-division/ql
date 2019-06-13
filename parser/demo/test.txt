@@ -3,14 +3,27 @@ let
     x
 =
     14
+    // trailing 1
+    // blah
 
+/* leading 1 */
+
+// leading 2
+// multi line comment group
+// abc
+
+// leading 3
 let y =
     a
     .b.  // end of line comment
-    c
+    c  // trailing 2
+       // multi-line
 
 
-let str = "string"; let i = 10;
+/* leading 4 */ let str = "string"; let i = 10;
+// leading 5
+// foo bar
+
 let k = blah
     + 12
     == 5
@@ -23,3 +36,5 @@ let z = a.b.c * (0 + 0xDeadBeef) / - 01234567 * 123 *
         * .1e5 + .2E-7 + 3e+9 + 5.7e12
         - z * k > blah && bar == 'a'  // end of line comment
         || _ != '\t' ^ "blah blah" | "" & "\n\"'" - "abc\tdef"
+
+// end
