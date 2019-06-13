@@ -887,14 +887,21 @@ type rawTokenizer struct {
 }
 
 func NewRawTokenizer(filename string, reader io.Reader) (Tokenizer, error) {
-	return &rawTokenizer{
+	tok := &rawTokenizer{
 		filename: filename,
 		reader:   reader,
 		Position: Position{
 			Column: 1,
 			Line:   1,
 		},
-	}, nil
+	}
+
+	err := tok.stripMeaninglessWhitespaces()
+	if err != nil {
+		return nil, err
+	}
+
+	return tok, nil
 }
 
 func (tok *rawTokenizer) Filename() string {
