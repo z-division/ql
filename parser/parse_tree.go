@@ -64,6 +64,23 @@ func prettyFormatNode(prefix string, node Node, indent int) string {
 				field.Name+" = ",
 				value,
 				indent+1)
+		case []ControlFlowExpr:
+			result += fmt.Sprintf(
+				"\n%s%s%s = [",
+				indentStr,
+				indentLevel,
+				field.Name)
+			if len(value) == 0 {
+				result += "]"
+			} else {
+				for _, expr := range value {
+					result += "\n" + prettyFormatNode(
+						"",
+						expr,
+						indent+2)
+				}
+				result += "\n" + indentStr + indentLevel + "]"
+			}
 		default:
 			result += fmt.Sprintf(
 				"\n%s%s%s = %v",
@@ -187,6 +204,10 @@ func (token *Token) Name() string {
 }
 
 func (token *Token) prettyFormat(prefix string, indent int) string {
+	if token == nil {
+		return fmt.Sprintf("%s%s<nil>", formatIdent(indent), prefix)
+	}
+
 	if token.Type == NEWLINE || token.Type == TERMINATOR {
 		return fmt.Sprintf(
 			"%s%s[%s (%v)%v]",
@@ -220,17 +241,16 @@ type expr struct{}
 
 func (expr) isExpr() {}
 
-// Placeholder for comments at the end of file
-type Noop struct {
-	Location
+type ControlFlowExpr interface {
+	Expr
+	isControlFlowExpr()
+}
+
+type controlFlowExpr struct {
 	expr
-
-	Value *Token
 }
 
-func (noop *Noop) String() string {
-	return prettyFormatNode("", noop, 0)
-}
+func (controlFlowExpr) isControlFlowExpr() {}
 
 // <value>
 type Identifier struct {
@@ -311,10 +331,50 @@ func (evalOrder *EvalOrderExpr) String() string {
 	return prettyFormatNode("", evalOrder, 0)
 }
 
+// Placeholder for comments at the end of file
+type Noop struct {
+	Location
+	controlFlowExpr
+
+	Value *Token
+}
+
+func (noop *Noop) String() string {
+	return prettyFormatNode("", noop, 0)
+}
+
+type ExprBlock struct {
+	Location
+	controlFlowExpr
+
+	LBrace     *Token
+	Statements []ControlFlowExpr
+	RBrace     *Token
+}
+
+func (block *ExprBlock) String() string {
+	return prettyFormatNode("", block, 0)
+}
+
+type ConditionalExpr struct {
+	Location
+	controlFlowExpr
+
+	If          *Token
+	Predicate   Expr
+	TrueClause  ControlFlowExpr
+	Else        *Token
+	FalseClause ControlFlowExpr
+}
+
+func (cond *ConditionalExpr) String() string {
+	return prettyFormatNode("", cond, 0)
+}
+
 // let <name> = <expr>
 type AssignExpr struct {
 	Location
-	expr
+	controlFlowExpr
 
 	Let        *Token
 	Name       *Token
@@ -324,4 +384,17 @@ type AssignExpr struct {
 
 func (assign *AssignExpr) String() string {
 	return prettyFormatNode("", assign, 0)
+}
+
+type ReturnExpr struct {
+	Location
+	controlFlowExpr
+
+	Return     *Token
+	Label      *Token // Optional
+	Expression Expr
+}
+
+func (ret *ReturnExpr) String() string {
+	return prettyFormatNode("", ret, 0)
 }
