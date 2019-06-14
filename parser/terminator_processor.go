@@ -7,13 +7,14 @@ import (
 var (
 	// Tokens that are sensitive to terminators on either side of the token
 	terminatorSensitive = map[int]struct{}{
-		IDENT:  struct{}{},
-		CHAR:   struct{}{},
-		STRING: struct{}{},
-		INT:    struct{}{},
-		FLOAT:  struct{}{},
-		BOOL:   struct{}{},
-		NOOP:   struct{}{},
+		IDENT:   struct{}{},
+		CHAR:    struct{}{},
+		STRING:  struct{}{},
+		INT:     struct{}{},
+		FLOAT:   struct{}{},
+		BOOL:    struct{}{},
+		NOOP:    struct{}{},
+		R_BRACE: struct{}{},
 	}
 
 	// Tokens that are sensitive to terminators on the leading side of the
@@ -23,25 +24,22 @@ var (
 		IF:      struct{}{},
 		RETURN:  struct{}{},
 		L_BRACE: struct{}{}, // expression block needs special parser handling
-		R_BRACE: struct{}{}, // ensures statement terminates
 	}
 
 	// Tokens that are sensitive to terminators on the trailing side of the
 	// token
 	trailingTerminatorSensitive = map[int]struct{}{
 		R_PAREN: struct{}{},
-		R_BRACE: struct{}{},
 	}
 
 	// Tokens that are implicitly lead by a terminator
 	implicitLeadingTerminator = map[int]struct{}{
+		// This ensures the last statement in the block terminates
 		R_BRACE: struct{}{},
 	}
 
 	// Tokens that are implicitly trail by a terminator
-	implicitTrailingTerminator = map[int]struct{}{
-		L_BRACE: struct{}{},
-	}
+	implicitTrailingTerminator = map[int]struct{}{}
 )
 
 // This tokenizer drops context insensitive newline tokens
