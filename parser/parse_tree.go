@@ -73,10 +73,27 @@ func prettyFormatNode(prefix string, node Node, indent int) string {
 			if len(value) == 0 {
 				result += "]"
 			} else {
-				for _, expr := range value {
+				for _, argument := range value {
 					result += "\n" + prettyFormatNode(
 						"",
-						expr,
+						argument,
+						indent+2)
+				}
+				result += "\n" + indentStr + indentLevel + "]"
+			}
+		case []*Argument:
+			result += fmt.Sprintf(
+				"\n%s%s%s = [",
+				indentStr,
+				indentLevel,
+				field.Name)
+			if len(value) == 0 {
+				result += "]"
+			} else {
+				for _, arg := range value {
+					result += "\n" + prettyFormatNode(
+						"",
+						arg,
 						indent+2)
 				}
 				result += "\n" + indentStr + indentLevel + "]"
@@ -323,6 +340,26 @@ type Accessor struct {
 
 func (accessor *Accessor) String() string {
 	return prettyFormatNode("", accessor, 0)
+}
+
+type Argument struct {
+	Location
+	Expression Expr
+	Comma      *Token
+}
+
+type Invocation struct {
+	Location
+	expr
+
+	Expression Expr
+	LParen     *Token
+	Arguments  []*Argument
+	RParen     *Token
+}
+
+func (invoke *Invocation) String() string {
+	return prettyFormatNode("", invoke, 0)
 }
 
 // Placeholder for comments at the end of file

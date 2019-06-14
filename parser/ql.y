@@ -9,6 +9,7 @@ package parser
     Expr
 
     Statements []ControlFlowExpr
+    Arguments []*Argument
 }
 
 //
@@ -63,6 +64,7 @@ package parser
 
 
 %type <Statements> statement_list nonempty_statement_list
+%type <Arguments> argument_list nonempty_argument_list
 
 %type <ControlFlowExpr> statement control_flow_expr
 %type <ControlFlowExpr> expr_block conditional_expr assignment_expr return_expr
@@ -312,28 +314,42 @@ unit_expr:
         }
     }
     | unit_expr L_PAREN argument_list R_PAREN {
-        /* TODO
-        $$ = &Invoke{
+        $$ = &Invocation{
             Location: $1.Loc().Merge($4.Loc()),
+            Expression: $1,
+            LParen: $2,
+            Arguments: $3,
+            RParen: $4,
         }
-        */
     }
     ;
 
 argument_list:
     { // empty
+        $$ = nil
     }
     | nonempty_argument_list {
-        // TODO
+        $$ = $1
     }
     ;
 
 nonempty_argument_list:
     composable_expr {
-        // TODO
+        $$ = []*Argument{
+            &Argument{
+                Location: $1.Loc(),
+                Expression: $1,
+            },
+        }
     }
     | nonempty_argument_list COMMA composable_expr {
-        // TODO
+        $1[len($1)-1].Location = $1[len($1)-1].Location.Merge($2.Loc())
+        $1[len($1)-1].Comma = $2
+        $$ = append($1,
+            &Argument{
+                Location: $3.Loc(),
+                Expression: $3,
+            })
     }
     ;
 
