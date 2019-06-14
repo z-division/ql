@@ -1,3 +1,9 @@
+hello()
+
+hello.world("abc")
+
+{abc}(1, arg, "const")
+
 if blah == 5 {return 5}
 
 let x = {
