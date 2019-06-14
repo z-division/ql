@@ -122,6 +122,14 @@ func (loc Location) Loc() Location {
 func (Location) isNode() {
 }
 
+func (loc1 Location) Merge(loc2 Location) Location {
+	return Location{
+		Filename: loc1.Filename,
+		Start:    loc1.Start,
+		End:      loc2.End,
+	}
+}
+
 func (loc Location) String() string {
 	return fmt.Sprintf(
 		"%s: %v-%v",
