@@ -145,11 +145,7 @@ control_flow_expr:
 expr_block:
     L_BRACE statement_list R_BRACE {
         $$ = &ExprBlock{
-            Location: Location{
-                Filename: $1.Loc().Filename,
-                Start: $1.Loc().Start,
-                End: $3.Loc().End,
-            },
+            Location: $1.Loc().Merge($3.Loc()),
             LBrace: $1,
             Statements: $2,
             RBrace: $3,
@@ -157,11 +153,7 @@ expr_block:
     }
     | IDENT AT L_BRACE statement_list R_BRACE {
         $$ = &ExprBlock{
-            Location: Location{
-                Filename: $1.Loc().Filename,
-                Start: $1.Loc().Start,
-                End: $5.Loc().End,
-            },
+            Location: $1.Loc().Merge($5.Loc()),
             Label: $1,
             At: $2,
             LBrace: $3,
@@ -174,11 +166,7 @@ expr_block:
 conditional_expr:
     IF composable_expr expr_block {
         $$ = &ConditionalExpr{
-            Location: Location{
-                Filename: $1.Loc().Filename,
-                Start: $1.Loc().Start,
-                End: $3.Loc().End,
-            },
+            Location: $1.Loc().Merge($3.Loc()),
             If: $1,
             Predicate: $2,
             TrueClause: $3,
@@ -186,11 +174,7 @@ conditional_expr:
     }
     | IF composable_expr NEWLINE expr_block {
         $$ = &ConditionalExpr{
-            Location: Location{
-                Filename: $1.Loc().Filename,
-                Start: $1.Loc().Start,
-                End: $4.Loc().End,
-            },
+            Location: $1.Loc().Merge($4.Loc()),
             If: $1,
             Predicate: $2,
             TrueClause: $4,
@@ -198,11 +182,7 @@ conditional_expr:
     }
     | IF composable_expr expr_block ELSE conditional_expr {
         $$ = &ConditionalExpr{
-            Location: Location{
-                Filename: $1.Loc().Filename,
-                Start: $1.Loc().Start,
-                End: $5.Loc().End,
-            },
+            Location: $1.Loc().Merge($5.Loc()),
             If: $1,
             Predicate: $2,
             TrueClause: $3,
@@ -212,11 +192,7 @@ conditional_expr:
     }
     | IF composable_expr NEWLINE expr_block ELSE conditional_expr {
         $$ = &ConditionalExpr{
-            Location: Location{
-                Filename: $1.Loc().Filename,
-                Start: $1.Loc().Start,
-                End: $6.Loc().End,
-            },
+            Location: $1.Loc().Merge($6.Loc()),
             If: $1,
             Predicate: $2,
             TrueClause: $4,
@@ -226,11 +202,7 @@ conditional_expr:
     }
     | IF composable_expr expr_block ELSE expr_block {
         $$ = &ConditionalExpr{
-            Location: Location{
-                Filename: $1.Loc().Filename,
-                Start: $1.Loc().Start,
-                End: $5.Loc().End,
-            },
+            Location: $1.Loc().Merge($5.Loc()),
             If: $1,
             Predicate: $2,
             TrueClause: $3,
@@ -240,11 +212,7 @@ conditional_expr:
     }
     | IF composable_expr NEWLINE expr_block ELSE expr_block {
         $$ = &ConditionalExpr{
-            Location: Location{
-                Filename: $1.Loc().Filename,
-                Start: $1.Loc().Start,
-                End: $6.Loc().End,
-            },
+            Location: $1.Loc().Merge($6.Loc()),
             If: $1,
             Predicate: $2,
             TrueClause: $4,
@@ -257,11 +225,7 @@ conditional_expr:
 assignment_expr:
     LET IDENT ASSIGN expr {
         $$ = &AssignExpr{
-            Location: Location{
-                Filename: $1.Loc().Filename,
-                Start: $1.Loc().Start,
-                End: $4.Loc().End,
-            },
+            Location: $1.Loc().Merge($4.Loc()),
             Let: $1,
             Name: $2,
             Assign: $3,
@@ -273,22 +237,14 @@ assignment_expr:
 return_expr:
     RETURN expr {
         $$ = &ReturnExpr{
-            Location: Location{
-                Filename: $1.Loc().Filename,
-                Start: $1.Loc().Start,
-                End: $2.Loc().End,
-            },
+            Location: $1.Loc().Merge($2.Loc()),
             Return: $1,
             Expression: $2,
         }
     }
     | RETURN AT IDENT expr {
         $$ = &ReturnExpr{
-            Location: Location{
-                Filename: $1.Loc().Filename,
-                Start: $1.Loc().Start,
-                End: $3.Loc().End,
-            },
+            Location: $1.Loc().Merge($4.Loc()),
             Return: $1,
             At: $2,
             Label: $3,
@@ -349,262 +305,18 @@ unit_expr:
     }
     | unit_expr DOT IDENT {
         $$ = &Accessor{
-            Location: Location{
-                Filename: $1.Loc().Filename,
-                Start: $1.Loc().Start,
-                End: $3.Loc().End,
-            },
+            Location: $1.Loc().Merge($3.Loc()),
             PrimaryExpr: $1,
             Dot: $2,
             Name: $3,
         }
     }
     | unit_expr L_PAREN argument_list R_PAREN {
-    }
-    ;
-
-// TODO(patrick): maybe in/like expr
-composable_expr:
-    unit_expr {
-        $$ = $1
-    }
-    | composable_expr OR composable_expr {
-        $$ = &BinaryExpr{
-            Location: Location{
-                Filename: $1.Loc().Filename,
-                Start: $1.Loc().Start,
-                End: $3.Loc().End,
-            },
-            Left: $1,
-            Op: $2,
-            Right: $3,
+        /* TODO
+        $$ = &Invoke{
+            Location: $1.Loc().Merge($4.Loc()),
         }
-    }
-    | composable_expr AND composable_expr {
-        $$ = &BinaryExpr{
-            Location: Location{
-                Filename: $1.Loc().Filename,
-                Start: $1.Loc().Start,
-                End: $3.Loc().End,
-            },
-            Left: $1,
-            Op: $2,
-            Right: $3,
-        }
-    }
-    | composable_expr LT composable_expr {
-        $$ = &BinaryExpr{
-            Location: Location{
-                Filename: $1.Loc().Filename,
-                Start: $1.Loc().Start,
-                End: $3.Loc().End,
-            },
-            Left: $1,
-            Op: $2,
-            Right: $3,
-        }
-    }
-    | composable_expr GT composable_expr {
-        $$ = &BinaryExpr{
-            Location: Location{
-                Filename: $1.Loc().Filename,
-                Start: $1.Loc().Start,
-                End: $3.Loc().End,
-            },
-            Left: $1,
-            Op: $2,
-            Right: $3,
-        }
-    }
-    | composable_expr EQ composable_expr {
-        $$ = &BinaryExpr{
-            Location: Location{
-                Filename: $1.Loc().Filename,
-                Start: $1.Loc().Start,
-                End: $3.Loc().End,
-            },
-            Left: $1,
-            Op: $2,
-            Right: $3,
-        }
-    }
-    | composable_expr NE composable_expr {
-        $$ = &BinaryExpr{
-            Location: Location{
-                Filename: $1.Loc().Filename,
-                Start: $1.Loc().Start,
-                End: $3.Loc().End,
-            },
-            Left: $1,
-            Op: $2,
-            Right: $3,
-        }
-    }
-    | composable_expr LE composable_expr {
-        $$ = &BinaryExpr{
-            Location: Location{
-                Filename: $1.Loc().Filename,
-                Start: $1.Loc().Start,
-                End: $3.Loc().End,
-            },
-            Left: $1,
-            Op: $2,
-            Right: $3,
-        }
-    }
-    | composable_expr GE composable_expr {
-        $$ = &BinaryExpr{
-            Location: Location{
-                Filename: $1.Loc().Filename,
-                Start: $1.Loc().Start,
-                End: $3.Loc().End,
-            },
-            Left: $1,
-            Op: $2,
-            Right: $3,
-        }
-    }
-    | composable_expr BITWISE_OR composable_expr {
-        $$ = &BinaryExpr{
-            Location: Location{
-                Filename: $1.Loc().Filename,
-                Start: $1.Loc().Start,
-                End: $3.Loc().End,
-            },
-            Left: $1,
-            Op: $2,
-            Right: $3,
-        }
-    }
-    | composable_expr BITWISE_AND composable_expr {
-        $$ = &BinaryExpr{
-            Location: Location{
-                Filename: $1.Loc().Filename,
-                Start: $1.Loc().Start,
-                End: $3.Loc().End,
-            },
-            Left: $1,
-            Op: $2,
-            Right: $3,
-        }
-    }
-    | composable_expr XOR composable_expr {
-        $$ = &BinaryExpr{
-            Location: Location{
-                Filename: $1.Loc().Filename,
-                Start: $1.Loc().Start,
-                End: $3.Loc().End,
-            },
-            Left: $1,
-            Op: $2,
-            Right: $3,
-        }
-    }
-    | composable_expr L_SHIFT composable_expr {
-        $$ = &BinaryExpr{
-            Location: Location{
-                Filename: $1.Loc().Filename,
-                Start: $1.Loc().Start,
-                End: $3.Loc().End,
-            },
-            Left: $1,
-            Op: $2,
-            Right: $3,
-        }
-    }
-    | composable_expr R_SHIFT composable_expr {
-        $$ = &BinaryExpr{
-            Location: Location{
-                Filename: $1.Loc().Filename,
-                Start: $1.Loc().Start,
-                End: $3.Loc().End,
-            },
-            Left: $1,
-            Op: $2,
-            Right: $3,
-        }
-    }
-    | composable_expr ADD composable_expr {
-        $$ = &BinaryExpr{
-            Location: Location{
-                Filename: $1.Loc().Filename,
-                Start: $1.Loc().Start,
-                End: $3.Loc().End,
-            },
-            Left: $1,
-            Op: $2,
-            Right: $3,
-        }
-    }
-    | composable_expr SUB composable_expr {
-        $$ = &BinaryExpr{
-            Location: Location{
-                Filename: $1.Loc().Filename,
-                Start: $1.Loc().Start,
-                End: $3.Loc().End,
-            },
-            Left: $1,
-            Op: $2,
-            Right: $3,
-        }
-    }
-    | composable_expr MUL composable_expr {
-        $$ = &BinaryExpr{
-            Location: Location{
-                Filename: $1.Loc().Filename,
-                Start: $1.Loc().Start,
-                End: $3.Loc().End,
-            },
-            Left: $1,
-            Op: $2,
-            Right: $3,
-        }
-    }
-    | composable_expr DIV composable_expr {
-        $$ = &BinaryExpr{
-            Location: Location{
-                Filename: $1.Loc().Filename,
-                Start: $1.Loc().Start,
-                End: $3.Loc().End,
-            },
-            Left: $1,
-            Op: $2,
-            Right: $3,
-        }
-    }
-    | composable_expr MOD composable_expr {
-        $$ = &BinaryExpr{
-            Location: Location{
-                Filename: $1.Loc().Filename,
-                Start: $1.Loc().Start,
-                End: $3.Loc().End,
-            },
-            Left: $1,
-            Op: $2,
-            Right: $3,
-        }
-    }
-    | SUB composable_expr %prec UNARY {
-        $$ = &UnaryExpr{
-            Location: Location{
-                Filename: $1.Loc().Filename,
-                Start: $1.Loc().Start,
-                End: $2.Loc().End,
-            },
-            Op: $1,
-            Expression: $2,
-        }
-    }
-    | NOT composable_expr {
-        $$ = &UnaryExpr{
-            Location: Location{
-                Filename: $1.Loc().Filename,
-                Start: $1.Loc().Start,
-                End: $2.Loc().End,
-            },
-            Op: $1,
-            Expression: $2,
-        }
+        */
     }
     ;
 
@@ -622,6 +334,171 @@ nonempty_argument_list:
     }
     | nonempty_argument_list COMMA composable_expr {
         // TODO
+    }
+    ;
+
+// TODO(patrick): maybe in/like expr
+composable_expr:
+    unit_expr {
+        $$ = $1
+    }
+    | composable_expr OR composable_expr {
+        $$ = &BinaryExpr{
+            Location: $1.Loc().Merge($3.Loc()),
+            Left: $1,
+            Op: $2,
+            Right: $3,
+        }
+    }
+    | composable_expr AND composable_expr {
+        $$ = &BinaryExpr{
+            Location: $1.Loc().Merge($3.Loc()),
+            Left: $1,
+            Op: $2,
+            Right: $3,
+        }
+    }
+    | composable_expr LT composable_expr {
+        $$ = &BinaryExpr{
+            Location: $1.Loc().Merge($3.Loc()),
+            Left: $1,
+            Op: $2,
+            Right: $3,
+        }
+    }
+    | composable_expr GT composable_expr {
+        $$ = &BinaryExpr{
+            Location: $1.Loc().Merge($3.Loc()),
+            Left: $1,
+            Op: $2,
+            Right: $3,
+        }
+    }
+    | composable_expr EQ composable_expr {
+        $$ = &BinaryExpr{
+            Location: $1.Loc().Merge($3.Loc()),
+            Left: $1,
+            Op: $2,
+            Right: $3,
+        }
+    }
+    | composable_expr NE composable_expr {
+        $$ = &BinaryExpr{
+            Location: $1.Loc().Merge($3.Loc()),
+            Left: $1,
+            Op: $2,
+            Right: $3,
+        }
+    }
+    | composable_expr LE composable_expr {
+        $$ = &BinaryExpr{
+            Location: $1.Loc().Merge($3.Loc()),
+            Left: $1,
+            Op: $2,
+            Right: $3,
+        }
+    }
+    | composable_expr GE composable_expr {
+        $$ = &BinaryExpr{
+            Location: $1.Loc().Merge($3.Loc()),
+            Left: $1,
+            Op: $2,
+            Right: $3,
+        }
+    }
+    | composable_expr BITWISE_OR composable_expr {
+        $$ = &BinaryExpr{
+            Location: $1.Loc().Merge($3.Loc()),
+            Left: $1,
+            Op: $2,
+            Right: $3,
+        }
+    }
+    | composable_expr BITWISE_AND composable_expr {
+        $$ = &BinaryExpr{
+            Location: $1.Loc().Merge($3.Loc()),
+            Left: $1,
+            Op: $2,
+            Right: $3,
+        }
+    }
+    | composable_expr XOR composable_expr {
+        $$ = &BinaryExpr{
+            Location: $1.Loc().Merge($3.Loc()),
+            Left: $1,
+            Op: $2,
+            Right: $3,
+        }
+    }
+    | composable_expr L_SHIFT composable_expr {
+        $$ = &BinaryExpr{
+            Location: $1.Loc().Merge($3.Loc()),
+            Left: $1,
+            Op: $2,
+            Right: $3,
+        }
+    }
+    | composable_expr R_SHIFT composable_expr {
+        $$ = &BinaryExpr{
+            Location: $1.Loc().Merge($3.Loc()),
+            Left: $1,
+            Op: $2,
+            Right: $3,
+        }
+    }
+    | composable_expr ADD composable_expr {
+        $$ = &BinaryExpr{
+            Location: $1.Loc().Merge($3.Loc()),
+            Left: $1,
+            Op: $2,
+            Right: $3,
+        }
+    }
+    | composable_expr SUB composable_expr {
+        $$ = &BinaryExpr{
+            Location: $1.Loc().Merge($3.Loc()),
+            Left: $1,
+            Op: $2,
+            Right: $3,
+        }
+    }
+    | composable_expr MUL composable_expr {
+        $$ = &BinaryExpr{
+            Location: $1.Loc().Merge($3.Loc()),
+            Left: $1,
+            Op: $2,
+            Right: $3,
+        }
+    }
+    | composable_expr DIV composable_expr {
+        $$ = &BinaryExpr{
+            Location: $1.Loc().Merge($3.Loc()),
+            Left: $1,
+            Op: $2,
+            Right: $3,
+        }
+    }
+    | composable_expr MOD composable_expr {
+        $$ = &BinaryExpr{
+            Location: $1.Loc().Merge($3.Loc()),
+            Left: $1,
+            Op: $2,
+            Right: $3,
+        }
+    }
+    | SUB composable_expr %prec UNARY {
+        $$ = &UnaryExpr{
+            Location: $1.Loc().Merge($2.Loc()),
+            Op: $1,
+            Expression: $2,
+        }
+    }
+    | NOT composable_expr {
+        $$ = &UnaryExpr{
+            Location: $1.Loc().Merge($2.Loc()),
+            Op: $1,
+            Expression: $2,
+        }
     }
     ;
 
