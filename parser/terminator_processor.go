@@ -22,7 +22,6 @@ var (
 		LET:     struct{}{},
 		IF:      struct{}{},
 		RETURN:  struct{}{},
-		L_PAREN: struct{}{}, // invocation vs expression grouping
 		L_BRACE: struct{}{}, // expression block needs special parser handling
 		R_BRACE: struct{}{}, // ensures statement terminates
 	}
