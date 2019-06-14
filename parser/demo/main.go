@@ -10,18 +10,22 @@ import (
 )
 
 func main() {
-	content, err := ioutil.ReadFile(os.Args[1])
-	if err != nil {
-		panic(err)
-	}
+	for _, path := range os.Args[1:] {
+		fmt.Println(path, "===========================")
 
-	parsed, err := parser.Parse(os.Args[1], bytes.NewReader(content))
-	if err != nil {
-		panic(err)
-	}
+		content, err := ioutil.ReadFile(path)
+		if err != nil {
+			panic(err)
+		}
 
-	fmt.Println("OK")
-	for _, node := range parsed {
-		fmt.Println(node)
+		parsed, err := parser.Parse(path, bytes.NewReader(content))
+		if err != nil {
+			panic(err)
+		}
+
+		for _, node := range parsed {
+			fmt.Println(node)
+		}
+		fmt.Println("OK")
 	}
 }

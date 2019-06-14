@@ -32,39 +32,40 @@ const COLON = 57356
 const COMMA = 57357
 const DOT = 57358
 const STAR_STAR = 57359
-const SEMICOLON = 57360
-const NEWLINE = 57361
-const LET = 57362
-const IF = 57363
-const ELSE = 57364
-const RETURN = 57365
-const OR = 57366
-const AND = 57367
-const NOT = 57368
-const LT = 57369
-const GT = 57370
-const EQ = 57371
-const NE = 57372
-const LE = 57373
-const GE = 57374
-const BITWISE_OR = 57375
-const BITWISE_AND = 57376
-const XOR = 57377
-const L_SHIFT = 57378
-const R_SHIFT = 57379
-const ADD = 57380
-const SUB = 57381
-const MUL = 57382
-const DIV = 57383
-const MOD = 57384
-const UNARY = 57385
-const IDENT = 57386
-const CHAR = 57387
-const STRING = 57388
-const INT = 57389
-const FLOAT = 57390
-const BOOL = 57391
-const NOOP = 57392
+const AT = 57360
+const SEMICOLON = 57361
+const NEWLINE = 57362
+const LET = 57363
+const IF = 57364
+const ELSE = 57365
+const RETURN = 57366
+const OR = 57367
+const AND = 57368
+const NOT = 57369
+const LT = 57370
+const GT = 57371
+const EQ = 57372
+const NE = 57373
+const LE = 57374
+const GE = 57375
+const BITWISE_OR = 57376
+const BITWISE_AND = 57377
+const XOR = 57378
+const L_SHIFT = 57379
+const R_SHIFT = 57380
+const ADD = 57381
+const SUB = 57382
+const MUL = 57383
+const DIV = 57384
+const MOD = 57385
+const UNARY = 57386
+const IDENT = 57387
+const CHAR = 57388
+const STRING = 57389
+const INT = 57390
+const FLOAT = 57391
+const BOOL = 57392
+const NOOP = 57393
 
 var qlToknames = [...]string{
 	"$end",
@@ -84,6 +85,7 @@ var qlToknames = [...]string{
 	"COMMA",
 	"DOT",
 	"STAR_STAR",
+	"AT",
 	"SEMICOLON",
 	"NEWLINE",
 	"LET",
@@ -124,7 +126,7 @@ const qlEofCode = 1
 const qlErrCode = 2
 const qlInitialStackSize = 16
 
-//line ql.y:607
+//line ql.y:628
 
 //line yacctab:1
 var qlExca = [...]int{
@@ -135,60 +137,60 @@ var qlExca = [...]int{
 
 const qlPrivate = 57344
 
-const qlLast = 259
+const qlLast = 244
 
 var qlAct = [...]int{
 
-	35, 84, 34, 11, 48, 49, 50, 51, 52, 53,
-	54, 55, 56, 57, 33, 92, 21, 55, 56, 57,
-	64, 36, 7, 8, 60, 61, 51, 52, 53, 54,
-	55, 56, 57, 62, 53, 54, 55, 56, 57, 94,
-	63, 66, 67, 68, 69, 70, 71, 72, 73, 74,
-	75, 76, 77, 78, 79, 80, 81, 82, 83, 14,
-	87, 31, 10, 59, 2, 10, 89, 36, 90, 93,
-	58, 37, 14, 15, 5, 86, 10, 14, 85, 20,
-	4, 19, 14, 38, 18, 1, 13, 12, 7, 8,
-	16, 15, 6, 17, 39, 97, 95, 3, 22, 40,
-	41, 65, 42, 43, 44, 45, 46, 47, 48, 49,
-	50, 51, 52, 53, 54, 55, 56, 57, 88, 0,
-	9, 0, 0, 0, 0, 0, 91, 0, 0, 0,
-	0, 0, 40, 41, 0, 42, 43, 44, 45, 46,
-	47, 48, 49, 50, 51, 52, 53, 54, 55, 56,
-	57, 0, 40, 41, 96, 42, 43, 44, 45, 46,
-	47, 48, 49, 50, 51, 52, 53, 54, 55, 56,
-	57, 14, 0, 32, 50, 51, 52, 53, 54, 55,
-	56, 57, 14, 0, 32, 15, 0, 0, 0, 0,
-	24, 49, 50, 51, 52, 53, 54, 55, 56, 57,
-	0, 24, 0, 23, 0, 0, 0, 0, 25, 26,
-	27, 28, 29, 30, 23, 0, 0, 0, 0, 25,
-	26, 27, 28, 29, 30, 41, 0, 42, 43, 44,
-	45, 46, 47, 48, 49, 50, 51, 52, 53, 54,
-	55, 56, 57, 42, 43, 44, 45, 46, 47, 48,
-	49, 50, 51, 52, 53, 54, 55, 56, 57,
+	13, 27, 14, 46, 47, 48, 10, 39, 40, 41,
+	42, 43, 44, 45, 46, 47, 48, 28, 98, 54,
+	55, 56, 2, 50, 41, 42, 43, 44, 45, 46,
+	47, 48, 59, 60, 61, 62, 63, 64, 65, 66,
+	67, 68, 69, 70, 71, 72, 73, 74, 75, 76,
+	79, 58, 78, 49, 82, 85, 31, 32, 83, 33,
+	34, 35, 36, 37, 38, 39, 40, 41, 42, 43,
+	44, 45, 46, 47, 48, 92, 28, 57, 28, 44,
+	45, 46, 47, 48, 88, 89, 93, 7, 8, 51,
+	28, 20, 95, 20, 97, 96, 91, 77, 19, 53,
+	101, 100, 7, 8, 15, 20, 52, 16, 90, 94,
+	19, 18, 99, 87, 85, 86, 21, 22, 23, 24,
+	25, 26, 28, 18, 81, 80, 1, 12, 21, 22,
+	23, 24, 25, 26, 9, 84, 11, 6, 3, 17,
+	31, 32, 28, 33, 34, 35, 36, 37, 38, 39,
+	40, 41, 42, 43, 44, 45, 46, 47, 48, 28,
+	85, 0, 19, 40, 41, 42, 43, 44, 45, 46,
+	47, 48, 4, 0, 20, 18, 29, 0, 0, 19,
+	21, 22, 23, 24, 25, 26, 5, 0, 0, 0,
+	0, 0, 18, 30, 0, 0, 0, 21, 22, 23,
+	24, 25, 26, 32, 0, 33, 34, 35, 36, 37,
+	38, 39, 40, 41, 42, 43, 44, 45, 46, 47,
+	48, 33, 34, 35, 36, 37, 38, 39, 40, 41,
+	42, 43, 44, 45, 46, 47, 48, 42, 43, 44,
+	45, 46, 47, 48,
 }
 var qlPact = [...]int{
 
-	70, -1000, -1000, 70, -1000, -1000, 4, -1000, -1000, -1000,
-	-1000, -1000, -1000, -1000, 70, 175, -30, 164, -1000, -1000,
-	63, 75, 54, 175, 175, -1000, -1000, -1000, -1000, -1000,
-	-1000, -1000, 175, 27, -1000, 128, -1000, -1000, -2, 65,
-	175, 175, 175, 175, 175, 175, 175, 175, 175, 175,
-	175, 175, 175, 175, 175, 175, 175, 175, -43, 175,
-	-1000, 216, 108, 164, 52, -7, 200, 216, -29, -29,
-	-29, -29, -29, -29, 157, 139, -10, -4, -4, -23,
-	-23, -1000, -1000, -1000, -1000, 59, 24, 128, -1000, -1000,
-	-1000, -1000, 52, -1000, 175, -1000, -1000, 128,
+	83, -1000, -1000, 83, -1000, -1000, 68, -1000, -1000, -1000,
+	-1000, -1000, -1000, 31, -1000, 8, 71, 90, 135, 135,
+	135, 59, -1000, -1000, -1000, -1000, -1000, -1000, 83, -1000,
+	-1000, 135, 135, 135, 135, 135, 135, 135, 135, 135,
+	135, 135, 135, 135, 135, 135, 135, 135, 135, 84,
+	-1000, 7, 5, 135, -1000, 193, 115, 108, 105, 177,
+	193, -27, -27, -27, -27, -27, -27, 128, -12, 200,
+	40, 40, -38, -38, -1000, -1000, -1000, 152, 152, -1000,
+	98, 81, 31, 52, 10, 59, 83, -1000, -1000, -1000,
+	-1000, 135, 69, -5, 104, 31, -1000, -1000, 69, -1000,
+	-1000, -1000,
 }
 var qlPgo = [...]int{
 
-	0, 2, 98, 0, 64, 97, 80, 92, 61, 3,
-	87, 86, 85, 74, 78, 75,
+	0, 6, 139, 0, 22, 138, 172, 137, 1, 2,
+	136, 127, 126, 186, 125, 124,
 }
 var qlR1 = [...]int{
 
 	0, 12, 4, 4, 5, 5, 13, 13, 6, 6,
-	7, 7, 7, 7, 7, 8, 9, 9, 9, 9,
-	9, 9, 10, 11, 1, 1, 2, 2, 2, 2,
+	7, 7, 7, 7, 8, 8, 9, 9, 9, 9,
+	9, 9, 10, 11, 11, 1, 1, 2, 2, 2,
 	2, 2, 2, 2, 2, 2, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 14, 14, 15,
@@ -197,38 +199,40 @@ var qlR1 = [...]int{
 var qlR2 = [...]int{
 
 	0, 1, 0, 1, 1, 2, 1, 1, 1, 2,
-	1, 1, 1, 1, 1, 3, 3, 4, 5, 6,
-	5, 6, 4, 2, 1, 1, 1, 1, 1, 1,
-	1, 1, 1, 3, 4, 3, 1, 3, 3, 3,
+	1, 1, 1, 1, 3, 5, 3, 4, 5, 6,
+	5, 6, 4, 2, 4, 1, 1, 1, 1, 1,
+	1, 1, 1, 1, 3, 4, 1, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 2, 2, 0, 1, 1,
 	3,
 }
 var qlChk = [...]int{
 
-	-1000, -12, -4, -5, -6, -13, -7, 18, 19, 50,
-	-8, -9, -10, -11, 7, 21, 20, 23, -6, -13,
-	-4, -3, -2, 39, 26, 44, 45, 46, 47, 48,
-	49, -8, 9, 44, -1, -3, -9, 8, -8, 19,
-	24, 25, 27, 28, 29, 30, 31, 32, 33, 34,
-	35, 36, 37, 38, 39, 40, 41, 42, 16, 9,
-	-3, -3, -3, 13, 22, -8, -3, -3, -3, -3,
+	-1000, -12, -4, -5, -6, -13, -7, 19, 20, 51,
+	-1, -10, -11, -3, -9, 21, 24, -2, 40, 27,
+	22, 45, 46, 47, 48, 49, 50, -8, 7, -6,
+	-13, 25, 26, 28, 29, 30, 31, 32, 33, 34,
+	35, 36, 37, 38, 39, 40, 41, 42, 43, 45,
+	-1, 18, 16, 9, -3, -3, -3, 18, -4, -3,
 	-3, -3, -3, -3, -3, -3, -3, -3, -3, -3,
-	-3, -3, -3, -3, 44, -14, -15, -3, 10, -1,
-	-9, -8, 22, 10, 15, -9, -8, -3,
+	-3, -3, -3, -3, -3, -3, -3, 13, 45, 45,
+	-14, -15, -3, -8, 20, 45, 7, 8, -1, -1,
+	10, 15, 23, -8, -4, -3, -9, -8, 23, 8,
+	-9, -8,
 }
 var qlDef = [...]int{
 
 	2, -2, 1, 3, 4, 8, 0, 6, 7, 10,
-	11, 12, 13, 14, 2, 0, 0, 0, 5, 9,
-	0, 0, 36, 0, 0, 26, 27, 28, 29, 30,
-	31, 32, 0, 0, 23, 24, 25, 15, 16, 0,
+	11, 12, 13, 25, 26, 0, 0, 36, 0, 0,
+	0, 27, 28, 29, 30, 31, 32, 33, 2, 5,
+	9, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 57,
-	55, 56, 0, 0, 0, 17, 37, 38, 39, 40,
-	41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
-	51, 52, 53, 54, 33, 0, 58, 59, 35, 22,
-	18, 20, 0, 34, 0, 19, 21, 60,
+	23, 0, 0, 57, 55, 56, 0, 0, 0, 37,
+	38, 39, 40, 41, 42, 43, 44, 45, 46, 47,
+	48, 49, 50, 51, 52, 53, 54, 0, 0, 34,
+	0, 58, 59, 16, 0, 0, 2, 14, 22, 24,
+	35, 0, 0, 17, 0, 60, 18, 20, 0, 15,
+	19, 21,
 }
 var qlTok1 = [...]int{
 
@@ -240,7 +244,7 @@ var qlTok2 = [...]int{
 	12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
 	22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
 	32, 33, 34, 35, 36, 37, 38, 39, 40, 41,
-	42, 43, 44, 45, 46, 47, 48, 49, 50,
+	42, 43, 44, 45, 46, 47, 48, 49, 50, 51,
 }
 var qlTok3 = [...]int{
 	0,
@@ -621,20 +625,33 @@ qldefault:
 				qlVAL.Statements = append(qlDollar[1].Statements, qlDollar[2].ControlFlowExpr)
 			}
 		}
+	case 6:
+		qlDollar = qlS[qlpt-1 : qlpt+1]
+//line ql.y:107
+		{
+			// do nothing
+		}
+	case 7:
+		qlDollar = qlS[qlpt-1 : qlpt+1]
+//line ql.y:110
+		{
+			// do nothing
+		}
 	case 8:
 		qlDollar = qlS[qlpt-1 : qlpt+1]
-//line ql.y:112
+//line ql.y:116
 		{
 			qlVAL.ControlFlowExpr = nil
 		}
 	case 9:
 		qlDollar = qlS[qlpt-2 : qlpt+1]
-//line ql.y:115
+//line ql.y:119
 		{
+			qlVAL.ControlFlowExpr = qlDollar[1].ControlFlowExpr
 		}
 	case 10:
 		qlDollar = qlS[qlpt-1 : qlpt+1]
-//line ql.y:120
+//line ql.y:125
 		{
 			qlVAL.ControlFlowExpr = &Noop{
 				Location: qlDollar[1].Token.Location,
@@ -643,31 +660,28 @@ qldefault:
 		}
 	case 11:
 		qlDollar = qlS[qlpt-1 : qlpt+1]
-//line ql.y:126
+//line ql.y:131
 		{
-			qlVAL.ControlFlowExpr = qlDollar[1].ControlFlowExpr
+			qlVAL.ControlFlowExpr = &EvalExpr{
+				Location:   qlDollar[1].Expr.Loc(),
+				Expression: qlDollar[1].Expr,
+			}
 		}
 	case 12:
 		qlDollar = qlS[qlpt-1 : qlpt+1]
-//line ql.y:129
+//line ql.y:137
 		{
 			qlVAL.ControlFlowExpr = qlDollar[1].ControlFlowExpr
 		}
 	case 13:
 		qlDollar = qlS[qlpt-1 : qlpt+1]
-//line ql.y:132
+//line ql.y:140
 		{
 			qlVAL.ControlFlowExpr = qlDollar[1].ControlFlowExpr
 		}
 	case 14:
-		qlDollar = qlS[qlpt-1 : qlpt+1]
-//line ql.y:135
-		{
-			qlVAL.ControlFlowExpr = qlDollar[1].ControlFlowExpr
-		}
-	case 15:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:142
+//line ql.y:146
 		{
 			qlVAL.ControlFlowExpr = &ExprBlock{
 				Location: Location{
@@ -680,9 +694,26 @@ qldefault:
 				RBrace:     qlDollar[3].Token,
 			}
 		}
+	case 15:
+		qlDollar = qlS[qlpt-5 : qlpt+1]
+//line ql.y:158
+		{
+			qlVAL.ControlFlowExpr = &ExprBlock{
+				Location: Location{
+					Filename: qlDollar[1].Token.Loc().Filename,
+					Start:    qlDollar[1].Token.Loc().Start,
+					End:      qlDollar[5].Token.Loc().End,
+				},
+				Label:      qlDollar[1].Token,
+				At:         qlDollar[2].Token,
+				LBrace:     qlDollar[3].Token,
+				Statements: qlDollar[4].Statements,
+				RBrace:     qlDollar[5].Token,
+			}
+		}
 	case 16:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:157
+//line ql.y:175
 		{
 			qlVAL.ControlFlowExpr = &ConditionalExpr{
 				Location: Location{
@@ -697,7 +728,7 @@ qldefault:
 		}
 	case 17:
 		qlDollar = qlS[qlpt-4 : qlpt+1]
-//line ql.y:169
+//line ql.y:187
 		{
 			qlVAL.ControlFlowExpr = &ConditionalExpr{
 				Location: Location{
@@ -712,7 +743,7 @@ qldefault:
 		}
 	case 18:
 		qlDollar = qlS[qlpt-5 : qlpt+1]
-//line ql.y:181
+//line ql.y:199
 		{
 			qlVAL.ControlFlowExpr = &ConditionalExpr{
 				Location: Location{
@@ -729,7 +760,7 @@ qldefault:
 		}
 	case 19:
 		qlDollar = qlS[qlpt-6 : qlpt+1]
-//line ql.y:195
+//line ql.y:213
 		{
 			qlVAL.ControlFlowExpr = &ConditionalExpr{
 				Location: Location{
@@ -746,7 +777,7 @@ qldefault:
 		}
 	case 20:
 		qlDollar = qlS[qlpt-5 : qlpt+1]
-//line ql.y:209
+//line ql.y:227
 		{
 			qlVAL.ControlFlowExpr = &ConditionalExpr{
 				Location: Location{
@@ -763,7 +794,7 @@ qldefault:
 		}
 	case 21:
 		qlDollar = qlS[qlpt-6 : qlpt+1]
-//line ql.y:223
+//line ql.y:241
 		{
 			qlVAL.ControlFlowExpr = &ConditionalExpr{
 				Location: Location{
@@ -780,7 +811,7 @@ qldefault:
 		}
 	case 22:
 		qlDollar = qlS[qlpt-4 : qlpt+1]
-//line ql.y:240
+//line ql.y:258
 		{
 			qlVAL.ControlFlowExpr = &AssignExpr{
 				Location: Location{
@@ -796,7 +827,7 @@ qldefault:
 		}
 	case 23:
 		qlDollar = qlS[qlpt-2 : qlpt+1]
-//line ql.y:257
+//line ql.y:274
 		{
 			qlVAL.ControlFlowExpr = &ReturnExpr{
 				Location: Location{
@@ -809,38 +840,45 @@ qldefault:
 			}
 		}
 	case 24:
-		qlDollar = qlS[qlpt-1 : qlpt+1]
-//line ql.y:271
+		qlDollar = qlS[qlpt-4 : qlpt+1]
+//line ql.y:285
 		{
-			qlVAL.Expr = qlDollar[1].Expr
+			qlVAL.ControlFlowExpr = &ReturnExpr{
+				Location: Location{
+					Filename: qlDollar[1].Token.Loc().Filename,
+					Start:    qlDollar[1].Token.Loc().Start,
+					End:      qlDollar[3].Token.Loc().End,
+				},
+				Return:     qlDollar[1].Token,
+				At:         qlDollar[2].Token,
+				Label:      qlDollar[3].Token,
+				Expression: qlDollar[4].Expr,
+			}
 		}
 	case 25:
 		qlDollar = qlS[qlpt-1 : qlpt+1]
-//line ql.y:274
+//line ql.y:301
 		{
-			qlVAL.Expr = qlDollar[1].ControlFlowExpr
+			qlVAL.Expr = qlDollar[1].Expr
 		}
 	case 26:
 		qlDollar = qlS[qlpt-1 : qlpt+1]
-//line ql.y:281
+//line ql.y:304
+		{
+			qlVAL.Expr = qlDollar[1].ControlFlowExpr
+		}
+	case 27:
+		qlDollar = qlS[qlpt-1 : qlpt+1]
+//line ql.y:311
 		{
 			qlVAL.Expr = &Identifier{
 				Location: qlDollar[1].Token.Location,
 				Value:    qlDollar[1].Token,
 			}
 		}
-	case 27:
-		qlDollar = qlS[qlpt-1 : qlpt+1]
-//line ql.y:287
-		{
-			qlVAL.Expr = &Literal{
-				Location: qlDollar[1].Token.Location,
-				Value:    qlDollar[1].Token,
-			}
-		}
 	case 28:
 		qlDollar = qlS[qlpt-1 : qlpt+1]
-//line ql.y:293
+//line ql.y:317
 		{
 			qlVAL.Expr = &Literal{
 				Location: qlDollar[1].Token.Location,
@@ -849,7 +887,7 @@ qldefault:
 		}
 	case 29:
 		qlDollar = qlS[qlpt-1 : qlpt+1]
-//line ql.y:299
+//line ql.y:323
 		{
 			qlVAL.Expr = &Literal{
 				Location: qlDollar[1].Token.Location,
@@ -858,7 +896,7 @@ qldefault:
 		}
 	case 30:
 		qlDollar = qlS[qlpt-1 : qlpt+1]
-//line ql.y:305
+//line ql.y:329
 		{
 			qlVAL.Expr = &Literal{
 				Location: qlDollar[1].Token.Location,
@@ -867,7 +905,7 @@ qldefault:
 		}
 	case 31:
 		qlDollar = qlS[qlpt-1 : qlpt+1]
-//line ql.y:311
+//line ql.y:335
 		{
 			qlVAL.Expr = &Literal{
 				Location: qlDollar[1].Token.Location,
@@ -876,13 +914,22 @@ qldefault:
 		}
 	case 32:
 		qlDollar = qlS[qlpt-1 : qlpt+1]
-//line ql.y:317
+//line ql.y:341
+		{
+			qlVAL.Expr = &Literal{
+				Location: qlDollar[1].Token.Location,
+				Value:    qlDollar[1].Token,
+			}
+		}
+	case 33:
+		qlDollar = qlS[qlpt-1 : qlpt+1]
+//line ql.y:347
 		{
 			qlVAL.Expr = qlDollar[1].ControlFlowExpr
 		}
-	case 33:
+	case 34:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:320
+//line ql.y:350
 		{
 			qlVAL.Expr = &Accessor{
 				Location: Location{
@@ -895,35 +942,20 @@ qldefault:
 				Name:        qlDollar[3].Token,
 			}
 		}
-	case 34:
-		qlDollar = qlS[qlpt-4 : qlpt+1]
-//line ql.y:332
-		{
-		}
 	case 35:
-		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:334
+		qlDollar = qlS[qlpt-4 : qlpt+1]
+//line ql.y:362
 		{
-			qlVAL.Expr = &EvalOrderExpr{
-				Location: Location{
-					Filename: qlDollar[1].Token.Loc().Filename,
-					Start:    qlDollar[1].Token.Loc().Start,
-					End:      qlDollar[3].Token.Loc().End,
-				},
-				LParen:     qlDollar[1].Token,
-				Expression: qlDollar[2].Expr,
-				RParen:     qlDollar[3].Token,
-			}
 		}
 	case 36:
 		qlDollar = qlS[qlpt-1 : qlpt+1]
-//line ql.y:350
+//line ql.y:368
 		{
 			qlVAL.Expr = qlDollar[1].Expr
 		}
 	case 37:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:353
+//line ql.y:371
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: Location{
@@ -938,7 +970,7 @@ qldefault:
 		}
 	case 38:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:365
+//line ql.y:383
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: Location{
@@ -953,7 +985,7 @@ qldefault:
 		}
 	case 39:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:377
+//line ql.y:395
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: Location{
@@ -968,7 +1000,7 @@ qldefault:
 		}
 	case 40:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:389
+//line ql.y:407
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: Location{
@@ -983,7 +1015,7 @@ qldefault:
 		}
 	case 41:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:401
+//line ql.y:419
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: Location{
@@ -998,7 +1030,7 @@ qldefault:
 		}
 	case 42:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:413
+//line ql.y:431
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: Location{
@@ -1013,7 +1045,7 @@ qldefault:
 		}
 	case 43:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:425
+//line ql.y:443
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: Location{
@@ -1028,7 +1060,7 @@ qldefault:
 		}
 	case 44:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:437
+//line ql.y:455
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: Location{
@@ -1043,7 +1075,7 @@ qldefault:
 		}
 	case 45:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:449
+//line ql.y:467
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: Location{
@@ -1058,7 +1090,7 @@ qldefault:
 		}
 	case 46:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:461
+//line ql.y:479
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: Location{
@@ -1073,7 +1105,7 @@ qldefault:
 		}
 	case 47:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:473
+//line ql.y:491
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: Location{
@@ -1088,7 +1120,7 @@ qldefault:
 		}
 	case 48:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:485
+//line ql.y:503
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: Location{
@@ -1103,7 +1135,7 @@ qldefault:
 		}
 	case 49:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:497
+//line ql.y:515
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: Location{
@@ -1118,7 +1150,7 @@ qldefault:
 		}
 	case 50:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:509
+//line ql.y:527
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: Location{
@@ -1133,7 +1165,7 @@ qldefault:
 		}
 	case 51:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:521
+//line ql.y:539
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: Location{
@@ -1148,7 +1180,7 @@ qldefault:
 		}
 	case 52:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:533
+//line ql.y:551
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: Location{
@@ -1163,7 +1195,7 @@ qldefault:
 		}
 	case 53:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:545
+//line ql.y:563
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: Location{
@@ -1178,7 +1210,7 @@ qldefault:
 		}
 	case 54:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:557
+//line ql.y:575
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: Location{
@@ -1193,7 +1225,7 @@ qldefault:
 		}
 	case 55:
 		qlDollar = qlS[qlpt-2 : qlpt+1]
-//line ql.y:569
+//line ql.y:587
 		{
 			qlVAL.Expr = &UnaryExpr{
 				Location: Location{
@@ -1207,7 +1239,7 @@ qldefault:
 		}
 	case 56:
 		qlDollar = qlS[qlpt-2 : qlpt+1]
-//line ql.y:580
+//line ql.y:598
 		{
 			qlVAL.Expr = &UnaryExpr{
 				Location: Location{
@@ -1221,23 +1253,26 @@ qldefault:
 		}
 	case 57:
 		qlDollar = qlS[qlpt-0 : qlpt+1]
-//line ql.y:594
+//line ql.y:612
 		{ // empty
 		}
 	case 58:
 		qlDollar = qlS[qlpt-1 : qlpt+1]
-//line ql.y:596
+//line ql.y:614
 		{
+			// TODO
 		}
 	case 59:
 		qlDollar = qlS[qlpt-1 : qlpt+1]
-//line ql.y:601
+//line ql.y:620
 		{
+			// TODO
 		}
 	case 60:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:603
+//line ql.y:623
 		{
+			// TODO
 		}
 	}
 	goto qlstack /* stack new state and value */

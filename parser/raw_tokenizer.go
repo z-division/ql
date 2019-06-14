@@ -120,7 +120,9 @@ var (
 		'[': parseSymbol(map[string]int{"[": L_BRACKET}),
 		']': parseSymbol(map[string]int{"]": R_BRACKET}),
 
-		// Unused leading characters: @ # $ ~ ` ? \
+		'@': parseSymbol(map[string]int{"@": AT}),
+
+		// Unused leading characters: # $ ~ ` ? \
 
 		// NOTE(patrick): ' ' and '\t' are ignored
 	}
@@ -172,7 +174,8 @@ func parseIdentifierOrKeyword(tok *rawTokenizer) (*Token, error) {
 
 		if !(('a' <= char && char <= 'z') ||
 			('A' <= char && char <= 'Z') ||
-			'_' == char) {
+			'_' == char ||
+			'0' <= char && char <= '9') {
 
 			break
 		}

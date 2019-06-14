@@ -317,20 +317,6 @@ func (accessor *Accessor) String() string {
 	return prettyFormatNode("", accessor, 0)
 }
 
-// ( <expression> )
-type EvalOrderExpr struct {
-	Location
-	expr
-
-	LParen     *Token
-	Expression Expr
-	RParen     *Token
-}
-
-func (evalOrder *EvalOrderExpr) String() string {
-	return prettyFormatNode("", evalOrder, 0)
-}
-
 // Placeholder for comments at the end of file
 type Noop struct {
 	Location
@@ -347,6 +333,8 @@ type ExprBlock struct {
 	Location
 	controlFlowExpr
 
+	Label      *Token
+	At         *Token
 	LBrace     *Token
 	Statements []ControlFlowExpr
 	RBrace     *Token
@@ -371,6 +359,18 @@ func (cond *ConditionalExpr) String() string {
 	return prettyFormatNode("", cond, 0)
 }
 
+// <expr>
+type EvalExpr struct {
+	Location
+	controlFlowExpr
+
+	Expression Expr
+}
+
+func (eval *EvalExpr) String() string {
+	return prettyFormatNode("", eval, 0)
+}
+
 // let <name> = <expr>
 type AssignExpr struct {
 	Location
@@ -391,6 +391,7 @@ type ReturnExpr struct {
 	controlFlowExpr
 
 	Return     *Token
+	At         *Token // Optional
 	Label      *Token // Optional
 	Expression Expr
 }

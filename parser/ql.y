@@ -19,7 +19,7 @@ package parser
 
 %token <Token> COMMENT
 %token <Token> L_BRACE R_BRACE L_PAREN R_PAREN L_BRACKET R_BRACKET
-%token <Token> ASSIGN COLON  COMMA DOT STAR_STAR
+%token <Token> ASSIGN COLON COMMA DOT STAR_STAR AT
 
 // Terminators
 %token <Token> SEMICOLON NEWLINE
@@ -104,8 +104,12 @@ nonempty_statement_list:
     ;
 
 terminator:
-    SEMICOLON
-    | NEWLINE
+    SEMICOLON {
+        // do nothing
+    }
+    | NEWLINE {
+        // do nothing
+    }
     ;
 
 statement:
@@ -113,6 +117,7 @@ statement:
         $$ = nil
     }
     | control_flow_expr terminator {
+        $$ = $1
     }
     ;
 
@@ -123,11 +128,11 @@ control_flow_expr:
             Value: $1,
         }
     }
-    | expr_block {
-        $$ = $1
-    }
-    | conditional_expr {
-        $$ = $1
+    | expr {
+        $$ = &EvalExpr{
+            Location: $1.Loc(),
+            Expression: $1,
+        }
     }
     | assignment_expr {
         $$ = $1
@@ -137,7 +142,6 @@ control_flow_expr:
     }
     ;
 
-// TODO(patrick): label
 expr_block:
     L_BRACE statement_list R_BRACE {
         $$ = &ExprBlock{
@@ -149,6 +153,20 @@ expr_block:
             LBrace: $1,
             Statements: $2,
             RBrace: $3,
+        }
+    }
+    | IDENT AT L_BRACE statement_list R_BRACE {
+        $$ = &ExprBlock{
+            Location: Location{
+                Filename: $1.Loc().Filename,
+                Start: $1.Loc().Start,
+                End: $5.Loc().End,
+            },
+            Label: $1,
+            At: $2,
+            LBrace: $3,
+            Statements: $4,
+            RBrace: $5,
         }
     }
     ;
@@ -252,7 +270,6 @@ assignment_expr:
     }
     ;
 
-// TODO(patrick): label
 return_expr:
     RETURN expr {
         $$ = &ReturnExpr{
@@ -263,6 +280,19 @@ return_expr:
             },
             Return: $1,
             Expression: $2,
+        }
+    }
+    | RETURN AT IDENT expr {
+        $$ = &ReturnExpr{
+            Location: Location{
+                Filename: $1.Loc().Filename,
+                Start: $1.Loc().Start,
+                End: $3.Loc().End,
+            },
+            Return: $1,
+            At: $2,
+            Label: $3,
+            Expression: $4,
         }
     }
     ;
@@ -331,21 +361,9 @@ unit_expr:
     }
     | unit_expr L_PAREN argument_list R_PAREN {
     }
-    | L_PAREN composable_expr R_PAREN {
-        $$ = &EvalOrderExpr{
-            Location: Location{
-                Filename: $1.Loc().Filename,
-                Start: $1.Loc().Start,
-                End: $3.Loc().End,
-            },
-            LParen: $1,
-            Expression: $2,
-            RParen: $3,
-        }
-    }
     ;
 
-// TODO(patrick): maybe in/like expr.  conditional expr
+// TODO(patrick): maybe in/like expr
 composable_expr:
     unit_expr {
         $$ = $1
@@ -594,13 +612,16 @@ argument_list:
     { // empty
     }
     | nonempty_argument_list {
+        // TODO
     }
     ;
 
 nonempty_argument_list:
     composable_expr {
+        // TODO
     }
     | nonempty_argument_list COMMA composable_expr {
+        // TODO
     }
     ;
 
