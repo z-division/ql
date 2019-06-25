@@ -5,9 +5,11 @@ package parser
 %union{
     *Token
 
+    // scoped control flow expressions
     *ScopeDef
     *ExprBlock
     *ConditionalExpr
+    *ForExpr
 
     ControlFlowExpr
     Expr
@@ -32,6 +34,7 @@ package parser
 // Keywords
 %token <Token> LET
 %token <Token> IF ELSE
+%token <Token> FOR
 %token <Token> RETURN
 
 %left <Token> OR
@@ -75,6 +78,7 @@ package parser
 
 %type <ExprBlock> expr_block base_expr_block
 %type <ConditionalExpr> conditional_expr base_conditional_expr
+%type <ForExpr> for_expr base_for_expr
 
 %type <ControlFlowExpr> statement control_flow_expr
 %type <ControlFlowExpr> assignment_expr return_expr
@@ -257,6 +261,35 @@ base_conditional_expr:
     }
     ;
 
+for_expr:
+    scope_def base_for_expr {
+        $$ = $2
+        if $1 != nil {
+            $$.Location = $1.Location.Merge($2.Location)
+            $$.ScopeDef = $1
+        }
+    }
+    ;
+
+base_for_expr:
+    FOR composable_expr expr_block {
+        $$ = &ForExpr{
+            Location: $1.Location.Merge($3.Location),
+            For: $1,
+            Predicate: $2,
+            Body: $3,
+        }
+    }
+    | FOR composable_expr NEWLINE expr_block {
+        $$ = &ForExpr{
+            Location: $1.Location.Merge($4.Location),
+            For: $1,
+            Predicate: $2,
+            Body: $4,
+        }
+    }
+    ;
+
 assignment_expr:
     LET IDENT ASSIGN expr {
         $$ = &AssignExpr{
@@ -265,6 +298,15 @@ assignment_expr:
             Name: $2,
             Assign: $3,
             Expression: $4,
+        }
+    }
+    |
+    IDENT ASSIGN expr {
+        $$ = &AssignExpr{
+            Location: $1.Loc().Merge($3.Loc()),
+            Name: $1,
+            Assign: $2,
+            Expression: $3,
         }
     }
     ;
@@ -336,6 +378,9 @@ unit_expr:
         $$ = $1
     }
     | conditional_expr {
+        $$ = $1
+    }
+    | for_expr {
         $$ = $1
     }
     | unit_expr DOT IDENT {

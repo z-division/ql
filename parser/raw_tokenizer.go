@@ -134,6 +134,7 @@ var (
 		"false":  BOOL_LITERAL,
 		"if":     IF,
 		"else":   ELSE,
+		"for":    FOR,
 		"return": RETURN,
 	}
 

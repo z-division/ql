@@ -1,0 +1,26 @@
+for boolVal {
+    doStuff()
+}
+
+// break and continue
+break@ for true continue@ {
+    if x == 1 {
+        x = 4
+        return @continue x
+    }
+
+    if x > 10 {
+        return @break x
+    }
+
+    x = x + 1
+}
+
+// break outer loop
+outer@ for predicate1(x) {
+    for predicate2(y) {
+        if z == blah {
+            return @outer 1
+        }
+    }
+}
