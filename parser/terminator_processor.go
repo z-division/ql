@@ -7,14 +7,14 @@ import (
 var (
 	// Tokens that are sensitive to terminators on either side of the token
 	terminatorSensitive = map[int]struct{}{
-		IDENT:   struct{}{},
-		CHAR:    struct{}{},
-		STRING:  struct{}{},
-		INT:     struct{}{},
-		FLOAT:   struct{}{},
-		BOOL:    struct{}{},
-		NOOP:    struct{}{},
-		R_BRACE: struct{}{},
+		IDENT:          struct{}{},
+		CHAR_LITERAL:   struct{}{},
+		STRING_LITERAL: struct{}{},
+		INT_LITERAL:    struct{}{},
+		FLOAT_LITERAL:  struct{}{},
+		BOOL_LITERAL:   struct{}{},
+		NOOP:           struct{}{},
+		R_BRACE:        struct{}{},
 	}
 
 	// Tokens that are sensitive to terminators on the leading side of the
