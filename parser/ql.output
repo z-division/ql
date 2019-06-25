@@ -4,7 +4,7 @@ state 0
 	statement_list: .    (2)
 	scope_def: .    (14)
 
-	$end  reduce 2 (src line 99)
+	$end  reduce 2 (src line 107)
 	SEMICOLON  shift 7
 	NEWLINE  shift 8
 	LET  shift 14
@@ -12,23 +12,29 @@ state 0
 	NOT  shift 19
 	SUB  shift 18
 	IDENT  shift 15
-	CHAR_LITERAL  shift 20
-	STRING_LITERAL  shift 21
-	INT_LITERAL  shift 22
-	FLOAT_LITERAL  shift 23
-	BOOL_LITERAL  shift 24
+	BYTE_LITERAL  shift 25
+	STRING_LITERAL  shift 26
+	INT_LITERAL  shift 27
+	FLOAT_LITERAL  shift 28
+	BOOL_LITERAL  shift 29
+	INT_TYPE  shift 31
+	UINT_TYPE  shift 32
+	FLOAT_TYPE  shift 33
+	BYTE_TYPE  shift 30
 	NOOP  shift 9
-	.  reduce 14 (src line 161)
+	.  reduce 14 (src line 169)
 
+	literal  goto 20
+	conversion_type  goto 21
 	expr  goto 10
 	unit_expr  goto 17
 	composable_expr  goto 13
 	statement_list  goto 2
 	nonempty_statement_list  goto 3
-	scope_def  goto 28
-	expr_block  goto 25
-	conditional_expr  goto 26
-	for_expr  goto 27
+	scope_def  goto 34
+	expr_block  goto 22
+	conditional_expr  goto 23
+	for_expr  goto 24
 	statement  goto 4
 	control_flow_expr  goto 6
 	assignment_expr  goto 11
@@ -46,7 +52,7 @@ state 1
 state 2
 	start:  statement_list.    (1)
 
-	.  reduce 1 (src line 89)
+	.  reduce 1 (src line 97)
 
 
 state 3
@@ -54,8 +60,8 @@ state 3
 	nonempty_statement_list:  nonempty_statement_list.statement 
 	scope_def: .    (14)
 
-	$end  reduce 3 (src line 103)
-	R_BRACE  reduce 3 (src line 103)
+	$end  reduce 3 (src line 111)
+	R_BRACE  reduce 3 (src line 111)
 	SEMICOLON  shift 7
 	NEWLINE  shift 8
 	LET  shift 14
@@ -63,22 +69,28 @@ state 3
 	NOT  shift 19
 	SUB  shift 18
 	IDENT  shift 15
-	CHAR_LITERAL  shift 20
-	STRING_LITERAL  shift 21
-	INT_LITERAL  shift 22
-	FLOAT_LITERAL  shift 23
-	BOOL_LITERAL  shift 24
+	BYTE_LITERAL  shift 25
+	STRING_LITERAL  shift 26
+	INT_LITERAL  shift 27
+	FLOAT_LITERAL  shift 28
+	BOOL_LITERAL  shift 29
+	INT_TYPE  shift 31
+	UINT_TYPE  shift 32
+	FLOAT_TYPE  shift 33
+	BYTE_TYPE  shift 30
 	NOOP  shift 9
-	.  reduce 14 (src line 161)
+	.  reduce 14 (src line 169)
 
+	literal  goto 20
+	conversion_type  goto 21
 	expr  goto 10
 	unit_expr  goto 17
 	composable_expr  goto 13
-	scope_def  goto 28
-	expr_block  goto 25
-	conditional_expr  goto 26
-	for_expr  goto 27
-	statement  goto 29
+	scope_def  goto 34
+	expr_block  goto 22
+	conditional_expr  goto 23
+	for_expr  goto 24
+	statement  goto 35
 	control_flow_expr  goto 6
 	assignment_expr  goto 11
 	return_expr  goto 12
@@ -87,13 +99,13 @@ state 3
 state 4
 	nonempty_statement_list:  statement.    (4)
 
-	.  reduce 4 (src line 109)
+	.  reduce 4 (src line 117)
 
 
 state 5
 	statement:  terminator.    (8)
 
-	.  reduce 8 (src line 131)
+	.  reduce 8 (src line 139)
 
 
 state 6
@@ -103,46 +115,46 @@ state 6
 	NEWLINE  shift 8
 	.  error
 
-	terminator  goto 30
+	terminator  goto 36
 
 state 7
 	terminator:  SEMICOLON.    (6)
 
-	.  reduce 6 (src line 122)
+	.  reduce 6 (src line 130)
 
 
 state 8
 	terminator:  NEWLINE.    (7)
 
-	.  reduce 7 (src line 126)
+	.  reduce 7 (src line 134)
 
 
 state 9
 	control_flow_expr:  NOOP.    (10)
 
-	.  reduce 10 (src line 140)
+	.  reduce 10 (src line 148)
 
 
 state 10
 	control_flow_expr:  expr.    (11)
 
-	.  reduce 11 (src line 147)
+	.  reduce 11 (src line 155)
 
 
 state 11
 	control_flow_expr:  assignment_expr.    (12)
 
-	.  reduce 12 (src line 153)
+	.  reduce 12 (src line 161)
 
 
 state 12
 	control_flow_expr:  return_expr.    (13)
 
-	.  reduce 13 (src line 156)
+	.  reduce 13 (src line 164)
 
 
 state 13
-	expr:  composable_expr.    (32)
+	expr:  composable_expr.    (39)
 	composable_expr:  composable_expr.OR composable_expr 
 	composable_expr:  composable_expr.AND composable_expr 
 	composable_expr:  composable_expr.LT composable_expr 
@@ -162,42 +174,43 @@ state 13
 	composable_expr:  composable_expr.DIV composable_expr 
 	composable_expr:  composable_expr.MOD composable_expr 
 
-	OR  shift 31
-	AND  shift 32
-	LT  shift 33
-	GT  shift 34
-	EQ  shift 35
-	NE  shift 36
-	LE  shift 37
-	GE  shift 38
-	BITWISE_OR  shift 39
-	BITWISE_AND  shift 40
-	XOR  shift 41
-	L_SHIFT  shift 42
-	R_SHIFT  shift 43
-	ADD  shift 44
-	SUB  shift 45
-	MUL  shift 46
-	DIV  shift 47
-	MOD  shift 48
-	.  reduce 32 (src line 333)
+	OR  shift 37
+	AND  shift 38
+	LT  shift 39
+	GT  shift 40
+	EQ  shift 41
+	NE  shift 42
+	LE  shift 43
+	GE  shift 44
+	BITWISE_OR  shift 45
+	BITWISE_AND  shift 46
+	XOR  shift 47
+	L_SHIFT  shift 48
+	R_SHIFT  shift 49
+	ADD  shift 50
+	SUB  shift 51
+	MUL  shift 52
+	DIV  shift 53
+	MOD  shift 54
+	.  reduce 39 (src line 373)
 
 
 state 14
 	assignment_expr:  LET.IDENT ASSIGN expr 
+	assignment_expr:  LET.IDENT type_spec ASSIGN expr 
 
-	IDENT  shift 49
+	IDENT  shift 55
 	.  error
 
 
 state 15
 	scope_def:  IDENT.AT 
 	assignment_expr:  IDENT.ASSIGN expr 
-	unit_expr:  IDENT.    (33)
+	unit_expr:  IDENT.    (49)
 
-	ASSIGN  shift 51
-	AT  shift 50
-	.  reduce 33 (src line 340)
+	ASSIGN  shift 57
+	AT  shift 56
+	.  reduce 49 (src line 413)
 
 
 state 16
@@ -205,33 +218,39 @@ state 16
 	return_expr:  RETURN.AT IDENT expr 
 	scope_def: .    (14)
 
-	AT  shift 53
+	AT  shift 59
 	NOT  shift 19
 	SUB  shift 18
-	IDENT  shift 54
-	CHAR_LITERAL  shift 20
-	STRING_LITERAL  shift 21
-	INT_LITERAL  shift 22
-	FLOAT_LITERAL  shift 23
-	BOOL_LITERAL  shift 24
-	.  reduce 14 (src line 161)
+	IDENT  shift 60
+	BYTE_LITERAL  shift 25
+	STRING_LITERAL  shift 26
+	INT_LITERAL  shift 27
+	FLOAT_LITERAL  shift 28
+	BOOL_LITERAL  shift 29
+	INT_TYPE  shift 31
+	UINT_TYPE  shift 32
+	FLOAT_TYPE  shift 33
+	BYTE_TYPE  shift 30
+	.  reduce 14 (src line 169)
 
-	expr  goto 52
+	literal  goto 20
+	conversion_type  goto 21
+	expr  goto 58
 	unit_expr  goto 17
 	composable_expr  goto 13
-	scope_def  goto 28
-	expr_block  goto 25
-	conditional_expr  goto 26
-	for_expr  goto 27
+	scope_def  goto 34
+	expr_block  goto 22
+	conditional_expr  goto 23
+	for_expr  goto 24
 
 state 17
 	unit_expr:  unit_expr.DOT IDENT 
 	unit_expr:  unit_expr.L_PAREN argument_list R_PAREN 
-	composable_expr:  unit_expr.    (48)
+	composable_expr:  unit_expr.    (61)
 
-	L_PAREN  shift 56
-	DOT  shift 55
-	.  reduce 48 (src line 435)
+	L_PAREN  shift 62
+	DOT  shift 61
+	.  reduce 61 (src line 493)
 
 
 state 18
@@ -240,20 +259,26 @@ state 18
 
 	NOT  shift 19
 	SUB  shift 18
-	IDENT  shift 54
-	CHAR_LITERAL  shift 20
-	STRING_LITERAL  shift 21
-	INT_LITERAL  shift 22
-	FLOAT_LITERAL  shift 23
-	BOOL_LITERAL  shift 24
-	.  reduce 14 (src line 161)
+	IDENT  shift 60
+	BYTE_LITERAL  shift 25
+	STRING_LITERAL  shift 26
+	INT_LITERAL  shift 27
+	FLOAT_LITERAL  shift 28
+	BOOL_LITERAL  shift 29
+	INT_TYPE  shift 31
+	UINT_TYPE  shift 32
+	FLOAT_TYPE  shift 33
+	BYTE_TYPE  shift 30
+	.  reduce 14 (src line 169)
 
+	literal  goto 20
+	conversion_type  goto 21
 	unit_expr  goto 17
-	composable_expr  goto 57
-	scope_def  goto 28
-	expr_block  goto 25
-	conditional_expr  goto 26
-	for_expr  goto 27
+	composable_expr  goto 63
+	scope_def  goto 34
+	expr_block  goto 22
+	conditional_expr  goto 23
+	for_expr  goto 24
 
 state 19
 	composable_expr:  NOT.composable_expr 
@@ -261,649 +286,847 @@ state 19
 
 	NOT  shift 19
 	SUB  shift 18
-	IDENT  shift 54
-	CHAR_LITERAL  shift 20
-	STRING_LITERAL  shift 21
-	INT_LITERAL  shift 22
-	FLOAT_LITERAL  shift 23
-	BOOL_LITERAL  shift 24
-	.  reduce 14 (src line 161)
+	IDENT  shift 60
+	BYTE_LITERAL  shift 25
+	STRING_LITERAL  shift 26
+	INT_LITERAL  shift 27
+	FLOAT_LITERAL  shift 28
+	BOOL_LITERAL  shift 29
+	INT_TYPE  shift 31
+	UINT_TYPE  shift 32
+	FLOAT_TYPE  shift 33
+	BYTE_TYPE  shift 30
+	.  reduce 14 (src line 169)
 
+	literal  goto 20
+	conversion_type  goto 21
 	unit_expr  goto 17
-	composable_expr  goto 58
-	scope_def  goto 28
-	expr_block  goto 25
-	conditional_expr  goto 26
-	for_expr  goto 27
+	composable_expr  goto 64
+	scope_def  goto 34
+	expr_block  goto 22
+	conditional_expr  goto 23
+	for_expr  goto 24
 
 state 20
-	unit_expr:  CHAR_LITERAL.    (34)
+	unit_expr:  literal.    (50)
 
-	.  reduce 34 (src line 347)
+	.  reduce 50 (src line 420)
 
 
 state 21
-	unit_expr:  STRING_LITERAL.    (35)
+	unit_expr:  conversion_type.L_PAREN composable_expr R_PAREN 
 
-	.  reduce 35 (src line 353)
+	L_PAREN  shift 65
+	.  error
 
 
 state 22
-	unit_expr:  INT_LITERAL.    (36)
+	unit_expr:  expr_block.    (52)
 
-	.  reduce 36 (src line 359)
+	.  reduce 52 (src line 435)
 
 
 state 23
-	unit_expr:  FLOAT_LITERAL.    (37)
+	unit_expr:  conditional_expr.    (53)
 
-	.  reduce 37 (src line 365)
+	.  reduce 53 (src line 438)
 
 
 state 24
-	unit_expr:  BOOL_LITERAL.    (38)
+	unit_expr:  for_expr.    (54)
 
-	.  reduce 38 (src line 371)
+	.  reduce 54 (src line 441)
 
 
 state 25
-	unit_expr:  expr_block.    (39)
+	literal:  BYTE_LITERAL.    (40)
 
-	.  reduce 39 (src line 377)
+	.  reduce 40 (src line 379)
 
 
 state 26
-	unit_expr:  conditional_expr.    (40)
-
-	.  reduce 40 (src line 380)
-
-
-state 27
-	unit_expr:  for_expr.    (41)
+	literal:  STRING_LITERAL.    (41)
 
 	.  reduce 41 (src line 383)
 
 
+state 27
+	literal:  INT_LITERAL.    (42)
+
+	.  reduce 42 (src line 386)
+
+
 state 28
+	literal:  FLOAT_LITERAL.    (43)
+
+	.  reduce 43 (src line 389)
+
+
+state 29
+	literal:  BOOL_LITERAL.    (44)
+
+	.  reduce 44 (src line 392)
+
+
+state 30
+	conversion_type:  BYTE_TYPE.    (45)
+
+	.  reduce 45 (src line 397)
+
+
+state 31
+	conversion_type:  INT_TYPE.    (46)
+
+	.  reduce 46 (src line 401)
+
+
+state 32
+	conversion_type:  UINT_TYPE.    (47)
+
+	.  reduce 47 (src line 404)
+
+
+state 33
+	conversion_type:  FLOAT_TYPE.    (48)
+
+	.  reduce 48 (src line 407)
+
+
+state 34
 	expr_block:  scope_def.base_expr_block 
 	conditional_expr:  scope_def.base_conditional_expr 
 	for_expr:  scope_def.base_for_expr 
 
-	L_BRACE  shift 62
-	IF  shift 63
-	FOR  shift 64
+	L_BRACE  shift 69
+	IF  shift 70
+	FOR  shift 71
 	.  error
 
-	base_expr_block  goto 59
-	base_conditional_expr  goto 60
-	base_for_expr  goto 61
+	base_expr_block  goto 66
+	base_conditional_expr  goto 67
+	base_for_expr  goto 68
 
-state 29
+state 35
 	nonempty_statement_list:  nonempty_statement_list statement.    (5)
 
-	.  reduce 5 (src line 115)
+	.  reduce 5 (src line 123)
 
 
-state 30
+state 36
 	statement:  control_flow_expr terminator.    (9)
 
-	.  reduce 9 (src line 135)
+	.  reduce 9 (src line 143)
 
 
-state 31
+state 37
 	composable_expr:  composable_expr OR.composable_expr 
 	scope_def: .    (14)
 
 	NOT  shift 19
 	SUB  shift 18
-	IDENT  shift 54
-	CHAR_LITERAL  shift 20
-	STRING_LITERAL  shift 21
-	INT_LITERAL  shift 22
-	FLOAT_LITERAL  shift 23
-	BOOL_LITERAL  shift 24
-	.  reduce 14 (src line 161)
+	IDENT  shift 60
+	BYTE_LITERAL  shift 25
+	STRING_LITERAL  shift 26
+	INT_LITERAL  shift 27
+	FLOAT_LITERAL  shift 28
+	BOOL_LITERAL  shift 29
+	INT_TYPE  shift 31
+	UINT_TYPE  shift 32
+	FLOAT_TYPE  shift 33
+	BYTE_TYPE  shift 30
+	.  reduce 14 (src line 169)
 
+	literal  goto 20
+	conversion_type  goto 21
 	unit_expr  goto 17
-	composable_expr  goto 65
-	scope_def  goto 28
-	expr_block  goto 25
-	conditional_expr  goto 26
-	for_expr  goto 27
+	composable_expr  goto 72
+	scope_def  goto 34
+	expr_block  goto 22
+	conditional_expr  goto 23
+	for_expr  goto 24
 
-state 32
+state 38
 	composable_expr:  composable_expr AND.composable_expr 
 	scope_def: .    (14)
 
 	NOT  shift 19
 	SUB  shift 18
-	IDENT  shift 54
-	CHAR_LITERAL  shift 20
-	STRING_LITERAL  shift 21
-	INT_LITERAL  shift 22
-	FLOAT_LITERAL  shift 23
-	BOOL_LITERAL  shift 24
-	.  reduce 14 (src line 161)
+	IDENT  shift 60
+	BYTE_LITERAL  shift 25
+	STRING_LITERAL  shift 26
+	INT_LITERAL  shift 27
+	FLOAT_LITERAL  shift 28
+	BOOL_LITERAL  shift 29
+	INT_TYPE  shift 31
+	UINT_TYPE  shift 32
+	FLOAT_TYPE  shift 33
+	BYTE_TYPE  shift 30
+	.  reduce 14 (src line 169)
 
+	literal  goto 20
+	conversion_type  goto 21
 	unit_expr  goto 17
-	composable_expr  goto 66
-	scope_def  goto 28
-	expr_block  goto 25
-	conditional_expr  goto 26
-	for_expr  goto 27
+	composable_expr  goto 73
+	scope_def  goto 34
+	expr_block  goto 22
+	conditional_expr  goto 23
+	for_expr  goto 24
 
-state 33
+state 39
 	composable_expr:  composable_expr LT.composable_expr 
 	scope_def: .    (14)
 
 	NOT  shift 19
 	SUB  shift 18
-	IDENT  shift 54
-	CHAR_LITERAL  shift 20
-	STRING_LITERAL  shift 21
-	INT_LITERAL  shift 22
-	FLOAT_LITERAL  shift 23
-	BOOL_LITERAL  shift 24
-	.  reduce 14 (src line 161)
+	IDENT  shift 60
+	BYTE_LITERAL  shift 25
+	STRING_LITERAL  shift 26
+	INT_LITERAL  shift 27
+	FLOAT_LITERAL  shift 28
+	BOOL_LITERAL  shift 29
+	INT_TYPE  shift 31
+	UINT_TYPE  shift 32
+	FLOAT_TYPE  shift 33
+	BYTE_TYPE  shift 30
+	.  reduce 14 (src line 169)
 
+	literal  goto 20
+	conversion_type  goto 21
 	unit_expr  goto 17
-	composable_expr  goto 67
-	scope_def  goto 28
-	expr_block  goto 25
-	conditional_expr  goto 26
-	for_expr  goto 27
+	composable_expr  goto 74
+	scope_def  goto 34
+	expr_block  goto 22
+	conditional_expr  goto 23
+	for_expr  goto 24
 
-state 34
+state 40
 	composable_expr:  composable_expr GT.composable_expr 
 	scope_def: .    (14)
 
 	NOT  shift 19
 	SUB  shift 18
-	IDENT  shift 54
-	CHAR_LITERAL  shift 20
-	STRING_LITERAL  shift 21
-	INT_LITERAL  shift 22
-	FLOAT_LITERAL  shift 23
-	BOOL_LITERAL  shift 24
-	.  reduce 14 (src line 161)
+	IDENT  shift 60
+	BYTE_LITERAL  shift 25
+	STRING_LITERAL  shift 26
+	INT_LITERAL  shift 27
+	FLOAT_LITERAL  shift 28
+	BOOL_LITERAL  shift 29
+	INT_TYPE  shift 31
+	UINT_TYPE  shift 32
+	FLOAT_TYPE  shift 33
+	BYTE_TYPE  shift 30
+	.  reduce 14 (src line 169)
 
+	literal  goto 20
+	conversion_type  goto 21
 	unit_expr  goto 17
-	composable_expr  goto 68
-	scope_def  goto 28
-	expr_block  goto 25
-	conditional_expr  goto 26
-	for_expr  goto 27
+	composable_expr  goto 75
+	scope_def  goto 34
+	expr_block  goto 22
+	conditional_expr  goto 23
+	for_expr  goto 24
 
-state 35
+state 41
 	composable_expr:  composable_expr EQ.composable_expr 
 	scope_def: .    (14)
 
 	NOT  shift 19
 	SUB  shift 18
-	IDENT  shift 54
-	CHAR_LITERAL  shift 20
-	STRING_LITERAL  shift 21
-	INT_LITERAL  shift 22
-	FLOAT_LITERAL  shift 23
-	BOOL_LITERAL  shift 24
-	.  reduce 14 (src line 161)
+	IDENT  shift 60
+	BYTE_LITERAL  shift 25
+	STRING_LITERAL  shift 26
+	INT_LITERAL  shift 27
+	FLOAT_LITERAL  shift 28
+	BOOL_LITERAL  shift 29
+	INT_TYPE  shift 31
+	UINT_TYPE  shift 32
+	FLOAT_TYPE  shift 33
+	BYTE_TYPE  shift 30
+	.  reduce 14 (src line 169)
 
+	literal  goto 20
+	conversion_type  goto 21
 	unit_expr  goto 17
-	composable_expr  goto 69
-	scope_def  goto 28
-	expr_block  goto 25
-	conditional_expr  goto 26
-	for_expr  goto 27
+	composable_expr  goto 76
+	scope_def  goto 34
+	expr_block  goto 22
+	conditional_expr  goto 23
+	for_expr  goto 24
 
-state 36
+state 42
 	composable_expr:  composable_expr NE.composable_expr 
 	scope_def: .    (14)
 
 	NOT  shift 19
 	SUB  shift 18
-	IDENT  shift 54
-	CHAR_LITERAL  shift 20
-	STRING_LITERAL  shift 21
-	INT_LITERAL  shift 22
-	FLOAT_LITERAL  shift 23
-	BOOL_LITERAL  shift 24
-	.  reduce 14 (src line 161)
+	IDENT  shift 60
+	BYTE_LITERAL  shift 25
+	STRING_LITERAL  shift 26
+	INT_LITERAL  shift 27
+	FLOAT_LITERAL  shift 28
+	BOOL_LITERAL  shift 29
+	INT_TYPE  shift 31
+	UINT_TYPE  shift 32
+	FLOAT_TYPE  shift 33
+	BYTE_TYPE  shift 30
+	.  reduce 14 (src line 169)
 
+	literal  goto 20
+	conversion_type  goto 21
 	unit_expr  goto 17
-	composable_expr  goto 70
-	scope_def  goto 28
-	expr_block  goto 25
-	conditional_expr  goto 26
-	for_expr  goto 27
+	composable_expr  goto 77
+	scope_def  goto 34
+	expr_block  goto 22
+	conditional_expr  goto 23
+	for_expr  goto 24
 
-state 37
+state 43
 	composable_expr:  composable_expr LE.composable_expr 
 	scope_def: .    (14)
 
 	NOT  shift 19
 	SUB  shift 18
-	IDENT  shift 54
-	CHAR_LITERAL  shift 20
-	STRING_LITERAL  shift 21
-	INT_LITERAL  shift 22
-	FLOAT_LITERAL  shift 23
-	BOOL_LITERAL  shift 24
-	.  reduce 14 (src line 161)
+	IDENT  shift 60
+	BYTE_LITERAL  shift 25
+	STRING_LITERAL  shift 26
+	INT_LITERAL  shift 27
+	FLOAT_LITERAL  shift 28
+	BOOL_LITERAL  shift 29
+	INT_TYPE  shift 31
+	UINT_TYPE  shift 32
+	FLOAT_TYPE  shift 33
+	BYTE_TYPE  shift 30
+	.  reduce 14 (src line 169)
 
+	literal  goto 20
+	conversion_type  goto 21
 	unit_expr  goto 17
-	composable_expr  goto 71
-	scope_def  goto 28
-	expr_block  goto 25
-	conditional_expr  goto 26
-	for_expr  goto 27
+	composable_expr  goto 78
+	scope_def  goto 34
+	expr_block  goto 22
+	conditional_expr  goto 23
+	for_expr  goto 24
 
-state 38
+state 44
 	composable_expr:  composable_expr GE.composable_expr 
 	scope_def: .    (14)
 
 	NOT  shift 19
 	SUB  shift 18
-	IDENT  shift 54
-	CHAR_LITERAL  shift 20
-	STRING_LITERAL  shift 21
-	INT_LITERAL  shift 22
-	FLOAT_LITERAL  shift 23
-	BOOL_LITERAL  shift 24
-	.  reduce 14 (src line 161)
+	IDENT  shift 60
+	BYTE_LITERAL  shift 25
+	STRING_LITERAL  shift 26
+	INT_LITERAL  shift 27
+	FLOAT_LITERAL  shift 28
+	BOOL_LITERAL  shift 29
+	INT_TYPE  shift 31
+	UINT_TYPE  shift 32
+	FLOAT_TYPE  shift 33
+	BYTE_TYPE  shift 30
+	.  reduce 14 (src line 169)
 
+	literal  goto 20
+	conversion_type  goto 21
 	unit_expr  goto 17
-	composable_expr  goto 72
-	scope_def  goto 28
-	expr_block  goto 25
-	conditional_expr  goto 26
-	for_expr  goto 27
+	composable_expr  goto 79
+	scope_def  goto 34
+	expr_block  goto 22
+	conditional_expr  goto 23
+	for_expr  goto 24
 
-state 39
+state 45
 	composable_expr:  composable_expr BITWISE_OR.composable_expr 
 	scope_def: .    (14)
 
 	NOT  shift 19
 	SUB  shift 18
-	IDENT  shift 54
-	CHAR_LITERAL  shift 20
-	STRING_LITERAL  shift 21
-	INT_LITERAL  shift 22
-	FLOAT_LITERAL  shift 23
-	BOOL_LITERAL  shift 24
-	.  reduce 14 (src line 161)
+	IDENT  shift 60
+	BYTE_LITERAL  shift 25
+	STRING_LITERAL  shift 26
+	INT_LITERAL  shift 27
+	FLOAT_LITERAL  shift 28
+	BOOL_LITERAL  shift 29
+	INT_TYPE  shift 31
+	UINT_TYPE  shift 32
+	FLOAT_TYPE  shift 33
+	BYTE_TYPE  shift 30
+	.  reduce 14 (src line 169)
 
+	literal  goto 20
+	conversion_type  goto 21
 	unit_expr  goto 17
-	composable_expr  goto 73
-	scope_def  goto 28
-	expr_block  goto 25
-	conditional_expr  goto 26
-	for_expr  goto 27
+	composable_expr  goto 80
+	scope_def  goto 34
+	expr_block  goto 22
+	conditional_expr  goto 23
+	for_expr  goto 24
 
-state 40
+state 46
 	composable_expr:  composable_expr BITWISE_AND.composable_expr 
 	scope_def: .    (14)
 
 	NOT  shift 19
 	SUB  shift 18
-	IDENT  shift 54
-	CHAR_LITERAL  shift 20
-	STRING_LITERAL  shift 21
-	INT_LITERAL  shift 22
-	FLOAT_LITERAL  shift 23
-	BOOL_LITERAL  shift 24
-	.  reduce 14 (src line 161)
+	IDENT  shift 60
+	BYTE_LITERAL  shift 25
+	STRING_LITERAL  shift 26
+	INT_LITERAL  shift 27
+	FLOAT_LITERAL  shift 28
+	BOOL_LITERAL  shift 29
+	INT_TYPE  shift 31
+	UINT_TYPE  shift 32
+	FLOAT_TYPE  shift 33
+	BYTE_TYPE  shift 30
+	.  reduce 14 (src line 169)
 
+	literal  goto 20
+	conversion_type  goto 21
 	unit_expr  goto 17
-	composable_expr  goto 74
-	scope_def  goto 28
-	expr_block  goto 25
-	conditional_expr  goto 26
-	for_expr  goto 27
+	composable_expr  goto 81
+	scope_def  goto 34
+	expr_block  goto 22
+	conditional_expr  goto 23
+	for_expr  goto 24
 
-state 41
+state 47
 	composable_expr:  composable_expr XOR.composable_expr 
 	scope_def: .    (14)
 
 	NOT  shift 19
 	SUB  shift 18
-	IDENT  shift 54
-	CHAR_LITERAL  shift 20
-	STRING_LITERAL  shift 21
-	INT_LITERAL  shift 22
-	FLOAT_LITERAL  shift 23
-	BOOL_LITERAL  shift 24
-	.  reduce 14 (src line 161)
+	IDENT  shift 60
+	BYTE_LITERAL  shift 25
+	STRING_LITERAL  shift 26
+	INT_LITERAL  shift 27
+	FLOAT_LITERAL  shift 28
+	BOOL_LITERAL  shift 29
+	INT_TYPE  shift 31
+	UINT_TYPE  shift 32
+	FLOAT_TYPE  shift 33
+	BYTE_TYPE  shift 30
+	.  reduce 14 (src line 169)
 
+	literal  goto 20
+	conversion_type  goto 21
 	unit_expr  goto 17
-	composable_expr  goto 75
-	scope_def  goto 28
-	expr_block  goto 25
-	conditional_expr  goto 26
-	for_expr  goto 27
+	composable_expr  goto 82
+	scope_def  goto 34
+	expr_block  goto 22
+	conditional_expr  goto 23
+	for_expr  goto 24
 
-state 42
+state 48
 	composable_expr:  composable_expr L_SHIFT.composable_expr 
 	scope_def: .    (14)
 
 	NOT  shift 19
 	SUB  shift 18
-	IDENT  shift 54
-	CHAR_LITERAL  shift 20
-	STRING_LITERAL  shift 21
-	INT_LITERAL  shift 22
-	FLOAT_LITERAL  shift 23
-	BOOL_LITERAL  shift 24
-	.  reduce 14 (src line 161)
+	IDENT  shift 60
+	BYTE_LITERAL  shift 25
+	STRING_LITERAL  shift 26
+	INT_LITERAL  shift 27
+	FLOAT_LITERAL  shift 28
+	BOOL_LITERAL  shift 29
+	INT_TYPE  shift 31
+	UINT_TYPE  shift 32
+	FLOAT_TYPE  shift 33
+	BYTE_TYPE  shift 30
+	.  reduce 14 (src line 169)
 
+	literal  goto 20
+	conversion_type  goto 21
 	unit_expr  goto 17
-	composable_expr  goto 76
-	scope_def  goto 28
-	expr_block  goto 25
-	conditional_expr  goto 26
-	for_expr  goto 27
+	composable_expr  goto 83
+	scope_def  goto 34
+	expr_block  goto 22
+	conditional_expr  goto 23
+	for_expr  goto 24
 
-state 43
+state 49
 	composable_expr:  composable_expr R_SHIFT.composable_expr 
 	scope_def: .    (14)
 
 	NOT  shift 19
 	SUB  shift 18
-	IDENT  shift 54
-	CHAR_LITERAL  shift 20
-	STRING_LITERAL  shift 21
-	INT_LITERAL  shift 22
-	FLOAT_LITERAL  shift 23
-	BOOL_LITERAL  shift 24
-	.  reduce 14 (src line 161)
+	IDENT  shift 60
+	BYTE_LITERAL  shift 25
+	STRING_LITERAL  shift 26
+	INT_LITERAL  shift 27
+	FLOAT_LITERAL  shift 28
+	BOOL_LITERAL  shift 29
+	INT_TYPE  shift 31
+	UINT_TYPE  shift 32
+	FLOAT_TYPE  shift 33
+	BYTE_TYPE  shift 30
+	.  reduce 14 (src line 169)
 
+	literal  goto 20
+	conversion_type  goto 21
 	unit_expr  goto 17
-	composable_expr  goto 77
-	scope_def  goto 28
-	expr_block  goto 25
-	conditional_expr  goto 26
-	for_expr  goto 27
+	composable_expr  goto 84
+	scope_def  goto 34
+	expr_block  goto 22
+	conditional_expr  goto 23
+	for_expr  goto 24
 
-state 44
+state 50
 	composable_expr:  composable_expr ADD.composable_expr 
 	scope_def: .    (14)
 
 	NOT  shift 19
 	SUB  shift 18
-	IDENT  shift 54
-	CHAR_LITERAL  shift 20
-	STRING_LITERAL  shift 21
-	INT_LITERAL  shift 22
-	FLOAT_LITERAL  shift 23
-	BOOL_LITERAL  shift 24
-	.  reduce 14 (src line 161)
+	IDENT  shift 60
+	BYTE_LITERAL  shift 25
+	STRING_LITERAL  shift 26
+	INT_LITERAL  shift 27
+	FLOAT_LITERAL  shift 28
+	BOOL_LITERAL  shift 29
+	INT_TYPE  shift 31
+	UINT_TYPE  shift 32
+	FLOAT_TYPE  shift 33
+	BYTE_TYPE  shift 30
+	.  reduce 14 (src line 169)
 
+	literal  goto 20
+	conversion_type  goto 21
 	unit_expr  goto 17
-	composable_expr  goto 78
-	scope_def  goto 28
-	expr_block  goto 25
-	conditional_expr  goto 26
-	for_expr  goto 27
+	composable_expr  goto 85
+	scope_def  goto 34
+	expr_block  goto 22
+	conditional_expr  goto 23
+	for_expr  goto 24
 
-state 45
+state 51
 	composable_expr:  composable_expr SUB.composable_expr 
 	scope_def: .    (14)
 
 	NOT  shift 19
 	SUB  shift 18
-	IDENT  shift 54
-	CHAR_LITERAL  shift 20
-	STRING_LITERAL  shift 21
-	INT_LITERAL  shift 22
-	FLOAT_LITERAL  shift 23
-	BOOL_LITERAL  shift 24
-	.  reduce 14 (src line 161)
+	IDENT  shift 60
+	BYTE_LITERAL  shift 25
+	STRING_LITERAL  shift 26
+	INT_LITERAL  shift 27
+	FLOAT_LITERAL  shift 28
+	BOOL_LITERAL  shift 29
+	INT_TYPE  shift 31
+	UINT_TYPE  shift 32
+	FLOAT_TYPE  shift 33
+	BYTE_TYPE  shift 30
+	.  reduce 14 (src line 169)
 
+	literal  goto 20
+	conversion_type  goto 21
 	unit_expr  goto 17
-	composable_expr  goto 79
-	scope_def  goto 28
-	expr_block  goto 25
-	conditional_expr  goto 26
-	for_expr  goto 27
+	composable_expr  goto 86
+	scope_def  goto 34
+	expr_block  goto 22
+	conditional_expr  goto 23
+	for_expr  goto 24
 
-state 46
+state 52
 	composable_expr:  composable_expr MUL.composable_expr 
 	scope_def: .    (14)
 
 	NOT  shift 19
 	SUB  shift 18
-	IDENT  shift 54
-	CHAR_LITERAL  shift 20
-	STRING_LITERAL  shift 21
-	INT_LITERAL  shift 22
-	FLOAT_LITERAL  shift 23
-	BOOL_LITERAL  shift 24
-	.  reduce 14 (src line 161)
+	IDENT  shift 60
+	BYTE_LITERAL  shift 25
+	STRING_LITERAL  shift 26
+	INT_LITERAL  shift 27
+	FLOAT_LITERAL  shift 28
+	BOOL_LITERAL  shift 29
+	INT_TYPE  shift 31
+	UINT_TYPE  shift 32
+	FLOAT_TYPE  shift 33
+	BYTE_TYPE  shift 30
+	.  reduce 14 (src line 169)
 
+	literal  goto 20
+	conversion_type  goto 21
 	unit_expr  goto 17
-	composable_expr  goto 80
-	scope_def  goto 28
-	expr_block  goto 25
-	conditional_expr  goto 26
-	for_expr  goto 27
+	composable_expr  goto 87
+	scope_def  goto 34
+	expr_block  goto 22
+	conditional_expr  goto 23
+	for_expr  goto 24
 
-state 47
+state 53
 	composable_expr:  composable_expr DIV.composable_expr 
 	scope_def: .    (14)
 
 	NOT  shift 19
 	SUB  shift 18
-	IDENT  shift 54
-	CHAR_LITERAL  shift 20
-	STRING_LITERAL  shift 21
-	INT_LITERAL  shift 22
-	FLOAT_LITERAL  shift 23
-	BOOL_LITERAL  shift 24
-	.  reduce 14 (src line 161)
+	IDENT  shift 60
+	BYTE_LITERAL  shift 25
+	STRING_LITERAL  shift 26
+	INT_LITERAL  shift 27
+	FLOAT_LITERAL  shift 28
+	BOOL_LITERAL  shift 29
+	INT_TYPE  shift 31
+	UINT_TYPE  shift 32
+	FLOAT_TYPE  shift 33
+	BYTE_TYPE  shift 30
+	.  reduce 14 (src line 169)
 
+	literal  goto 20
+	conversion_type  goto 21
 	unit_expr  goto 17
-	composable_expr  goto 81
-	scope_def  goto 28
-	expr_block  goto 25
-	conditional_expr  goto 26
-	for_expr  goto 27
+	composable_expr  goto 88
+	scope_def  goto 34
+	expr_block  goto 22
+	conditional_expr  goto 23
+	for_expr  goto 24
 
-state 48
+state 54
 	composable_expr:  composable_expr MOD.composable_expr 
 	scope_def: .    (14)
 
 	NOT  shift 19
 	SUB  shift 18
-	IDENT  shift 54
-	CHAR_LITERAL  shift 20
-	STRING_LITERAL  shift 21
-	INT_LITERAL  shift 22
-	FLOAT_LITERAL  shift 23
-	BOOL_LITERAL  shift 24
-	.  reduce 14 (src line 161)
+	IDENT  shift 60
+	BYTE_LITERAL  shift 25
+	STRING_LITERAL  shift 26
+	INT_LITERAL  shift 27
+	FLOAT_LITERAL  shift 28
+	BOOL_LITERAL  shift 29
+	INT_TYPE  shift 31
+	UINT_TYPE  shift 32
+	FLOAT_TYPE  shift 33
+	BYTE_TYPE  shift 30
+	.  reduce 14 (src line 169)
 
+	literal  goto 20
+	conversion_type  goto 21
 	unit_expr  goto 17
-	composable_expr  goto 82
-	scope_def  goto 28
-	expr_block  goto 25
-	conditional_expr  goto 26
-	for_expr  goto 27
+	composable_expr  goto 89
+	scope_def  goto 34
+	expr_block  goto 22
+	conditional_expr  goto 23
+	for_expr  goto 24
 
-state 49
+state 55
 	assignment_expr:  LET IDENT.ASSIGN expr 
+	assignment_expr:  LET IDENT.type_spec ASSIGN expr 
 
-	ASSIGN  shift 83
+	ASSIGN  shift 90
+	BOOL_TYPE  shift 92
+	INT_TYPE  shift 93
+	UINT_TYPE  shift 94
+	FLOAT_TYPE  shift 95
+	BYTE_TYPE  shift 96
+	STRING_TYPE  shift 97
 	.  error
 
+	type_spec  goto 91
 
-state 50
+state 56
 	scope_def:  IDENT AT.    (15)
 
-	.  reduce 15 (src line 165)
+	.  reduce 15 (src line 173)
 
 
-state 51
+state 57
 	assignment_expr:  IDENT ASSIGN.expr 
 	scope_def: .    (14)
 
 	NOT  shift 19
 	SUB  shift 18
-	IDENT  shift 54
-	CHAR_LITERAL  shift 20
-	STRING_LITERAL  shift 21
-	INT_LITERAL  shift 22
-	FLOAT_LITERAL  shift 23
-	BOOL_LITERAL  shift 24
-	.  reduce 14 (src line 161)
+	IDENT  shift 60
+	BYTE_LITERAL  shift 25
+	STRING_LITERAL  shift 26
+	INT_LITERAL  shift 27
+	FLOAT_LITERAL  shift 28
+	BOOL_LITERAL  shift 29
+	INT_TYPE  shift 31
+	UINT_TYPE  shift 32
+	FLOAT_TYPE  shift 33
+	BYTE_TYPE  shift 30
+	.  reduce 14 (src line 169)
 
-	expr  goto 84
+	literal  goto 20
+	conversion_type  goto 21
+	expr  goto 98
 	unit_expr  goto 17
 	composable_expr  goto 13
-	scope_def  goto 28
-	expr_block  goto 25
-	conditional_expr  goto 26
-	for_expr  goto 27
-
-state 52
-	return_expr:  RETURN expr.    (30)
-
-	.  reduce 30 (src line 314)
-
-
-state 53
-	return_expr:  RETURN AT.IDENT expr 
-
-	IDENT  shift 85
-	.  error
-
-
-state 54
-	scope_def:  IDENT.AT 
-	unit_expr:  IDENT.    (33)
-
-	AT  shift 50
-	.  reduce 33 (src line 340)
-
-
-state 55
-	unit_expr:  unit_expr DOT.IDENT 
-
-	IDENT  shift 86
-	.  error
-
-
-state 56
-	unit_expr:  unit_expr L_PAREN.argument_list R_PAREN 
-	argument_list: .    (44)
-	scope_def: .    (14)
-
-	R_PAREN  reduce 44 (src line 405)
-	NOT  shift 19
-	SUB  shift 18
-	IDENT  shift 54
-	CHAR_LITERAL  shift 20
-	STRING_LITERAL  shift 21
-	INT_LITERAL  shift 22
-	FLOAT_LITERAL  shift 23
-	BOOL_LITERAL  shift 24
-	.  reduce 14 (src line 161)
-
-	unit_expr  goto 17
-	composable_expr  goto 89
-	argument_list  goto 87
-	nonempty_argument_list  goto 88
-	scope_def  goto 28
-	expr_block  goto 25
-	conditional_expr  goto 26
-	for_expr  goto 27
-
-state 57
-	composable_expr:  composable_expr.OR composable_expr 
-	composable_expr:  composable_expr.AND composable_expr 
-	composable_expr:  composable_expr.LT composable_expr 
-	composable_expr:  composable_expr.GT composable_expr 
-	composable_expr:  composable_expr.EQ composable_expr 
-	composable_expr:  composable_expr.NE composable_expr 
-	composable_expr:  composable_expr.LE composable_expr 
-	composable_expr:  composable_expr.GE composable_expr 
-	composable_expr:  composable_expr.BITWISE_OR composable_expr 
-	composable_expr:  composable_expr.BITWISE_AND composable_expr 
-	composable_expr:  composable_expr.XOR composable_expr 
-	composable_expr:  composable_expr.L_SHIFT composable_expr 
-	composable_expr:  composable_expr.R_SHIFT composable_expr 
-	composable_expr:  composable_expr.ADD composable_expr 
-	composable_expr:  composable_expr.SUB composable_expr 
-	composable_expr:  composable_expr.MUL composable_expr 
-	composable_expr:  composable_expr.DIV composable_expr 
-	composable_expr:  composable_expr.MOD composable_expr 
-	composable_expr:  SUB composable_expr.    (67)
-
-	.  reduce 67 (src line 583)
-
+	scope_def  goto 34
+	expr_block  goto 22
+	conditional_expr  goto 23
+	for_expr  goto 24
 
 state 58
-	composable_expr:  composable_expr.OR composable_expr 
-	composable_expr:  composable_expr.AND composable_expr 
-	composable_expr:  composable_expr.LT composable_expr 
-	composable_expr:  composable_expr.GT composable_expr 
-	composable_expr:  composable_expr.EQ composable_expr 
-	composable_expr:  composable_expr.NE composable_expr 
-	composable_expr:  composable_expr.LE composable_expr 
-	composable_expr:  composable_expr.GE composable_expr 
-	composable_expr:  composable_expr.BITWISE_OR composable_expr 
-	composable_expr:  composable_expr.BITWISE_AND composable_expr 
-	composable_expr:  composable_expr.XOR composable_expr 
-	composable_expr:  composable_expr.L_SHIFT composable_expr 
-	composable_expr:  composable_expr.R_SHIFT composable_expr 
-	composable_expr:  composable_expr.ADD composable_expr 
-	composable_expr:  composable_expr.SUB composable_expr 
-	composable_expr:  composable_expr.MUL composable_expr 
-	composable_expr:  composable_expr.DIV composable_expr 
-	composable_expr:  composable_expr.MOD composable_expr 
-	composable_expr:  NOT composable_expr.    (68)
+	return_expr:  RETURN expr.    (37)
 
-	LT  shift 33
-	GT  shift 34
-	EQ  shift 35
-	NE  shift 36
-	LE  shift 37
-	GE  shift 38
-	BITWISE_OR  shift 39
-	BITWISE_AND  shift 40
-	XOR  shift 41
-	L_SHIFT  shift 42
-	R_SHIFT  shift 43
-	ADD  shift 44
-	SUB  shift 45
-	MUL  shift 46
-	DIV  shift 47
-	MOD  shift 48
-	.  reduce 68 (src line 590)
+	.  reduce 37 (src line 354)
 
 
 state 59
-	expr_block:  scope_def base_expr_block.    (16)
+	return_expr:  RETURN AT.IDENT expr 
 
-	.  reduce 16 (src line 174)
+	IDENT  shift 99
+	.  error
 
 
 state 60
-	conditional_expr:  scope_def base_conditional_expr.    (18)
+	scope_def:  IDENT.AT 
+	unit_expr:  IDENT.    (49)
 
-	.  reduce 18 (src line 195)
+	AT  shift 56
+	.  reduce 49 (src line 413)
 
 
 state 61
-	for_expr:  scope_def base_for_expr.    (25)
+	unit_expr:  unit_expr DOT.IDENT 
 
-	.  reduce 25 (src line 264)
+	IDENT  shift 100
+	.  error
 
 
 state 62
+	unit_expr:  unit_expr L_PAREN.argument_list R_PAREN 
+	argument_list: .    (57)
+	scope_def: .    (14)
+
+	R_PAREN  reduce 57 (src line 463)
+	NOT  shift 19
+	SUB  shift 18
+	IDENT  shift 60
+	BYTE_LITERAL  shift 25
+	STRING_LITERAL  shift 26
+	INT_LITERAL  shift 27
+	FLOAT_LITERAL  shift 28
+	BOOL_LITERAL  shift 29
+	INT_TYPE  shift 31
+	UINT_TYPE  shift 32
+	FLOAT_TYPE  shift 33
+	BYTE_TYPE  shift 30
+	.  reduce 14 (src line 169)
+
+	literal  goto 20
+	conversion_type  goto 21
+	unit_expr  goto 17
+	composable_expr  goto 103
+	argument_list  goto 101
+	nonempty_argument_list  goto 102
+	scope_def  goto 34
+	expr_block  goto 22
+	conditional_expr  goto 23
+	for_expr  goto 24
+
+state 63
+	composable_expr:  composable_expr.OR composable_expr 
+	composable_expr:  composable_expr.AND composable_expr 
+	composable_expr:  composable_expr.LT composable_expr 
+	composable_expr:  composable_expr.GT composable_expr 
+	composable_expr:  composable_expr.EQ composable_expr 
+	composable_expr:  composable_expr.NE composable_expr 
+	composable_expr:  composable_expr.LE composable_expr 
+	composable_expr:  composable_expr.GE composable_expr 
+	composable_expr:  composable_expr.BITWISE_OR composable_expr 
+	composable_expr:  composable_expr.BITWISE_AND composable_expr 
+	composable_expr:  composable_expr.XOR composable_expr 
+	composable_expr:  composable_expr.L_SHIFT composable_expr 
+	composable_expr:  composable_expr.R_SHIFT composable_expr 
+	composable_expr:  composable_expr.ADD composable_expr 
+	composable_expr:  composable_expr.SUB composable_expr 
+	composable_expr:  composable_expr.MUL composable_expr 
+	composable_expr:  composable_expr.DIV composable_expr 
+	composable_expr:  composable_expr.MOD composable_expr 
+	composable_expr:  SUB composable_expr.    (80)
+
+	.  reduce 80 (src line 641)
+
+
+state 64
+	composable_expr:  composable_expr.OR composable_expr 
+	composable_expr:  composable_expr.AND composable_expr 
+	composable_expr:  composable_expr.LT composable_expr 
+	composable_expr:  composable_expr.GT composable_expr 
+	composable_expr:  composable_expr.EQ composable_expr 
+	composable_expr:  composable_expr.NE composable_expr 
+	composable_expr:  composable_expr.LE composable_expr 
+	composable_expr:  composable_expr.GE composable_expr 
+	composable_expr:  composable_expr.BITWISE_OR composable_expr 
+	composable_expr:  composable_expr.BITWISE_AND composable_expr 
+	composable_expr:  composable_expr.XOR composable_expr 
+	composable_expr:  composable_expr.L_SHIFT composable_expr 
+	composable_expr:  composable_expr.R_SHIFT composable_expr 
+	composable_expr:  composable_expr.ADD composable_expr 
+	composable_expr:  composable_expr.SUB composable_expr 
+	composable_expr:  composable_expr.MUL composable_expr 
+	composable_expr:  composable_expr.DIV composable_expr 
+	composable_expr:  composable_expr.MOD composable_expr 
+	composable_expr:  NOT composable_expr.    (81)
+
+	LT  shift 39
+	GT  shift 40
+	EQ  shift 41
+	NE  shift 42
+	LE  shift 43
+	GE  shift 44
+	BITWISE_OR  shift 45
+	BITWISE_AND  shift 46
+	XOR  shift 47
+	L_SHIFT  shift 48
+	R_SHIFT  shift 49
+	ADD  shift 50
+	SUB  shift 51
+	MUL  shift 52
+	DIV  shift 53
+	MOD  shift 54
+	.  reduce 81 (src line 648)
+
+
+state 65
+	unit_expr:  conversion_type L_PAREN.composable_expr R_PAREN 
+	scope_def: .    (14)
+
+	NOT  shift 19
+	SUB  shift 18
+	IDENT  shift 60
+	BYTE_LITERAL  shift 25
+	STRING_LITERAL  shift 26
+	INT_LITERAL  shift 27
+	FLOAT_LITERAL  shift 28
+	BOOL_LITERAL  shift 29
+	INT_TYPE  shift 31
+	UINT_TYPE  shift 32
+	FLOAT_TYPE  shift 33
+	BYTE_TYPE  shift 30
+	.  reduce 14 (src line 169)
+
+	literal  goto 20
+	conversion_type  goto 21
+	unit_expr  goto 17
+	composable_expr  goto 104
+	scope_def  goto 34
+	expr_block  goto 22
+	conditional_expr  goto 23
+	for_expr  goto 24
+
+state 66
+	expr_block:  scope_def base_expr_block.    (22)
+
+	.  reduce 22 (src line 203)
+
+
+state 67
+	conditional_expr:  scope_def base_conditional_expr.    (24)
+
+	.  reduce 24 (src line 224)
+
+
+state 68
+	for_expr:  scope_def base_for_expr.    (31)
+
+	.  reduce 31 (src line 293)
+
+
+state 69
 	base_expr_block:  L_BRACE.statement_list R_BRACE 
 	statement_list: .    (2)
 	scope_def: .    (14)
 
-	R_BRACE  reduce 2 (src line 99)
+	R_BRACE  reduce 2 (src line 107)
 	SEMICOLON  shift 7
 	NEWLINE  shift 8
 	LET  shift 14
@@ -911,30 +1134,36 @@ state 62
 	NOT  shift 19
 	SUB  shift 18
 	IDENT  shift 15
-	CHAR_LITERAL  shift 20
-	STRING_LITERAL  shift 21
-	INT_LITERAL  shift 22
-	FLOAT_LITERAL  shift 23
-	BOOL_LITERAL  shift 24
+	BYTE_LITERAL  shift 25
+	STRING_LITERAL  shift 26
+	INT_LITERAL  shift 27
+	FLOAT_LITERAL  shift 28
+	BOOL_LITERAL  shift 29
+	INT_TYPE  shift 31
+	UINT_TYPE  shift 32
+	FLOAT_TYPE  shift 33
+	BYTE_TYPE  shift 30
 	NOOP  shift 9
-	.  reduce 14 (src line 161)
+	.  reduce 14 (src line 169)
 
+	literal  goto 20
+	conversion_type  goto 21
 	expr  goto 10
 	unit_expr  goto 17
 	composable_expr  goto 13
-	statement_list  goto 90
+	statement_list  goto 105
 	nonempty_statement_list  goto 3
-	scope_def  goto 28
-	expr_block  goto 25
-	conditional_expr  goto 26
-	for_expr  goto 27
+	scope_def  goto 34
+	expr_block  goto 22
+	conditional_expr  goto 23
+	for_expr  goto 24
 	statement  goto 4
 	control_flow_expr  goto 6
 	assignment_expr  goto 11
 	return_expr  goto 12
 	terminator  goto 5
 
-state 63
+state 70
 	base_conditional_expr:  IF.composable_expr base_expr_block 
 	base_conditional_expr:  IF.composable_expr NEWLINE base_expr_block 
 	base_conditional_expr:  IF.composable_expr base_expr_block ELSE base_conditional_expr 
@@ -945,296 +1174,58 @@ state 63
 
 	NOT  shift 19
 	SUB  shift 18
-	IDENT  shift 54
-	CHAR_LITERAL  shift 20
-	STRING_LITERAL  shift 21
-	INT_LITERAL  shift 22
-	FLOAT_LITERAL  shift 23
-	BOOL_LITERAL  shift 24
-	.  reduce 14 (src line 161)
+	IDENT  shift 60
+	BYTE_LITERAL  shift 25
+	STRING_LITERAL  shift 26
+	INT_LITERAL  shift 27
+	FLOAT_LITERAL  shift 28
+	BOOL_LITERAL  shift 29
+	INT_TYPE  shift 31
+	UINT_TYPE  shift 32
+	FLOAT_TYPE  shift 33
+	BYTE_TYPE  shift 30
+	.  reduce 14 (src line 169)
 
+	literal  goto 20
+	conversion_type  goto 21
 	unit_expr  goto 17
-	composable_expr  goto 91
-	scope_def  goto 28
-	expr_block  goto 25
-	conditional_expr  goto 26
-	for_expr  goto 27
+	composable_expr  goto 106
+	scope_def  goto 34
+	expr_block  goto 22
+	conditional_expr  goto 23
+	for_expr  goto 24
 
-state 64
+state 71
 	base_for_expr:  FOR.composable_expr expr_block 
 	base_for_expr:  FOR.composable_expr NEWLINE expr_block 
 	scope_def: .    (14)
 
 	NOT  shift 19
 	SUB  shift 18
-	IDENT  shift 54
-	CHAR_LITERAL  shift 20
-	STRING_LITERAL  shift 21
-	INT_LITERAL  shift 22
-	FLOAT_LITERAL  shift 23
-	BOOL_LITERAL  shift 24
-	.  reduce 14 (src line 161)
+	IDENT  shift 60
+	BYTE_LITERAL  shift 25
+	STRING_LITERAL  shift 26
+	INT_LITERAL  shift 27
+	FLOAT_LITERAL  shift 28
+	BOOL_LITERAL  shift 29
+	INT_TYPE  shift 31
+	UINT_TYPE  shift 32
+	FLOAT_TYPE  shift 33
+	BYTE_TYPE  shift 30
+	.  reduce 14 (src line 169)
 
+	literal  goto 20
+	conversion_type  goto 21
 	unit_expr  goto 17
-	composable_expr  goto 92
-	scope_def  goto 28
-	expr_block  goto 25
-	conditional_expr  goto 26
-	for_expr  goto 27
-
-state 65
-	composable_expr:  composable_expr.OR composable_expr 
-	composable_expr:  composable_expr OR composable_expr.    (49)
-	composable_expr:  composable_expr.AND composable_expr 
-	composable_expr:  composable_expr.LT composable_expr 
-	composable_expr:  composable_expr.GT composable_expr 
-	composable_expr:  composable_expr.EQ composable_expr 
-	composable_expr:  composable_expr.NE composable_expr 
-	composable_expr:  composable_expr.LE composable_expr 
-	composable_expr:  composable_expr.GE composable_expr 
-	composable_expr:  composable_expr.BITWISE_OR composable_expr 
-	composable_expr:  composable_expr.BITWISE_AND composable_expr 
-	composable_expr:  composable_expr.XOR composable_expr 
-	composable_expr:  composable_expr.L_SHIFT composable_expr 
-	composable_expr:  composable_expr.R_SHIFT composable_expr 
-	composable_expr:  composable_expr.ADD composable_expr 
-	composable_expr:  composable_expr.SUB composable_expr 
-	composable_expr:  composable_expr.MUL composable_expr 
-	composable_expr:  composable_expr.DIV composable_expr 
-	composable_expr:  composable_expr.MOD composable_expr 
-
-	AND  shift 32
-	LT  shift 33
-	GT  shift 34
-	EQ  shift 35
-	NE  shift 36
-	LE  shift 37
-	GE  shift 38
-	BITWISE_OR  shift 39
-	BITWISE_AND  shift 40
-	XOR  shift 41
-	L_SHIFT  shift 42
-	R_SHIFT  shift 43
-	ADD  shift 44
-	SUB  shift 45
-	MUL  shift 46
-	DIV  shift 47
-	MOD  shift 48
-	.  reduce 49 (src line 439)
-
-
-state 66
-	composable_expr:  composable_expr.OR composable_expr 
-	composable_expr:  composable_expr.AND composable_expr 
-	composable_expr:  composable_expr AND composable_expr.    (50)
-	composable_expr:  composable_expr.LT composable_expr 
-	composable_expr:  composable_expr.GT composable_expr 
-	composable_expr:  composable_expr.EQ composable_expr 
-	composable_expr:  composable_expr.NE composable_expr 
-	composable_expr:  composable_expr.LE composable_expr 
-	composable_expr:  composable_expr.GE composable_expr 
-	composable_expr:  composable_expr.BITWISE_OR composable_expr 
-	composable_expr:  composable_expr.BITWISE_AND composable_expr 
-	composable_expr:  composable_expr.XOR composable_expr 
-	composable_expr:  composable_expr.L_SHIFT composable_expr 
-	composable_expr:  composable_expr.R_SHIFT composable_expr 
-	composable_expr:  composable_expr.ADD composable_expr 
-	composable_expr:  composable_expr.SUB composable_expr 
-	composable_expr:  composable_expr.MUL composable_expr 
-	composable_expr:  composable_expr.DIV composable_expr 
-	composable_expr:  composable_expr.MOD composable_expr 
-
-	LT  shift 33
-	GT  shift 34
-	EQ  shift 35
-	NE  shift 36
-	LE  shift 37
-	GE  shift 38
-	BITWISE_OR  shift 39
-	BITWISE_AND  shift 40
-	XOR  shift 41
-	L_SHIFT  shift 42
-	R_SHIFT  shift 43
-	ADD  shift 44
-	SUB  shift 45
-	MUL  shift 46
-	DIV  shift 47
-	MOD  shift 48
-	.  reduce 50 (src line 447)
-
-
-state 67
-	composable_expr:  composable_expr.OR composable_expr 
-	composable_expr:  composable_expr.AND composable_expr 
-	composable_expr:  composable_expr.LT composable_expr 
-	composable_expr:  composable_expr LT composable_expr.    (51)
-	composable_expr:  composable_expr.GT composable_expr 
-	composable_expr:  composable_expr.EQ composable_expr 
-	composable_expr:  composable_expr.NE composable_expr 
-	composable_expr:  composable_expr.LE composable_expr 
-	composable_expr:  composable_expr.GE composable_expr 
-	composable_expr:  composable_expr.BITWISE_OR composable_expr 
-	composable_expr:  composable_expr.BITWISE_AND composable_expr 
-	composable_expr:  composable_expr.XOR composable_expr 
-	composable_expr:  composable_expr.L_SHIFT composable_expr 
-	composable_expr:  composable_expr.R_SHIFT composable_expr 
-	composable_expr:  composable_expr.ADD composable_expr 
-	composable_expr:  composable_expr.SUB composable_expr 
-	composable_expr:  composable_expr.MUL composable_expr 
-	composable_expr:  composable_expr.DIV composable_expr 
-	composable_expr:  composable_expr.MOD composable_expr 
-
-	BITWISE_OR  shift 39
-	BITWISE_AND  shift 40
-	XOR  shift 41
-	L_SHIFT  shift 42
-	R_SHIFT  shift 43
-	ADD  shift 44
-	SUB  shift 45
-	MUL  shift 46
-	DIV  shift 47
-	MOD  shift 48
-	.  reduce 51 (src line 455)
-
-
-state 68
-	composable_expr:  composable_expr.OR composable_expr 
-	composable_expr:  composable_expr.AND composable_expr 
-	composable_expr:  composable_expr.LT composable_expr 
-	composable_expr:  composable_expr.GT composable_expr 
-	composable_expr:  composable_expr GT composable_expr.    (52)
-	composable_expr:  composable_expr.EQ composable_expr 
-	composable_expr:  composable_expr.NE composable_expr 
-	composable_expr:  composable_expr.LE composable_expr 
-	composable_expr:  composable_expr.GE composable_expr 
-	composable_expr:  composable_expr.BITWISE_OR composable_expr 
-	composable_expr:  composable_expr.BITWISE_AND composable_expr 
-	composable_expr:  composable_expr.XOR composable_expr 
-	composable_expr:  composable_expr.L_SHIFT composable_expr 
-	composable_expr:  composable_expr.R_SHIFT composable_expr 
-	composable_expr:  composable_expr.ADD composable_expr 
-	composable_expr:  composable_expr.SUB composable_expr 
-	composable_expr:  composable_expr.MUL composable_expr 
-	composable_expr:  composable_expr.DIV composable_expr 
-	composable_expr:  composable_expr.MOD composable_expr 
-
-	BITWISE_OR  shift 39
-	BITWISE_AND  shift 40
-	XOR  shift 41
-	L_SHIFT  shift 42
-	R_SHIFT  shift 43
-	ADD  shift 44
-	SUB  shift 45
-	MUL  shift 46
-	DIV  shift 47
-	MOD  shift 48
-	.  reduce 52 (src line 463)
-
-
-state 69
-	composable_expr:  composable_expr.OR composable_expr 
-	composable_expr:  composable_expr.AND composable_expr 
-	composable_expr:  composable_expr.LT composable_expr 
-	composable_expr:  composable_expr.GT composable_expr 
-	composable_expr:  composable_expr.EQ composable_expr 
-	composable_expr:  composable_expr EQ composable_expr.    (53)
-	composable_expr:  composable_expr.NE composable_expr 
-	composable_expr:  composable_expr.LE composable_expr 
-	composable_expr:  composable_expr.GE composable_expr 
-	composable_expr:  composable_expr.BITWISE_OR composable_expr 
-	composable_expr:  composable_expr.BITWISE_AND composable_expr 
-	composable_expr:  composable_expr.XOR composable_expr 
-	composable_expr:  composable_expr.L_SHIFT composable_expr 
-	composable_expr:  composable_expr.R_SHIFT composable_expr 
-	composable_expr:  composable_expr.ADD composable_expr 
-	composable_expr:  composable_expr.SUB composable_expr 
-	composable_expr:  composable_expr.MUL composable_expr 
-	composable_expr:  composable_expr.DIV composable_expr 
-	composable_expr:  composable_expr.MOD composable_expr 
-
-	BITWISE_OR  shift 39
-	BITWISE_AND  shift 40
-	XOR  shift 41
-	L_SHIFT  shift 42
-	R_SHIFT  shift 43
-	ADD  shift 44
-	SUB  shift 45
-	MUL  shift 46
-	DIV  shift 47
-	MOD  shift 48
-	.  reduce 53 (src line 471)
-
-
-state 70
-	composable_expr:  composable_expr.OR composable_expr 
-	composable_expr:  composable_expr.AND composable_expr 
-	composable_expr:  composable_expr.LT composable_expr 
-	composable_expr:  composable_expr.GT composable_expr 
-	composable_expr:  composable_expr.EQ composable_expr 
-	composable_expr:  composable_expr.NE composable_expr 
-	composable_expr:  composable_expr NE composable_expr.    (54)
-	composable_expr:  composable_expr.LE composable_expr 
-	composable_expr:  composable_expr.GE composable_expr 
-	composable_expr:  composable_expr.BITWISE_OR composable_expr 
-	composable_expr:  composable_expr.BITWISE_AND composable_expr 
-	composable_expr:  composable_expr.XOR composable_expr 
-	composable_expr:  composable_expr.L_SHIFT composable_expr 
-	composable_expr:  composable_expr.R_SHIFT composable_expr 
-	composable_expr:  composable_expr.ADD composable_expr 
-	composable_expr:  composable_expr.SUB composable_expr 
-	composable_expr:  composable_expr.MUL composable_expr 
-	composable_expr:  composable_expr.DIV composable_expr 
-	composable_expr:  composable_expr.MOD composable_expr 
-
-	BITWISE_OR  shift 39
-	BITWISE_AND  shift 40
-	XOR  shift 41
-	L_SHIFT  shift 42
-	R_SHIFT  shift 43
-	ADD  shift 44
-	SUB  shift 45
-	MUL  shift 46
-	DIV  shift 47
-	MOD  shift 48
-	.  reduce 54 (src line 479)
-
-
-state 71
-	composable_expr:  composable_expr.OR composable_expr 
-	composable_expr:  composable_expr.AND composable_expr 
-	composable_expr:  composable_expr.LT composable_expr 
-	composable_expr:  composable_expr.GT composable_expr 
-	composable_expr:  composable_expr.EQ composable_expr 
-	composable_expr:  composable_expr.NE composable_expr 
-	composable_expr:  composable_expr.LE composable_expr 
-	composable_expr:  composable_expr LE composable_expr.    (55)
-	composable_expr:  composable_expr.GE composable_expr 
-	composable_expr:  composable_expr.BITWISE_OR composable_expr 
-	composable_expr:  composable_expr.BITWISE_AND composable_expr 
-	composable_expr:  composable_expr.XOR composable_expr 
-	composable_expr:  composable_expr.L_SHIFT composable_expr 
-	composable_expr:  composable_expr.R_SHIFT composable_expr 
-	composable_expr:  composable_expr.ADD composable_expr 
-	composable_expr:  composable_expr.SUB composable_expr 
-	composable_expr:  composable_expr.MUL composable_expr 
-	composable_expr:  composable_expr.DIV composable_expr 
-	composable_expr:  composable_expr.MOD composable_expr 
-
-	BITWISE_OR  shift 39
-	BITWISE_AND  shift 40
-	XOR  shift 41
-	L_SHIFT  shift 42
-	R_SHIFT  shift 43
-	ADD  shift 44
-	SUB  shift 45
-	MUL  shift 46
-	DIV  shift 47
-	MOD  shift 48
-	.  reduce 55 (src line 487)
-
+	composable_expr  goto 107
+	scope_def  goto 34
+	expr_block  goto 22
+	conditional_expr  goto 23
+	for_expr  goto 24
 
 state 72
 	composable_expr:  composable_expr.OR composable_expr 
+	composable_expr:  composable_expr OR composable_expr.    (62)
 	composable_expr:  composable_expr.AND composable_expr 
 	composable_expr:  composable_expr.LT composable_expr 
 	composable_expr:  composable_expr.GT composable_expr 
@@ -1242,7 +1233,6 @@ state 72
 	composable_expr:  composable_expr.NE composable_expr 
 	composable_expr:  composable_expr.LE composable_expr 
 	composable_expr:  composable_expr.GE composable_expr 
-	composable_expr:  composable_expr GE composable_expr.    (56)
 	composable_expr:  composable_expr.BITWISE_OR composable_expr 
 	composable_expr:  composable_expr.BITWISE_AND composable_expr 
 	composable_expr:  composable_expr.XOR composable_expr 
@@ -1254,22 +1244,30 @@ state 72
 	composable_expr:  composable_expr.DIV composable_expr 
 	composable_expr:  composable_expr.MOD composable_expr 
 
-	BITWISE_OR  shift 39
-	BITWISE_AND  shift 40
-	XOR  shift 41
-	L_SHIFT  shift 42
-	R_SHIFT  shift 43
-	ADD  shift 44
-	SUB  shift 45
-	MUL  shift 46
-	DIV  shift 47
-	MOD  shift 48
-	.  reduce 56 (src line 495)
+	AND  shift 38
+	LT  shift 39
+	GT  shift 40
+	EQ  shift 41
+	NE  shift 42
+	LE  shift 43
+	GE  shift 44
+	BITWISE_OR  shift 45
+	BITWISE_AND  shift 46
+	XOR  shift 47
+	L_SHIFT  shift 48
+	R_SHIFT  shift 49
+	ADD  shift 50
+	SUB  shift 51
+	MUL  shift 52
+	DIV  shift 53
+	MOD  shift 54
+	.  reduce 62 (src line 497)
 
 
 state 73
 	composable_expr:  composable_expr.OR composable_expr 
 	composable_expr:  composable_expr.AND composable_expr 
+	composable_expr:  composable_expr AND composable_expr.    (63)
 	composable_expr:  composable_expr.LT composable_expr 
 	composable_expr:  composable_expr.GT composable_expr 
 	composable_expr:  composable_expr.EQ composable_expr 
@@ -1277,7 +1275,6 @@ state 73
 	composable_expr:  composable_expr.LE composable_expr 
 	composable_expr:  composable_expr.GE composable_expr 
 	composable_expr:  composable_expr.BITWISE_OR composable_expr 
-	composable_expr:  composable_expr BITWISE_OR composable_expr.    (57)
 	composable_expr:  composable_expr.BITWISE_AND composable_expr 
 	composable_expr:  composable_expr.XOR composable_expr 
 	composable_expr:  composable_expr.L_SHIFT composable_expr 
@@ -1288,22 +1285,30 @@ state 73
 	composable_expr:  composable_expr.DIV composable_expr 
 	composable_expr:  composable_expr.MOD composable_expr 
 
-	BITWISE_AND  shift 40
-	XOR  shift 41
-	L_SHIFT  shift 42
-	R_SHIFT  shift 43
-	ADD  shift 44
-	SUB  shift 45
-	MUL  shift 46
-	DIV  shift 47
-	MOD  shift 48
-	.  reduce 57 (src line 503)
+	LT  shift 39
+	GT  shift 40
+	EQ  shift 41
+	NE  shift 42
+	LE  shift 43
+	GE  shift 44
+	BITWISE_OR  shift 45
+	BITWISE_AND  shift 46
+	XOR  shift 47
+	L_SHIFT  shift 48
+	R_SHIFT  shift 49
+	ADD  shift 50
+	SUB  shift 51
+	MUL  shift 52
+	DIV  shift 53
+	MOD  shift 54
+	.  reduce 63 (src line 505)
 
 
 state 74
 	composable_expr:  composable_expr.OR composable_expr 
 	composable_expr:  composable_expr.AND composable_expr 
 	composable_expr:  composable_expr.LT composable_expr 
+	composable_expr:  composable_expr LT composable_expr.    (64)
 	composable_expr:  composable_expr.GT composable_expr 
 	composable_expr:  composable_expr.EQ composable_expr 
 	composable_expr:  composable_expr.NE composable_expr 
@@ -1311,7 +1316,6 @@ state 74
 	composable_expr:  composable_expr.GE composable_expr 
 	composable_expr:  composable_expr.BITWISE_OR composable_expr 
 	composable_expr:  composable_expr.BITWISE_AND composable_expr 
-	composable_expr:  composable_expr BITWISE_AND composable_expr.    (58)
 	composable_expr:  composable_expr.XOR composable_expr 
 	composable_expr:  composable_expr.L_SHIFT composable_expr 
 	composable_expr:  composable_expr.R_SHIFT composable_expr 
@@ -1321,15 +1325,17 @@ state 74
 	composable_expr:  composable_expr.DIV composable_expr 
 	composable_expr:  composable_expr.MOD composable_expr 
 
-	XOR  shift 41
-	L_SHIFT  shift 42
-	R_SHIFT  shift 43
-	ADD  shift 44
-	SUB  shift 45
-	MUL  shift 46
-	DIV  shift 47
-	MOD  shift 48
-	.  reduce 58 (src line 511)
+	BITWISE_OR  shift 45
+	BITWISE_AND  shift 46
+	XOR  shift 47
+	L_SHIFT  shift 48
+	R_SHIFT  shift 49
+	ADD  shift 50
+	SUB  shift 51
+	MUL  shift 52
+	DIV  shift 53
+	MOD  shift 54
+	.  reduce 64 (src line 513)
 
 
 state 75
@@ -1337,6 +1343,7 @@ state 75
 	composable_expr:  composable_expr.AND composable_expr 
 	composable_expr:  composable_expr.LT composable_expr 
 	composable_expr:  composable_expr.GT composable_expr 
+	composable_expr:  composable_expr GT composable_expr.    (65)
 	composable_expr:  composable_expr.EQ composable_expr 
 	composable_expr:  composable_expr.NE composable_expr 
 	composable_expr:  composable_expr.LE composable_expr 
@@ -1344,7 +1351,6 @@ state 75
 	composable_expr:  composable_expr.BITWISE_OR composable_expr 
 	composable_expr:  composable_expr.BITWISE_AND composable_expr 
 	composable_expr:  composable_expr.XOR composable_expr 
-	composable_expr:  composable_expr XOR composable_expr.    (59)
 	composable_expr:  composable_expr.L_SHIFT composable_expr 
 	composable_expr:  composable_expr.R_SHIFT composable_expr 
 	composable_expr:  composable_expr.ADD composable_expr 
@@ -1353,14 +1359,17 @@ state 75
 	composable_expr:  composable_expr.DIV composable_expr 
 	composable_expr:  composable_expr.MOD composable_expr 
 
-	L_SHIFT  shift 42
-	R_SHIFT  shift 43
-	ADD  shift 44
-	SUB  shift 45
-	MUL  shift 46
-	DIV  shift 47
-	MOD  shift 48
-	.  reduce 59 (src line 519)
+	BITWISE_OR  shift 45
+	BITWISE_AND  shift 46
+	XOR  shift 47
+	L_SHIFT  shift 48
+	R_SHIFT  shift 49
+	ADD  shift 50
+	SUB  shift 51
+	MUL  shift 52
+	DIV  shift 53
+	MOD  shift 54
+	.  reduce 65 (src line 521)
 
 
 state 76
@@ -1369,6 +1378,7 @@ state 76
 	composable_expr:  composable_expr.LT composable_expr 
 	composable_expr:  composable_expr.GT composable_expr 
 	composable_expr:  composable_expr.EQ composable_expr 
+	composable_expr:  composable_expr EQ composable_expr.    (66)
 	composable_expr:  composable_expr.NE composable_expr 
 	composable_expr:  composable_expr.LE composable_expr 
 	composable_expr:  composable_expr.GE composable_expr 
@@ -1376,7 +1386,6 @@ state 76
 	composable_expr:  composable_expr.BITWISE_AND composable_expr 
 	composable_expr:  composable_expr.XOR composable_expr 
 	composable_expr:  composable_expr.L_SHIFT composable_expr 
-	composable_expr:  composable_expr L_SHIFT composable_expr.    (60)
 	composable_expr:  composable_expr.R_SHIFT composable_expr 
 	composable_expr:  composable_expr.ADD composable_expr 
 	composable_expr:  composable_expr.SUB composable_expr 
@@ -1384,12 +1393,17 @@ state 76
 	composable_expr:  composable_expr.DIV composable_expr 
 	composable_expr:  composable_expr.MOD composable_expr 
 
-	ADD  shift 44
-	SUB  shift 45
-	MUL  shift 46
-	DIV  shift 47
-	MOD  shift 48
-	.  reduce 60 (src line 527)
+	BITWISE_OR  shift 45
+	BITWISE_AND  shift 46
+	XOR  shift 47
+	L_SHIFT  shift 48
+	R_SHIFT  shift 49
+	ADD  shift 50
+	SUB  shift 51
+	MUL  shift 52
+	DIV  shift 53
+	MOD  shift 54
+	.  reduce 66 (src line 529)
 
 
 state 77
@@ -1399,6 +1413,7 @@ state 77
 	composable_expr:  composable_expr.GT composable_expr 
 	composable_expr:  composable_expr.EQ composable_expr 
 	composable_expr:  composable_expr.NE composable_expr 
+	composable_expr:  composable_expr NE composable_expr.    (67)
 	composable_expr:  composable_expr.LE composable_expr 
 	composable_expr:  composable_expr.GE composable_expr 
 	composable_expr:  composable_expr.BITWISE_OR composable_expr 
@@ -1406,19 +1421,23 @@ state 77
 	composable_expr:  composable_expr.XOR composable_expr 
 	composable_expr:  composable_expr.L_SHIFT composable_expr 
 	composable_expr:  composable_expr.R_SHIFT composable_expr 
-	composable_expr:  composable_expr R_SHIFT composable_expr.    (61)
 	composable_expr:  composable_expr.ADD composable_expr 
 	composable_expr:  composable_expr.SUB composable_expr 
 	composable_expr:  composable_expr.MUL composable_expr 
 	composable_expr:  composable_expr.DIV composable_expr 
 	composable_expr:  composable_expr.MOD composable_expr 
 
-	ADD  shift 44
-	SUB  shift 45
-	MUL  shift 46
-	DIV  shift 47
-	MOD  shift 48
-	.  reduce 61 (src line 535)
+	BITWISE_OR  shift 45
+	BITWISE_AND  shift 46
+	XOR  shift 47
+	L_SHIFT  shift 48
+	R_SHIFT  shift 49
+	ADD  shift 50
+	SUB  shift 51
+	MUL  shift 52
+	DIV  shift 53
+	MOD  shift 54
+	.  reduce 67 (src line 537)
 
 
 state 78
@@ -1429,6 +1448,7 @@ state 78
 	composable_expr:  composable_expr.EQ composable_expr 
 	composable_expr:  composable_expr.NE composable_expr 
 	composable_expr:  composable_expr.LE composable_expr 
+	composable_expr:  composable_expr LE composable_expr.    (68)
 	composable_expr:  composable_expr.GE composable_expr 
 	composable_expr:  composable_expr.BITWISE_OR composable_expr 
 	composable_expr:  composable_expr.BITWISE_AND composable_expr 
@@ -1436,16 +1456,22 @@ state 78
 	composable_expr:  composable_expr.L_SHIFT composable_expr 
 	composable_expr:  composable_expr.R_SHIFT composable_expr 
 	composable_expr:  composable_expr.ADD composable_expr 
-	composable_expr:  composable_expr ADD composable_expr.    (62)
 	composable_expr:  composable_expr.SUB composable_expr 
 	composable_expr:  composable_expr.MUL composable_expr 
 	composable_expr:  composable_expr.DIV composable_expr 
 	composable_expr:  composable_expr.MOD composable_expr 
 
-	MUL  shift 46
-	DIV  shift 47
-	MOD  shift 48
-	.  reduce 62 (src line 543)
+	BITWISE_OR  shift 45
+	BITWISE_AND  shift 46
+	XOR  shift 47
+	L_SHIFT  shift 48
+	R_SHIFT  shift 49
+	ADD  shift 50
+	SUB  shift 51
+	MUL  shift 52
+	DIV  shift 53
+	MOD  shift 54
+	.  reduce 68 (src line 545)
 
 
 state 79
@@ -1457,6 +1483,7 @@ state 79
 	composable_expr:  composable_expr.NE composable_expr 
 	composable_expr:  composable_expr.LE composable_expr 
 	composable_expr:  composable_expr.GE composable_expr 
+	composable_expr:  composable_expr GE composable_expr.    (69)
 	composable_expr:  composable_expr.BITWISE_OR composable_expr 
 	composable_expr:  composable_expr.BITWISE_AND composable_expr 
 	composable_expr:  composable_expr.XOR composable_expr 
@@ -1464,15 +1491,21 @@ state 79
 	composable_expr:  composable_expr.R_SHIFT composable_expr 
 	composable_expr:  composable_expr.ADD composable_expr 
 	composable_expr:  composable_expr.SUB composable_expr 
-	composable_expr:  composable_expr SUB composable_expr.    (63)
 	composable_expr:  composable_expr.MUL composable_expr 
 	composable_expr:  composable_expr.DIV composable_expr 
 	composable_expr:  composable_expr.MOD composable_expr 
 
-	MUL  shift 46
-	DIV  shift 47
-	MOD  shift 48
-	.  reduce 63 (src line 551)
+	BITWISE_OR  shift 45
+	BITWISE_AND  shift 46
+	XOR  shift 47
+	L_SHIFT  shift 48
+	R_SHIFT  shift 49
+	ADD  shift 50
+	SUB  shift 51
+	MUL  shift 52
+	DIV  shift 53
+	MOD  shift 54
+	.  reduce 69 (src line 553)
 
 
 state 80
@@ -1485,6 +1518,7 @@ state 80
 	composable_expr:  composable_expr.LE composable_expr 
 	composable_expr:  composable_expr.GE composable_expr 
 	composable_expr:  composable_expr.BITWISE_OR composable_expr 
+	composable_expr:  composable_expr BITWISE_OR composable_expr.    (70)
 	composable_expr:  composable_expr.BITWISE_AND composable_expr 
 	composable_expr:  composable_expr.XOR composable_expr 
 	composable_expr:  composable_expr.L_SHIFT composable_expr 
@@ -1492,11 +1526,19 @@ state 80
 	composable_expr:  composable_expr.ADD composable_expr 
 	composable_expr:  composable_expr.SUB composable_expr 
 	composable_expr:  composable_expr.MUL composable_expr 
-	composable_expr:  composable_expr MUL composable_expr.    (64)
 	composable_expr:  composable_expr.DIV composable_expr 
 	composable_expr:  composable_expr.MOD composable_expr 
 
-	.  reduce 64 (src line 559)
+	BITWISE_AND  shift 46
+	XOR  shift 47
+	L_SHIFT  shift 48
+	R_SHIFT  shift 49
+	ADD  shift 50
+	SUB  shift 51
+	MUL  shift 52
+	DIV  shift 53
+	MOD  shift 54
+	.  reduce 70 (src line 561)
 
 
 state 81
@@ -1510,6 +1552,7 @@ state 81
 	composable_expr:  composable_expr.GE composable_expr 
 	composable_expr:  composable_expr.BITWISE_OR composable_expr 
 	composable_expr:  composable_expr.BITWISE_AND composable_expr 
+	composable_expr:  composable_expr BITWISE_AND composable_expr.    (71)
 	composable_expr:  composable_expr.XOR composable_expr 
 	composable_expr:  composable_expr.L_SHIFT composable_expr 
 	composable_expr:  composable_expr.R_SHIFT composable_expr 
@@ -1517,10 +1560,17 @@ state 81
 	composable_expr:  composable_expr.SUB composable_expr 
 	composable_expr:  composable_expr.MUL composable_expr 
 	composable_expr:  composable_expr.DIV composable_expr 
-	composable_expr:  composable_expr DIV composable_expr.    (65)
 	composable_expr:  composable_expr.MOD composable_expr 
 
-	.  reduce 65 (src line 567)
+	XOR  shift 47
+	L_SHIFT  shift 48
+	R_SHIFT  shift 49
+	ADD  shift 50
+	SUB  shift 51
+	MUL  shift 52
+	DIV  shift 53
+	MOD  shift 54
+	.  reduce 71 (src line 569)
 
 
 state 82
@@ -1535,6 +1585,7 @@ state 82
 	composable_expr:  composable_expr.BITWISE_OR composable_expr 
 	composable_expr:  composable_expr.BITWISE_AND composable_expr 
 	composable_expr:  composable_expr.XOR composable_expr 
+	composable_expr:  composable_expr XOR composable_expr.    (72)
 	composable_expr:  composable_expr.L_SHIFT composable_expr 
 	composable_expr:  composable_expr.R_SHIFT composable_expr 
 	composable_expr:  composable_expr.ADD composable_expr 
@@ -1542,84 +1593,329 @@ state 82
 	composable_expr:  composable_expr.MUL composable_expr 
 	composable_expr:  composable_expr.DIV composable_expr 
 	composable_expr:  composable_expr.MOD composable_expr 
-	composable_expr:  composable_expr MOD composable_expr.    (66)
 
-	.  reduce 66 (src line 575)
+	L_SHIFT  shift 48
+	R_SHIFT  shift 49
+	ADD  shift 50
+	SUB  shift 51
+	MUL  shift 52
+	DIV  shift 53
+	MOD  shift 54
+	.  reduce 72 (src line 577)
 
 
 state 83
+	composable_expr:  composable_expr.OR composable_expr 
+	composable_expr:  composable_expr.AND composable_expr 
+	composable_expr:  composable_expr.LT composable_expr 
+	composable_expr:  composable_expr.GT composable_expr 
+	composable_expr:  composable_expr.EQ composable_expr 
+	composable_expr:  composable_expr.NE composable_expr 
+	composable_expr:  composable_expr.LE composable_expr 
+	composable_expr:  composable_expr.GE composable_expr 
+	composable_expr:  composable_expr.BITWISE_OR composable_expr 
+	composable_expr:  composable_expr.BITWISE_AND composable_expr 
+	composable_expr:  composable_expr.XOR composable_expr 
+	composable_expr:  composable_expr.L_SHIFT composable_expr 
+	composable_expr:  composable_expr L_SHIFT composable_expr.    (73)
+	composable_expr:  composable_expr.R_SHIFT composable_expr 
+	composable_expr:  composable_expr.ADD composable_expr 
+	composable_expr:  composable_expr.SUB composable_expr 
+	composable_expr:  composable_expr.MUL composable_expr 
+	composable_expr:  composable_expr.DIV composable_expr 
+	composable_expr:  composable_expr.MOD composable_expr 
+
+	ADD  shift 50
+	SUB  shift 51
+	MUL  shift 52
+	DIV  shift 53
+	MOD  shift 54
+	.  reduce 73 (src line 585)
+
+
+state 84
+	composable_expr:  composable_expr.OR composable_expr 
+	composable_expr:  composable_expr.AND composable_expr 
+	composable_expr:  composable_expr.LT composable_expr 
+	composable_expr:  composable_expr.GT composable_expr 
+	composable_expr:  composable_expr.EQ composable_expr 
+	composable_expr:  composable_expr.NE composable_expr 
+	composable_expr:  composable_expr.LE composable_expr 
+	composable_expr:  composable_expr.GE composable_expr 
+	composable_expr:  composable_expr.BITWISE_OR composable_expr 
+	composable_expr:  composable_expr.BITWISE_AND composable_expr 
+	composable_expr:  composable_expr.XOR composable_expr 
+	composable_expr:  composable_expr.L_SHIFT composable_expr 
+	composable_expr:  composable_expr.R_SHIFT composable_expr 
+	composable_expr:  composable_expr R_SHIFT composable_expr.    (74)
+	composable_expr:  composable_expr.ADD composable_expr 
+	composable_expr:  composable_expr.SUB composable_expr 
+	composable_expr:  composable_expr.MUL composable_expr 
+	composable_expr:  composable_expr.DIV composable_expr 
+	composable_expr:  composable_expr.MOD composable_expr 
+
+	ADD  shift 50
+	SUB  shift 51
+	MUL  shift 52
+	DIV  shift 53
+	MOD  shift 54
+	.  reduce 74 (src line 593)
+
+
+state 85
+	composable_expr:  composable_expr.OR composable_expr 
+	composable_expr:  composable_expr.AND composable_expr 
+	composable_expr:  composable_expr.LT composable_expr 
+	composable_expr:  composable_expr.GT composable_expr 
+	composable_expr:  composable_expr.EQ composable_expr 
+	composable_expr:  composable_expr.NE composable_expr 
+	composable_expr:  composable_expr.LE composable_expr 
+	composable_expr:  composable_expr.GE composable_expr 
+	composable_expr:  composable_expr.BITWISE_OR composable_expr 
+	composable_expr:  composable_expr.BITWISE_AND composable_expr 
+	composable_expr:  composable_expr.XOR composable_expr 
+	composable_expr:  composable_expr.L_SHIFT composable_expr 
+	composable_expr:  composable_expr.R_SHIFT composable_expr 
+	composable_expr:  composable_expr.ADD composable_expr 
+	composable_expr:  composable_expr ADD composable_expr.    (75)
+	composable_expr:  composable_expr.SUB composable_expr 
+	composable_expr:  composable_expr.MUL composable_expr 
+	composable_expr:  composable_expr.DIV composable_expr 
+	composable_expr:  composable_expr.MOD composable_expr 
+
+	MUL  shift 52
+	DIV  shift 53
+	MOD  shift 54
+	.  reduce 75 (src line 601)
+
+
+state 86
+	composable_expr:  composable_expr.OR composable_expr 
+	composable_expr:  composable_expr.AND composable_expr 
+	composable_expr:  composable_expr.LT composable_expr 
+	composable_expr:  composable_expr.GT composable_expr 
+	composable_expr:  composable_expr.EQ composable_expr 
+	composable_expr:  composable_expr.NE composable_expr 
+	composable_expr:  composable_expr.LE composable_expr 
+	composable_expr:  composable_expr.GE composable_expr 
+	composable_expr:  composable_expr.BITWISE_OR composable_expr 
+	composable_expr:  composable_expr.BITWISE_AND composable_expr 
+	composable_expr:  composable_expr.XOR composable_expr 
+	composable_expr:  composable_expr.L_SHIFT composable_expr 
+	composable_expr:  composable_expr.R_SHIFT composable_expr 
+	composable_expr:  composable_expr.ADD composable_expr 
+	composable_expr:  composable_expr.SUB composable_expr 
+	composable_expr:  composable_expr SUB composable_expr.    (76)
+	composable_expr:  composable_expr.MUL composable_expr 
+	composable_expr:  composable_expr.DIV composable_expr 
+	composable_expr:  composable_expr.MOD composable_expr 
+
+	MUL  shift 52
+	DIV  shift 53
+	MOD  shift 54
+	.  reduce 76 (src line 609)
+
+
+state 87
+	composable_expr:  composable_expr.OR composable_expr 
+	composable_expr:  composable_expr.AND composable_expr 
+	composable_expr:  composable_expr.LT composable_expr 
+	composable_expr:  composable_expr.GT composable_expr 
+	composable_expr:  composable_expr.EQ composable_expr 
+	composable_expr:  composable_expr.NE composable_expr 
+	composable_expr:  composable_expr.LE composable_expr 
+	composable_expr:  composable_expr.GE composable_expr 
+	composable_expr:  composable_expr.BITWISE_OR composable_expr 
+	composable_expr:  composable_expr.BITWISE_AND composable_expr 
+	composable_expr:  composable_expr.XOR composable_expr 
+	composable_expr:  composable_expr.L_SHIFT composable_expr 
+	composable_expr:  composable_expr.R_SHIFT composable_expr 
+	composable_expr:  composable_expr.ADD composable_expr 
+	composable_expr:  composable_expr.SUB composable_expr 
+	composable_expr:  composable_expr.MUL composable_expr 
+	composable_expr:  composable_expr MUL composable_expr.    (77)
+	composable_expr:  composable_expr.DIV composable_expr 
+	composable_expr:  composable_expr.MOD composable_expr 
+
+	.  reduce 77 (src line 617)
+
+
+state 88
+	composable_expr:  composable_expr.OR composable_expr 
+	composable_expr:  composable_expr.AND composable_expr 
+	composable_expr:  composable_expr.LT composable_expr 
+	composable_expr:  composable_expr.GT composable_expr 
+	composable_expr:  composable_expr.EQ composable_expr 
+	composable_expr:  composable_expr.NE composable_expr 
+	composable_expr:  composable_expr.LE composable_expr 
+	composable_expr:  composable_expr.GE composable_expr 
+	composable_expr:  composable_expr.BITWISE_OR composable_expr 
+	composable_expr:  composable_expr.BITWISE_AND composable_expr 
+	composable_expr:  composable_expr.XOR composable_expr 
+	composable_expr:  composable_expr.L_SHIFT composable_expr 
+	composable_expr:  composable_expr.R_SHIFT composable_expr 
+	composable_expr:  composable_expr.ADD composable_expr 
+	composable_expr:  composable_expr.SUB composable_expr 
+	composable_expr:  composable_expr.MUL composable_expr 
+	composable_expr:  composable_expr.DIV composable_expr 
+	composable_expr:  composable_expr DIV composable_expr.    (78)
+	composable_expr:  composable_expr.MOD composable_expr 
+
+	.  reduce 78 (src line 625)
+
+
+state 89
+	composable_expr:  composable_expr.OR composable_expr 
+	composable_expr:  composable_expr.AND composable_expr 
+	composable_expr:  composable_expr.LT composable_expr 
+	composable_expr:  composable_expr.GT composable_expr 
+	composable_expr:  composable_expr.EQ composable_expr 
+	composable_expr:  composable_expr.NE composable_expr 
+	composable_expr:  composable_expr.LE composable_expr 
+	composable_expr:  composable_expr.GE composable_expr 
+	composable_expr:  composable_expr.BITWISE_OR composable_expr 
+	composable_expr:  composable_expr.BITWISE_AND composable_expr 
+	composable_expr:  composable_expr.XOR composable_expr 
+	composable_expr:  composable_expr.L_SHIFT composable_expr 
+	composable_expr:  composable_expr.R_SHIFT composable_expr 
+	composable_expr:  composable_expr.ADD composable_expr 
+	composable_expr:  composable_expr.SUB composable_expr 
+	composable_expr:  composable_expr.MUL composable_expr 
+	composable_expr:  composable_expr.DIV composable_expr 
+	composable_expr:  composable_expr.MOD composable_expr 
+	composable_expr:  composable_expr MOD composable_expr.    (79)
+
+	.  reduce 79 (src line 633)
+
+
+state 90
 	assignment_expr:  LET IDENT ASSIGN.expr 
 	scope_def: .    (14)
 
 	NOT  shift 19
 	SUB  shift 18
-	IDENT  shift 54
-	CHAR_LITERAL  shift 20
-	STRING_LITERAL  shift 21
-	INT_LITERAL  shift 22
-	FLOAT_LITERAL  shift 23
-	BOOL_LITERAL  shift 24
-	.  reduce 14 (src line 161)
+	IDENT  shift 60
+	BYTE_LITERAL  shift 25
+	STRING_LITERAL  shift 26
+	INT_LITERAL  shift 27
+	FLOAT_LITERAL  shift 28
+	BOOL_LITERAL  shift 29
+	INT_TYPE  shift 31
+	UINT_TYPE  shift 32
+	FLOAT_TYPE  shift 33
+	BYTE_TYPE  shift 30
+	.  reduce 14 (src line 169)
 
-	expr  goto 93
+	literal  goto 20
+	conversion_type  goto 21
+	expr  goto 108
 	unit_expr  goto 17
 	composable_expr  goto 13
-	scope_def  goto 28
-	expr_block  goto 25
-	conditional_expr  goto 26
-	for_expr  goto 27
+	scope_def  goto 34
+	expr_block  goto 22
+	conditional_expr  goto 23
+	for_expr  goto 24
 
-state 84
-	assignment_expr:  IDENT ASSIGN expr.    (29)
+state 91
+	assignment_expr:  LET IDENT type_spec.ASSIGN expr 
 
-	.  reduce 29 (src line 303)
+	ASSIGN  shift 109
+	.  error
 
 
-state 85
+state 92
+	type_spec:  BOOL_TYPE.    (16)
+
+	.  reduce 16 (src line 182)
+
+
+state 93
+	type_spec:  INT_TYPE.    (17)
+
+	.  reduce 17 (src line 186)
+
+
+state 94
+	type_spec:  UINT_TYPE.    (18)
+
+	.  reduce 18 (src line 189)
+
+
+state 95
+	type_spec:  FLOAT_TYPE.    (19)
+
+	.  reduce 19 (src line 192)
+
+
+state 96
+	type_spec:  BYTE_TYPE.    (20)
+
+	.  reduce 20 (src line 195)
+
+
+state 97
+	type_spec:  STRING_TYPE.    (21)
+
+	.  reduce 21 (src line 198)
+
+
+state 98
+	assignment_expr:  IDENT ASSIGN expr.    (36)
+
+	.  reduce 36 (src line 343)
+
+
+state 99
 	return_expr:  RETURN AT IDENT.expr 
 	scope_def: .    (14)
 
 	NOT  shift 19
 	SUB  shift 18
-	IDENT  shift 54
-	CHAR_LITERAL  shift 20
-	STRING_LITERAL  shift 21
-	INT_LITERAL  shift 22
-	FLOAT_LITERAL  shift 23
-	BOOL_LITERAL  shift 24
-	.  reduce 14 (src line 161)
+	IDENT  shift 60
+	BYTE_LITERAL  shift 25
+	STRING_LITERAL  shift 26
+	INT_LITERAL  shift 27
+	FLOAT_LITERAL  shift 28
+	BOOL_LITERAL  shift 29
+	INT_TYPE  shift 31
+	UINT_TYPE  shift 32
+	FLOAT_TYPE  shift 33
+	BYTE_TYPE  shift 30
+	.  reduce 14 (src line 169)
 
-	expr  goto 94
+	literal  goto 20
+	conversion_type  goto 21
+	expr  goto 110
 	unit_expr  goto 17
 	composable_expr  goto 13
-	scope_def  goto 28
-	expr_block  goto 25
-	conditional_expr  goto 26
-	for_expr  goto 27
+	scope_def  goto 34
+	expr_block  goto 22
+	conditional_expr  goto 23
+	for_expr  goto 24
 
-state 86
-	unit_expr:  unit_expr DOT IDENT.    (42)
+state 100
+	unit_expr:  unit_expr DOT IDENT.    (55)
 
-	.  reduce 42 (src line 386)
+	.  reduce 55 (src line 444)
 
 
-state 87
+state 101
 	unit_expr:  unit_expr L_PAREN argument_list.R_PAREN 
 
-	R_PAREN  shift 95
+	R_PAREN  shift 111
 	.  error
 
 
-state 88
-	argument_list:  nonempty_argument_list.    (45)
+state 102
+	argument_list:  nonempty_argument_list.    (58)
 	nonempty_argument_list:  nonempty_argument_list.COMMA composable_expr 
 
-	COMMA  shift 96
-	.  reduce 45 (src line 409)
+	COMMA  shift 112
+	.  reduce 58 (src line 467)
 
 
-state 89
-	nonempty_argument_list:  composable_expr.    (46)
+state 103
+	nonempty_argument_list:  composable_expr.    (59)
 	composable_expr:  composable_expr.OR composable_expr 
 	composable_expr:  composable_expr.AND composable_expr 
 	composable_expr:  composable_expr.LT composable_expr 
@@ -1639,35 +1935,78 @@ state 89
 	composable_expr:  composable_expr.DIV composable_expr 
 	composable_expr:  composable_expr.MOD composable_expr 
 
-	OR  shift 31
-	AND  shift 32
-	LT  shift 33
-	GT  shift 34
-	EQ  shift 35
-	NE  shift 36
-	LE  shift 37
-	GE  shift 38
-	BITWISE_OR  shift 39
-	BITWISE_AND  shift 40
-	XOR  shift 41
-	L_SHIFT  shift 42
-	R_SHIFT  shift 43
-	ADD  shift 44
-	SUB  shift 45
-	MUL  shift 46
-	DIV  shift 47
-	MOD  shift 48
-	.  reduce 46 (src line 414)
+	OR  shift 37
+	AND  shift 38
+	LT  shift 39
+	GT  shift 40
+	EQ  shift 41
+	NE  shift 42
+	LE  shift 43
+	GE  shift 44
+	BITWISE_OR  shift 45
+	BITWISE_AND  shift 46
+	XOR  shift 47
+	L_SHIFT  shift 48
+	R_SHIFT  shift 49
+	ADD  shift 50
+	SUB  shift 51
+	MUL  shift 52
+	DIV  shift 53
+	MOD  shift 54
+	.  reduce 59 (src line 472)
 
 
-state 90
-	base_expr_block:  L_BRACE statement_list.R_BRACE 
+state 104
+	unit_expr:  conversion_type L_PAREN composable_expr.R_PAREN 
+	composable_expr:  composable_expr.OR composable_expr 
+	composable_expr:  composable_expr.AND composable_expr 
+	composable_expr:  composable_expr.LT composable_expr 
+	composable_expr:  composable_expr.GT composable_expr 
+	composable_expr:  composable_expr.EQ composable_expr 
+	composable_expr:  composable_expr.NE composable_expr 
+	composable_expr:  composable_expr.LE composable_expr 
+	composable_expr:  composable_expr.GE composable_expr 
+	composable_expr:  composable_expr.BITWISE_OR composable_expr 
+	composable_expr:  composable_expr.BITWISE_AND composable_expr 
+	composable_expr:  composable_expr.XOR composable_expr 
+	composable_expr:  composable_expr.L_SHIFT composable_expr 
+	composable_expr:  composable_expr.R_SHIFT composable_expr 
+	composable_expr:  composable_expr.ADD composable_expr 
+	composable_expr:  composable_expr.SUB composable_expr 
+	composable_expr:  composable_expr.MUL composable_expr 
+	composable_expr:  composable_expr.DIV composable_expr 
+	composable_expr:  composable_expr.MOD composable_expr 
 
-	R_BRACE  shift 97
+	R_PAREN  shift 113
+	OR  shift 37
+	AND  shift 38
+	LT  shift 39
+	GT  shift 40
+	EQ  shift 41
+	NE  shift 42
+	LE  shift 43
+	GE  shift 44
+	BITWISE_OR  shift 45
+	BITWISE_AND  shift 46
+	XOR  shift 47
+	L_SHIFT  shift 48
+	R_SHIFT  shift 49
+	ADD  shift 50
+	SUB  shift 51
+	MUL  shift 52
+	DIV  shift 53
+	MOD  shift 54
 	.  error
 
 
-state 91
+state 105
+	base_expr_block:  L_BRACE statement_list.R_BRACE 
+
+	R_BRACE  shift 114
+	.  error
+
+
+state 106
 	base_conditional_expr:  IF composable_expr.base_expr_block 
 	base_conditional_expr:  IF composable_expr.NEWLINE base_expr_block 
 	base_conditional_expr:  IF composable_expr.base_expr_block ELSE base_conditional_expr 
@@ -1693,31 +2032,31 @@ state 91
 	composable_expr:  composable_expr.DIV composable_expr 
 	composable_expr:  composable_expr.MOD composable_expr 
 
-	L_BRACE  shift 62
-	NEWLINE  shift 99
-	OR  shift 31
-	AND  shift 32
-	LT  shift 33
-	GT  shift 34
-	EQ  shift 35
-	NE  shift 36
-	LE  shift 37
-	GE  shift 38
-	BITWISE_OR  shift 39
-	BITWISE_AND  shift 40
-	XOR  shift 41
-	L_SHIFT  shift 42
-	R_SHIFT  shift 43
-	ADD  shift 44
-	SUB  shift 45
-	MUL  shift 46
-	DIV  shift 47
-	MOD  shift 48
+	L_BRACE  shift 69
+	NEWLINE  shift 116
+	OR  shift 37
+	AND  shift 38
+	LT  shift 39
+	GT  shift 40
+	EQ  shift 41
+	NE  shift 42
+	LE  shift 43
+	GE  shift 44
+	BITWISE_OR  shift 45
+	BITWISE_AND  shift 46
+	XOR  shift 47
+	L_SHIFT  shift 48
+	R_SHIFT  shift 49
+	ADD  shift 50
+	SUB  shift 51
+	MUL  shift 52
+	DIV  shift 53
+	MOD  shift 54
 	.  error
 
-	base_expr_block  goto 98
+	base_expr_block  goto 115
 
-state 92
+state 107
 	base_for_expr:  FOR composable_expr.expr_block 
 	base_for_expr:  FOR composable_expr.NEWLINE expr_block 
 	composable_expr:  composable_expr.OR composable_expr 
@@ -1740,128 +2079,174 @@ state 92
 	composable_expr:  composable_expr.MOD composable_expr 
 	scope_def: .    (14)
 
-	NEWLINE  shift 101
-	OR  shift 31
-	AND  shift 32
-	LT  shift 33
-	GT  shift 34
-	EQ  shift 35
-	NE  shift 36
-	LE  shift 37
-	GE  shift 38
-	BITWISE_OR  shift 39
-	BITWISE_AND  shift 40
-	XOR  shift 41
-	L_SHIFT  shift 42
-	R_SHIFT  shift 43
-	ADD  shift 44
-	SUB  shift 45
-	MUL  shift 46
-	DIV  shift 47
-	MOD  shift 48
-	IDENT  shift 103
-	.  reduce 14 (src line 161)
+	NEWLINE  shift 118
+	OR  shift 37
+	AND  shift 38
+	LT  shift 39
+	GT  shift 40
+	EQ  shift 41
+	NE  shift 42
+	LE  shift 43
+	GE  shift 44
+	BITWISE_OR  shift 45
+	BITWISE_AND  shift 46
+	XOR  shift 47
+	L_SHIFT  shift 48
+	R_SHIFT  shift 49
+	ADD  shift 50
+	SUB  shift 51
+	MUL  shift 52
+	DIV  shift 53
+	MOD  shift 54
+	IDENT  shift 120
+	.  reduce 14 (src line 169)
 
-	scope_def  goto 102
-	expr_block  goto 100
+	scope_def  goto 119
+	expr_block  goto 117
 
-state 93
-	assignment_expr:  LET IDENT ASSIGN expr.    (28)
+state 108
+	assignment_expr:  LET IDENT ASSIGN expr.    (34)
 
-	.  reduce 28 (src line 293)
-
-
-state 94
-	return_expr:  RETURN AT IDENT expr.    (31)
-
-	.  reduce 31 (src line 322)
+	.  reduce 34 (src line 322)
 
 
-state 95
-	unit_expr:  unit_expr L_PAREN argument_list R_PAREN.    (43)
+state 109
+	assignment_expr:  LET IDENT type_spec ASSIGN.expr 
+	scope_def: .    (14)
 
-	.  reduce 43 (src line 394)
+	NOT  shift 19
+	SUB  shift 18
+	IDENT  shift 60
+	BYTE_LITERAL  shift 25
+	STRING_LITERAL  shift 26
+	INT_LITERAL  shift 27
+	FLOAT_LITERAL  shift 28
+	BOOL_LITERAL  shift 29
+	INT_TYPE  shift 31
+	UINT_TYPE  shift 32
+	FLOAT_TYPE  shift 33
+	BYTE_TYPE  shift 30
+	.  reduce 14 (src line 169)
+
+	literal  goto 20
+	conversion_type  goto 21
+	expr  goto 121
+	unit_expr  goto 17
+	composable_expr  goto 13
+	scope_def  goto 34
+	expr_block  goto 22
+	conditional_expr  goto 23
+	for_expr  goto 24
+
+state 110
+	return_expr:  RETURN AT IDENT expr.    (38)
+
+	.  reduce 38 (src line 362)
 
 
-state 96
+state 111
+	unit_expr:  unit_expr L_PAREN argument_list R_PAREN.    (56)
+
+	.  reduce 56 (src line 452)
+
+
+state 112
 	nonempty_argument_list:  nonempty_argument_list COMMA.composable_expr 
 	scope_def: .    (14)
 
 	NOT  shift 19
 	SUB  shift 18
-	IDENT  shift 54
-	CHAR_LITERAL  shift 20
-	STRING_LITERAL  shift 21
-	INT_LITERAL  shift 22
-	FLOAT_LITERAL  shift 23
-	BOOL_LITERAL  shift 24
-	.  reduce 14 (src line 161)
+	IDENT  shift 60
+	BYTE_LITERAL  shift 25
+	STRING_LITERAL  shift 26
+	INT_LITERAL  shift 27
+	FLOAT_LITERAL  shift 28
+	BOOL_LITERAL  shift 29
+	INT_TYPE  shift 31
+	UINT_TYPE  shift 32
+	FLOAT_TYPE  shift 33
+	BYTE_TYPE  shift 30
+	.  reduce 14 (src line 169)
 
+	literal  goto 20
+	conversion_type  goto 21
 	unit_expr  goto 17
-	composable_expr  goto 104
-	scope_def  goto 28
-	expr_block  goto 25
-	conditional_expr  goto 26
-	for_expr  goto 27
+	composable_expr  goto 122
+	scope_def  goto 34
+	expr_block  goto 22
+	conditional_expr  goto 23
+	for_expr  goto 24
 
-state 97
-	base_expr_block:  L_BRACE statement_list R_BRACE.    (17)
+state 113
+	unit_expr:  conversion_type L_PAREN composable_expr R_PAREN.    (51)
 
-	.  reduce 17 (src line 184)
+	.  reduce 51 (src line 426)
 
 
-state 98
-	base_conditional_expr:  IF composable_expr base_expr_block.    (19)
+state 114
+	base_expr_block:  L_BRACE statement_list R_BRACE.    (23)
+
+	.  reduce 23 (src line 213)
+
+
+state 115
+	base_conditional_expr:  IF composable_expr base_expr_block.    (25)
 	base_conditional_expr:  IF composable_expr base_expr_block.ELSE base_conditional_expr 
 	base_conditional_expr:  IF composable_expr base_expr_block.ELSE base_expr_block 
 
-	ELSE  shift 105
-	.  reduce 19 (src line 205)
+	ELSE  shift 123
+	.  reduce 25 (src line 234)
 
 
-state 99
+state 116
 	base_conditional_expr:  IF composable_expr NEWLINE.base_expr_block 
 	base_conditional_expr:  IF composable_expr NEWLINE.base_expr_block ELSE base_conditional_expr 
 	base_conditional_expr:  IF composable_expr NEWLINE.base_expr_block ELSE base_expr_block 
 
-	L_BRACE  shift 62
+	L_BRACE  shift 69
 	.  error
 
-	base_expr_block  goto 106
+	base_expr_block  goto 124
 
-state 100
-	base_for_expr:  FOR composable_expr expr_block.    (26)
+state 117
+	base_for_expr:  FOR composable_expr expr_block.    (32)
 
-	.  reduce 26 (src line 274)
+	.  reduce 32 (src line 303)
 
 
-state 101
+state 118
 	base_for_expr:  FOR composable_expr NEWLINE.expr_block 
 	scope_def: .    (14)
 
-	IDENT  shift 103
-	.  reduce 14 (src line 161)
+	IDENT  shift 120
+	.  reduce 14 (src line 169)
 
-	scope_def  goto 102
-	expr_block  goto 107
+	scope_def  goto 119
+	expr_block  goto 125
 
-state 102
+state 119
 	expr_block:  scope_def.base_expr_block 
 
-	L_BRACE  shift 62
+	L_BRACE  shift 69
 	.  error
 
-	base_expr_block  goto 59
+	base_expr_block  goto 66
 
-state 103
+state 120
 	scope_def:  IDENT.AT 
 
-	AT  shift 50
+	AT  shift 56
 	.  error
 
 
-state 104
-	nonempty_argument_list:  nonempty_argument_list COMMA composable_expr.    (47)
+state 121
+	assignment_expr:  LET IDENT type_spec ASSIGN expr.    (35)
+
+	.  reduce 35 (src line 332)
+
+
+state 122
+	nonempty_argument_list:  nonempty_argument_list COMMA composable_expr.    (60)
 	composable_expr:  composable_expr.OR composable_expr 
 	composable_expr:  composable_expr.AND composable_expr 
 	composable_expr:  composable_expr.LT composable_expr 
@@ -1881,97 +2266,97 @@ state 104
 	composable_expr:  composable_expr.DIV composable_expr 
 	composable_expr:  composable_expr.MOD composable_expr 
 
-	OR  shift 31
-	AND  shift 32
-	LT  shift 33
-	GT  shift 34
-	EQ  shift 35
-	NE  shift 36
-	LE  shift 37
-	GE  shift 38
-	BITWISE_OR  shift 39
-	BITWISE_AND  shift 40
-	XOR  shift 41
-	L_SHIFT  shift 42
-	R_SHIFT  shift 43
-	ADD  shift 44
-	SUB  shift 45
-	MUL  shift 46
-	DIV  shift 47
-	MOD  shift 48
-	.  reduce 47 (src line 423)
+	OR  shift 37
+	AND  shift 38
+	LT  shift 39
+	GT  shift 40
+	EQ  shift 41
+	NE  shift 42
+	LE  shift 43
+	GE  shift 44
+	BITWISE_OR  shift 45
+	BITWISE_AND  shift 46
+	XOR  shift 47
+	L_SHIFT  shift 48
+	R_SHIFT  shift 49
+	ADD  shift 50
+	SUB  shift 51
+	MUL  shift 52
+	DIV  shift 53
+	MOD  shift 54
+	.  reduce 60 (src line 481)
 
 
-state 105
+state 123
 	base_conditional_expr:  IF composable_expr base_expr_block ELSE.base_conditional_expr 
 	base_conditional_expr:  IF composable_expr base_expr_block ELSE.base_expr_block 
 
-	L_BRACE  shift 62
-	IF  shift 63
+	L_BRACE  shift 69
+	IF  shift 70
 	.  error
 
-	base_expr_block  goto 109
-	base_conditional_expr  goto 108
+	base_expr_block  goto 127
+	base_conditional_expr  goto 126
 
-state 106
-	base_conditional_expr:  IF composable_expr NEWLINE base_expr_block.    (20)
+state 124
+	base_conditional_expr:  IF composable_expr NEWLINE base_expr_block.    (26)
 	base_conditional_expr:  IF composable_expr NEWLINE base_expr_block.ELSE base_conditional_expr 
 	base_conditional_expr:  IF composable_expr NEWLINE base_expr_block.ELSE base_expr_block 
 
-	ELSE  shift 110
-	.  reduce 20 (src line 214)
+	ELSE  shift 128
+	.  reduce 26 (src line 243)
 
 
-state 107
-	base_for_expr:  FOR composable_expr NEWLINE expr_block.    (27)
+state 125
+	base_for_expr:  FOR composable_expr NEWLINE expr_block.    (33)
 
-	.  reduce 27 (src line 283)
-
-
-state 108
-	base_conditional_expr:  IF composable_expr base_expr_block ELSE base_conditional_expr.    (21)
-
-	.  reduce 21 (src line 222)
+	.  reduce 33 (src line 312)
 
 
-state 109
-	base_conditional_expr:  IF composable_expr base_expr_block ELSE base_expr_block.    (23)
+state 126
+	base_conditional_expr:  IF composable_expr base_expr_block ELSE base_conditional_expr.    (27)
 
-	.  reduce 23 (src line 242)
+	.  reduce 27 (src line 251)
 
 
-state 110
+state 127
+	base_conditional_expr:  IF composable_expr base_expr_block ELSE base_expr_block.    (29)
+
+	.  reduce 29 (src line 271)
+
+
+state 128
 	base_conditional_expr:  IF composable_expr NEWLINE base_expr_block ELSE.base_conditional_expr 
 	base_conditional_expr:  IF composable_expr NEWLINE base_expr_block ELSE.base_expr_block 
 
-	L_BRACE  shift 62
-	IF  shift 63
+	L_BRACE  shift 69
+	IF  shift 70
 	.  error
 
-	base_expr_block  goto 112
-	base_conditional_expr  goto 111
+	base_expr_block  goto 130
+	base_conditional_expr  goto 129
 
-state 111
-	base_conditional_expr:  IF composable_expr NEWLINE base_expr_block ELSE base_conditional_expr.    (22)
+state 129
+	base_conditional_expr:  IF composable_expr NEWLINE base_expr_block ELSE base_conditional_expr.    (28)
 
-	.  reduce 22 (src line 232)
-
-
-state 112
-	base_conditional_expr:  IF composable_expr NEWLINE base_expr_block ELSE base_expr_block.    (24)
-
-	.  reduce 24 (src line 252)
+	.  reduce 28 (src line 261)
 
 
-52 terminals, 21 nonterminals
-69 grammar rules, 113/8000 states
+state 130
+	base_conditional_expr:  IF composable_expr NEWLINE base_expr_block ELSE base_expr_block.    (30)
+
+	.  reduce 30 (src line 281)
+
+
+58 terminals, 24 nonterminals
+82 grammar rules, 131/8000 states
 0 shift/reduce, 0 reduce/reduce conflicts reported
-70 working sets used
-memory: parser 399/120000
-87 extra closures
-534 shift entries, 6 exceptions
-61 goto entries
-169 entries saved by goto default
-Optimizer space used: output 260/120000
-260 table entries, 13 zero
-maximum spread: 52, maximum offset: 110
+73 working sets used
+memory: parser 515/120000
+92 extra closures
+709 shift entries, 6 exceptions
+66 goto entries
+244 entries saved by goto default
+Optimizer space used: output 291/120000
+291 table entries, 0 zero
+maximum spread: 58, maximum offset: 128
