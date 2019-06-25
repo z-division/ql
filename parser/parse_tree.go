@@ -219,10 +219,6 @@ func (comments Comments) prettyFormat(indent int) string {
 	return lines
 }
 
-func (comments Comments) String() string {
-	return prettyFormatNode("", comments, 0)
-}
-
 type Token struct {
 	Type int
 	Location

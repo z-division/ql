@@ -14,7 +14,7 @@ let x = {
             { 1 } + { 5 }
         } else if blah {
             return -1
-        } else label3@ {
+        } else {
             return @label2 17
         }
     }

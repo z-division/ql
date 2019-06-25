@@ -199,7 +199,7 @@ conditional_expr:
     ;
 
 base_conditional_expr:
-    IF composable_expr expr_block {
+    IF composable_expr base_expr_block {
         $$ = &ConditionalExpr{
             Location: $1.Loc().Merge($3.Loc()),
             If: $1,
@@ -207,7 +207,7 @@ base_conditional_expr:
             TrueClause: $3,
         }
     }
-    | IF composable_expr NEWLINE expr_block {
+    | IF composable_expr NEWLINE base_expr_block {
         $$ = &ConditionalExpr{
             Location: $1.Loc().Merge($4.Loc()),
             If: $1,
@@ -215,7 +215,7 @@ base_conditional_expr:
             TrueClause: $4,
         }
     }
-    | IF composable_expr expr_block ELSE base_conditional_expr {
+    | IF composable_expr base_expr_block ELSE base_conditional_expr {
         $$ = &ConditionalExpr{
             Location: $1.Loc().Merge($5.Loc()),
             If: $1,
@@ -225,7 +225,7 @@ base_conditional_expr:
             FalseClause: $5,
         }
     }
-    | IF composable_expr NEWLINE expr_block ELSE base_conditional_expr {
+    | IF composable_expr NEWLINE base_expr_block ELSE base_conditional_expr {
         $$ = &ConditionalExpr{
             Location: $1.Loc().Merge($6.Loc()),
             If: $1,
@@ -235,7 +235,7 @@ base_conditional_expr:
             FalseClause: $6,
         }
     }
-    | IF composable_expr expr_block ELSE expr_block {
+    | IF composable_expr base_expr_block ELSE base_expr_block {
         $$ = &ConditionalExpr{
             Location: $1.Loc().Merge($5.Loc()),
             If: $1,
@@ -245,7 +245,7 @@ base_conditional_expr:
             FalseClause: $5,
         }
     }
-    | IF composable_expr NEWLINE expr_block ELSE expr_block {
+    | IF composable_expr NEWLINE base_expr_block ELSE base_expr_block {
         $$ = &ConditionalExpr{
             Location: $1.Loc().Merge($6.Loc()),
             If: $1,
@@ -292,9 +292,6 @@ expr:
     composable_expr {
         $$ = $1
     }
-    | conditional_expr {
-        $$ = $1
-    }
     ;
 
 // TODO(patrick): tuples.  maybe list slicing
@@ -336,6 +333,9 @@ unit_expr:
         }
     }
     | expr_block {
+        $$ = $1
+    }
+    | conditional_expr {
         $$ = $1
     }
     | unit_expr DOT IDENT {
