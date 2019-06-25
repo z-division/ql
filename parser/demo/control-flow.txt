@@ -12,10 +12,8 @@ let x = {
             return @label1 5
         } else if foo {
             { 1 } + { 5 }
-        } else if blah {
-            return -1
         } else {
-            return @label2 17
+            return -1
         }
     }
 
