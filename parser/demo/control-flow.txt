@@ -8,12 +8,14 @@ if blah == 5 {return 5}
 
 let x = {
     let z = label1@{
-        if blah {
+        label2@ if blah {
             return @label1 5
         } else if foo {
             { 1 } + { 5 }
-        } else {
+        } else if blah {
             return -1
+        } else label3@ {
+            return @label2 17
         }
     }
 
