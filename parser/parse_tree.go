@@ -261,6 +261,10 @@ func (op *Token) String() string {
 	return prettyFormatNode("", op, 0)
 }
 
+type TypeSpec struct {
+	// TODO
+}
+
 type Expr interface {
 	Node
 	isExpr()
@@ -350,6 +354,20 @@ type Argument struct {
 	Location
 	Expression Expr
 	Comma      *Token
+}
+
+type TypeConversion struct {
+	Location
+	expr
+
+	Type       *Token
+	LParen     *Token
+	Expression Expr
+	RParen     *Token
+}
+
+func (tc *TypeConversion) String() string {
+	return prettyFormatNode("", tc, 0)
 }
 
 type Invocation struct {
@@ -452,6 +470,7 @@ type AssignExpr struct {
 
 	Let        *Token // Optional
 	Name       *Token
+	*TypeSpec  // Optional
 	Assign     *Token
 	Expression Expr
 }

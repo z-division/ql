@@ -1,4 +1,6 @@
-for boolVal {
+for
+    boolVal
+{
     doStuff()
 }
 

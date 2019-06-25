@@ -8,7 +8,7 @@ var (
 	// Tokens that are sensitive to terminators on either side of the token
 	terminatorSensitive = map[int]struct{}{
 		IDENT:          struct{}{},
-		CHAR_LITERAL:   struct{}{},
+		BYTE_LITERAL:   struct{}{},
 		STRING_LITERAL: struct{}{},
 		INT_LITERAL:    struct{}{},
 		FLOAT_LITERAL:  struct{}{},

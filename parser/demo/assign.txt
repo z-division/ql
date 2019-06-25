@@ -1,0 +1,8 @@
+// type inferred from expression
+let x = 5
+
+// explicit type specification
+let y uint = 6.0
+
+// inherit type from original let statement
+z = float64(7)

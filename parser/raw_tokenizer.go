@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"path/filepath"
+	"regexp"
 	"strings"
 )
 
@@ -136,6 +137,7 @@ var (
 		"else":   ELSE,
 		"for":    FOR,
 		"return": RETURN,
+		"byte":   BYTE_TYPE,
 	}
 
 	// NOTE(patrick): This is a subset of the standard C escape sequence.
@@ -158,6 +160,8 @@ var (
 		'\t': struct{}{},
 		'\v': struct{}{},
 	}
+
+	numTypeRe = regexp.MustCompile("^(float|int|uint)\\d*$")
 )
 
 func parseIdentifierOrKeyword(tok *rawTokenizer) (*Token, error) {
@@ -203,10 +207,31 @@ func parseIdentifierOrKeyword(tok *rawTokenizer) (*Token, error) {
 		Value: string(value),
 	}
 
+	lowered := strings.ToLower(token.Value)
+
 	// The identifier may be a keyword
-	kwToken, ok := keywords[strings.ToLower(token.Value)]
+	kwToken, ok := keywords[lowered]
 	if ok {
 		token.Type = kwToken
+	}
+
+	// The identifier may be a numeric type
+	match := numTypeRe.FindStringSubmatch(lowered)
+	if len(match) > 0 {
+		switch match[1] {
+		case "float":
+			token.Type = FLOAT_TYPE
+		case "int":
+			token.Type = INT_TYPE
+		case "uint":
+			token.Type = UINT_TYPE
+		default:
+			return nil, fmt.Errorf(
+				"%s:%v: invalid numeric type: %s",
+				filepath.Base(tok.filename),
+				tok.Position,
+				token.Value)
+		}
 	}
 
 	return token, nil
@@ -544,7 +569,7 @@ func parseChar(tok *rawTokenizer) (*Token, error) {
 
 		tok.consumeN(4)
 		return &Token{
-			Type: CHAR_LITERAL,
+			Type: BYTE_LITERAL,
 			Location: Location{
 				Filename: tok.filename,
 				Start:    start,
@@ -564,7 +589,7 @@ func parseChar(tok *rawTokenizer) (*Token, error) {
 
 	tok.consumeN(3)
 	return &Token{
-		Type: CHAR_LITERAL,
+		Type: BYTE_LITERAL,
 		Location: Location{
 			Filename: tok.filename,
 			Start:    start,
