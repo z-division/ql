@@ -75,11 +75,13 @@ const STRING_LITERAL = 57390
 const INT_LITERAL = 57391
 const FLOAT_LITERAL = 57392
 const BOOL_LITERAL = 57393
-const BYTE_TYPE = 57394
-const FLOAT_TYPE = 57395
-const INT_TYPE = 57396
-const UINT_TYPE = 57397
-const NOOP = 57398
+const BOOL_TYPE = 57394
+const INT_TYPE = 57395
+const UINT_TYPE = 57396
+const FLOAT_TYPE = 57397
+const BYTE_TYPE = 57398
+const STRING_TYPE = 57399
+const NOOP = 57400
 
 var qlToknames = [...]string{
 	"$end",
@@ -133,10 +135,12 @@ var qlToknames = [...]string{
 	"INT_LITERAL",
 	"FLOAT_LITERAL",
 	"BOOL_LITERAL",
-	"BYTE_TYPE",
-	"FLOAT_TYPE",
+	"BOOL_TYPE",
 	"INT_TYPE",
 	"UINT_TYPE",
+	"FLOAT_TYPE",
+	"BYTE_TYPE",
+	"STRING_TYPE",
 	"NOOP",
 }
 var qlStatenames = [...]string{}
@@ -145,7 +149,7 @@ const qlEofCode = 1
 const qlErrCode = 2
 const qlInitialStackSize = 16
 
-//line ql.y:651
+//line ql.y:657
 
 //line yacctab:1
 var qlExca = [...]int{
@@ -160,7 +164,7 @@ var qlExca = [...]int{
 	8, 3,
 	-2, 14,
 	-1, 62,
-	10, 55,
+	10, 57,
 	-2, 14,
 	-1, 69,
 	8, 2,
@@ -173,112 +177,117 @@ const qlLast = 291
 
 var qlAct = [...]int{
 
-	13, 66, 67, 22, 34, 2, 10, 118, 19, 45,
+	13, 66, 67, 22, 34, 2, 10, 120, 19, 45,
 	46, 47, 48, 49, 50, 51, 52, 53, 54, 63,
-	64, 18, 98, 58, 97, 55, 60, 25, 26, 27,
-	28, 29, 30, 33, 31, 32, 126, 121, 72, 73,
+	64, 18, 100, 58, 99, 55, 60, 25, 26, 27,
+	28, 29, 128, 31, 32, 33, 30, 123, 72, 73,
 	74, 75, 76, 77, 78, 79, 80, 81, 82, 83,
 	84, 85, 86, 87, 88, 89, 7, 8, 14, 90,
-	56, 69, 16, 101, 96, 19, 102, 52, 53, 54,
-	110, 104, 105, 107, 65, 103, 70, 57, 18, 69,
-	7, 8, 56, 15, 25, 26, 27, 28, 29, 30,
-	33, 31, 32, 9, 70, 109, 71, 106, 92, 93,
-	94, 95, 59, 112, 108, 69, 113, 1, 62, 115,
-	117, 120, 19, 4, 119, 61, 122, 35, 91, 5,
-	123, 117, 12, 125, 124, 18, 36, 11, 128, 127,
-	60, 25, 26, 27, 28, 29, 30, 33, 31, 32,
-	116, 50, 51, 52, 53, 54, 37, 38, 6, 39,
-	40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
-	50, 51, 52, 53, 54, 69, 118, 46, 47, 48,
-	49, 50, 51, 52, 53, 54, 68, 24, 114, 23,
-	100, 99, 3, 17, 37, 38, 21, 39, 40, 41,
+	56, 69, 16, 103, 98, 19, 104, 52, 53, 54,
+	112, 106, 107, 109, 65, 105, 70, 57, 18, 69,
+	7, 8, 56, 15, 25, 26, 27, 28, 29, 111,
+	31, 32, 33, 30, 70, 9, 71, 108, 92, 93,
+	94, 95, 96, 97, 59, 114, 110, 69, 115, 1,
+	62, 117, 119, 122, 19, 4, 121, 61, 124, 35,
+	91, 5, 125, 119, 12, 127, 126, 18, 36, 11,
+	130, 129, 60, 25, 26, 27, 28, 29, 118, 31,
+	32, 33, 30, 6, 37, 38, 68, 39, 40, 41,
 	42, 43, 44, 45, 46, 47, 48, 49, 50, 51,
-	52, 53, 54, 111, 47, 48, 49, 50, 51, 52,
-	53, 54, 48, 49, 50, 51, 52, 53, 54, 37,
-	38, 20, 39, 40, 41, 42, 43, 44, 45, 46,
-	47, 48, 49, 50, 51, 52, 53, 54, 37, 38,
-	0, 39, 40, 41, 42, 43, 44, 45, 46, 47,
-	48, 49, 50, 51, 52, 53, 54, 38, 0, 39,
-	40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
-	50, 51, 52, 53, 54, 39, 40, 41, 42, 43,
+	52, 53, 54, 69, 120, 46, 47, 48, 49, 50,
+	51, 52, 53, 54, 24, 23, 116, 50, 51, 52,
+	53, 54, 37, 38, 102, 39, 40, 41, 42, 43,
 	44, 45, 46, 47, 48, 49, 50, 51, 52, 53,
-	54,
+	54, 113, 47, 48, 49, 50, 51, 52, 53, 54,
+	48, 49, 50, 51, 52, 53, 54, 37, 38, 101,
+	39, 40, 41, 42, 43, 44, 45, 46, 47, 48,
+	49, 50, 51, 52, 53, 54, 37, 38, 3, 39,
+	40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+	50, 51, 52, 53, 54, 38, 17, 39, 40, 41,
+	42, 43, 44, 45, 46, 47, 48, 49, 50, 51,
+	52, 53, 54, 39, 40, 41, 42, 43, 44, 45,
+	46, 47, 48, 49, 50, 51, 52, 53, 54, 21,
+	20,
 }
 var qlPact = [...]int{
 
 	37, -1000, -1000, 37, -1000, -1000, 61, -1000, -1000, -1000,
-	-1000, -1000, -1000, 212, -21, 64, 84, 99, -20, -20,
+	-1000, -1000, -1000, 210, -21, 64, 86, 101, -20, -20,
 	-1000, 65, -1000, -1000, -1000, -1000, -1000, -1000, -1000, -1000,
 	-1000, -1000, -1000, -1000, 72, -1000, -1000, -20, -20, -20,
 	-20, -20, -20, -20, -20, -20, -20, -20, -20, -20,
 	-20, -20, -20, -20, -20, 46, -1000, -20, -1000, -22,
-	42, -24, -20, -1000, 246, -20, -1000, -1000, -1000, 37,
-	-20, -20, 230, 246, -26, -26, -26, -26, -26, -26,
-	131, 167, 174, 101, 101, 25, 25, -1000, -1000, -1000,
-	-20, 60, -1000, -1000, -1000, -1000, -1000, -20, -1000, 85,
-	55, 212, 193, 95, 158, 120, -1000, -20, -1000, -1000,
-	-20, -1000, -1000, 14, 98, -1000, -39, 98, 42, -1000,
-	212, 54, 13, -1000, -1000, -1000, 54, -1000, -1000,
+	42, -24, -20, -1000, 244, -20, -1000, -1000, -1000, 37,
+	-20, -20, 228, 244, -26, -26, -26, -26, -26, -26,
+	129, 165, 172, 137, 137, 25, 25, -1000, -1000, -1000,
+	-20, 60, -1000, -1000, -1000, -1000, -1000, -1000, -1000, -20,
+	-1000, 79, 55, 210, 191, 97, 156, 118, -1000, -20,
+	-1000, -1000, -20, -1000, -1000, 14, 100, -1000, -39, 100,
+	42, -1000, 210, 54, 9, -1000, -1000, -1000, 54, -1000,
+	-1000,
 }
 var qlPgo = [...]int{
 
-	0, 221, 186, 6, 183, 0, 5, 182, 181, 180,
-	4, 3, 1, 179, 2, 177, 176, 113, 148, 127,
-	122, 118, 107, 119,
+	0, 290, 289, 6, 256, 0, 5, 238, 219, 184,
+	4, 3, 1, 175, 2, 174, 146, 115, 143, 129,
+	124, 120, 109, 121,
 }
 var qlR1 = [...]int{
 
 	0, 22, 6, 6, 7, 7, 23, 23, 17, 17,
 	18, 18, 18, 18, 10, 10, 21, 21, 21, 21,
-	11, 12, 13, 14, 14, 14, 14, 14, 14, 15,
-	16, 16, 19, 19, 19, 20, 20, 3, 1, 1,
-	1, 1, 1, 2, 2, 2, 2, 4, 4, 4,
-	4, 4, 4, 4, 4, 8, 8, 9, 9, 5,
+	21, 21, 11, 12, 13, 14, 14, 14, 14, 14,
+	14, 15, 16, 16, 19, 19, 19, 20, 20, 3,
+	1, 1, 1, 1, 1, 2, 2, 2, 2, 4,
+	4, 4, 4, 4, 4, 4, 4, 8, 8, 9,
+	9, 5, 5, 5, 5, 5, 5, 5, 5, 5,
 	5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-	5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+	5, 5,
 }
 var qlR2 = [...]int{
 
 	0, 1, 0, 1, 1, 2, 1, 1, 1, 2,
 	1, 1, 1, 1, 0, 2, 1, 1, 1, 1,
-	2, 3, 2, 3, 4, 5, 6, 5, 6, 2,
-	3, 4, 4, 5, 3, 2, 4, 1, 1, 1,
-	1, 1, 1, 1, 1, 1, 1, 1, 1, 4,
-	1, 1, 1, 3, 4, 0, 1, 1, 3, 1,
+	1, 1, 2, 3, 2, 3, 4, 5, 6, 5,
+	6, 2, 3, 4, 4, 5, 3, 2, 4, 1,
+	1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+	1, 4, 1, 1, 1, 3, 4, 0, 1, 1,
+	3, 1, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 3, 3, 3, 3, 3, 2, 2,
+	2, 2,
 }
 var qlChk = [...]int{
 
-	-1000, -22, -6, -7, -17, -23, -18, 19, 20, 56,
+	-1000, -22, -6, -7, -17, -23, -18, 19, 20, 58,
 	-3, -19, -20, -5, 21, 46, 25, -4, 41, 28,
 	-1, -2, -11, -13, -15, 47, 48, 49, 50, 51,
-	52, 54, 55, 53, -10, -17, -23, 26, 27, 29,
+	56, 53, 54, 55, -10, -17, -23, 26, 27, 29,
 	30, 31, 32, 33, 34, 35, 36, 37, 38, 39,
 	40, 41, 42, 43, 44, 46, 18, 13, -3, 18,
 	46, 16, 9, -5, -5, 9, -12, -14, -16, 7,
 	22, 24, -5, -5, -5, -5, -5, -5, -5, -5,
 	-5, -5, -5, -5, -5, -5, -5, -5, -5, -5,
-	13, -21, 52, 53, 54, 55, -3, 46, 46, -8,
-	-9, -5, -5, -6, -5, -5, -3, 13, -3, 10,
-	15, 10, 8, -12, 20, -11, 20, -10, 46, -3,
-	-5, 23, -12, -11, -14, -12, 23, -14, -12,
+	13, -21, 52, 53, 54, 55, 56, 57, -3, 46,
+	46, -8, -9, -5, -5, -6, -5, -5, -3, 13,
+	-3, 10, 15, 10, 8, -12, 20, -11, 20, -10,
+	46, -3, -5, 23, -12, -11, -14, -12, 23, -14,
+	-12,
 }
 var qlDef = [...]int{
 
 	-2, -2, 1, -2, 4, 8, 0, 6, 7, 10,
-	11, 12, 13, 37, 0, 47, 14, 59, 14, 14,
-	48, 0, 50, 51, 52, 38, 39, 40, 41, 42,
-	43, 44, 45, 46, 0, 5, 9, 14, 14, 14,
+	11, 12, 13, 39, 0, 49, 14, 61, 14, 14,
+	50, 0, 52, 53, 54, 40, 41, 42, 43, 44,
+	45, 46, 47, 48, 0, 5, 9, 14, 14, 14,
 	14, 14, 14, 14, 14, 14, 14, 14, 14, 14,
-	14, 14, 14, 14, 14, 0, 15, 14, 35, 0,
-	47, 0, -2, 78, 79, 14, 20, 22, 29, -2,
-	14, 14, 60, 61, 62, 63, 64, 65, 66, 67,
-	68, 69, 70, 71, 72, 73, 74, 75, 76, 77,
-	14, 0, 16, 17, 18, 19, 34, 14, 53, 0,
-	56, 57, 0, 0, 0, 14, 32, 14, 36, 54,
-	14, 49, 21, 23, 0, 30, 14, 0, 0, 33,
-	58, 0, 24, 31, 25, 27, 0, 26, 28,
+	14, 14, 14, 14, 14, 0, 15, 14, 37, 0,
+	49, 0, -2, 80, 81, 14, 22, 24, 31, -2,
+	14, 14, 62, 63, 64, 65, 66, 67, 68, 69,
+	70, 71, 72, 73, 74, 75, 76, 77, 78, 79,
+	14, 0, 16, 17, 18, 19, 20, 21, 36, 14,
+	55, 0, 58, 59, 0, 0, 0, 14, 34, 14,
+	38, 56, 14, 51, 23, 25, 0, 32, 14, 0,
+	0, 35, 60, 0, 26, 33, 27, 29, 0, 28,
+	30,
 }
 var qlTok1 = [...]int{
 
@@ -291,7 +300,7 @@ var qlTok2 = [...]int{
 	22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
 	32, 33, 34, 35, 36, 37, 38, 39, 40, 41,
 	42, 43, 44, 45, 46, 47, 48, 49, 50, 51,
-	52, 53, 54, 55, 56,
+	52, 53, 54, 55, 56, 57, 58,
 }
 var qlTok3 = [...]int{
 	0,
@@ -767,8 +776,20 @@ qldefault:
 			// TODO
 		}
 	case 20:
-		qlDollar = qlS[qlpt-2 : qlpt+1]
+		qlDollar = qlS[qlpt-1 : qlpt+1]
+//line ql.y:195
+		{
+			// TODO
+		}
+	case 21:
+		qlDollar = qlS[qlpt-1 : qlpt+1]
 //line ql.y:198
+		{
+			// TODO
+		}
+	case 22:
+		qlDollar = qlS[qlpt-2 : qlpt+1]
+//line ql.y:204
 		{
 			qlVAL.ExprBlock = qlDollar[2].ExprBlock
 			if qlDollar[1].ScopeDef != nil {
@@ -776,9 +797,9 @@ qldefault:
 				qlVAL.ExprBlock.ScopeDef = qlDollar[1].ScopeDef
 			}
 		}
-	case 21:
+	case 23:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:208
+//line ql.y:214
 		{
 			qlVAL.ExprBlock = &ExprBlock{
 				Location:   qlDollar[1].Token.Loc().Merge(qlDollar[3].Token.Loc()),
@@ -787,9 +808,9 @@ qldefault:
 				RBrace:     qlDollar[3].Token,
 			}
 		}
-	case 22:
+	case 24:
 		qlDollar = qlS[qlpt-2 : qlpt+1]
-//line ql.y:219
+//line ql.y:225
 		{
 			qlVAL.ConditionalExpr = qlDollar[2].ConditionalExpr
 			if qlDollar[1].ScopeDef != nil {
@@ -797,9 +818,9 @@ qldefault:
 				qlVAL.ConditionalExpr.ScopeDef = qlDollar[1].ScopeDef
 			}
 		}
-	case 23:
+	case 25:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:229
+//line ql.y:235
 		{
 			qlVAL.ConditionalExpr = &ConditionalExpr{
 				Location:   qlDollar[1].Token.Loc().Merge(qlDollar[3].ExprBlock.Loc()),
@@ -808,9 +829,9 @@ qldefault:
 				TrueClause: qlDollar[3].ExprBlock,
 			}
 		}
-	case 24:
+	case 26:
 		qlDollar = qlS[qlpt-4 : qlpt+1]
-//line ql.y:237
+//line ql.y:243
 		{
 			qlVAL.ConditionalExpr = &ConditionalExpr{
 				Location:   qlDollar[1].Token.Loc().Merge(qlDollar[4].ExprBlock.Loc()),
@@ -819,9 +840,9 @@ qldefault:
 				TrueClause: qlDollar[4].ExprBlock,
 			}
 		}
-	case 25:
+	case 27:
 		qlDollar = qlS[qlpt-5 : qlpt+1]
-//line ql.y:245
+//line ql.y:251
 		{
 			qlVAL.ConditionalExpr = &ConditionalExpr{
 				Location:    qlDollar[1].Token.Loc().Merge(qlDollar[5].ConditionalExpr.Loc()),
@@ -832,9 +853,9 @@ qldefault:
 				FalseClause: qlDollar[5].ConditionalExpr,
 			}
 		}
-	case 26:
+	case 28:
 		qlDollar = qlS[qlpt-6 : qlpt+1]
-//line ql.y:255
+//line ql.y:261
 		{
 			qlVAL.ConditionalExpr = &ConditionalExpr{
 				Location:    qlDollar[1].Token.Loc().Merge(qlDollar[6].ConditionalExpr.Loc()),
@@ -845,9 +866,9 @@ qldefault:
 				FalseClause: qlDollar[6].ConditionalExpr,
 			}
 		}
-	case 27:
+	case 29:
 		qlDollar = qlS[qlpt-5 : qlpt+1]
-//line ql.y:265
+//line ql.y:271
 		{
 			qlVAL.ConditionalExpr = &ConditionalExpr{
 				Location:    qlDollar[1].Token.Loc().Merge(qlDollar[5].ExprBlock.Loc()),
@@ -858,9 +879,9 @@ qldefault:
 				FalseClause: qlDollar[5].ExprBlock,
 			}
 		}
-	case 28:
+	case 30:
 		qlDollar = qlS[qlpt-6 : qlpt+1]
-//line ql.y:275
+//line ql.y:281
 		{
 			qlVAL.ConditionalExpr = &ConditionalExpr{
 				Location:    qlDollar[1].Token.Loc().Merge(qlDollar[6].ExprBlock.Loc()),
@@ -871,9 +892,9 @@ qldefault:
 				FalseClause: qlDollar[6].ExprBlock,
 			}
 		}
-	case 29:
+	case 31:
 		qlDollar = qlS[qlpt-2 : qlpt+1]
-//line ql.y:288
+//line ql.y:294
 		{
 			qlVAL.ForExpr = qlDollar[2].ForExpr
 			if qlDollar[1].ScopeDef != nil {
@@ -881,9 +902,9 @@ qldefault:
 				qlVAL.ForExpr.ScopeDef = qlDollar[1].ScopeDef
 			}
 		}
-	case 30:
+	case 32:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:298
+//line ql.y:304
 		{
 			qlVAL.ForExpr = &ForExpr{
 				Location:  qlDollar[1].Token.Location.Merge(qlDollar[3].ExprBlock.Location),
@@ -892,9 +913,9 @@ qldefault:
 				Body:      qlDollar[3].ExprBlock,
 			}
 		}
-	case 31:
+	case 33:
 		qlDollar = qlS[qlpt-4 : qlpt+1]
-//line ql.y:306
+//line ql.y:312
 		{
 			qlVAL.ForExpr = &ForExpr{
 				Location:  qlDollar[1].Token.Location.Merge(qlDollar[4].ExprBlock.Location),
@@ -903,9 +924,9 @@ qldefault:
 				Body:      qlDollar[4].ExprBlock,
 			}
 		}
-	case 32:
+	case 34:
 		qlDollar = qlS[qlpt-4 : qlpt+1]
-//line ql.y:317
+//line ql.y:323
 		{
 			qlVAL.ControlFlowExpr = &AssignExpr{
 				Location:   qlDollar[1].Token.Loc().Merge(qlDollar[4].Expr.Loc()),
@@ -915,9 +936,9 @@ qldefault:
 				Expression: qlDollar[4].Expr,
 			}
 		}
-	case 33:
+	case 35:
 		qlDollar = qlS[qlpt-5 : qlpt+1]
-//line ql.y:327
+//line ql.y:333
 		{
 			qlVAL.ControlFlowExpr = &AssignExpr{
 				Location:   qlDollar[1].Token.Loc().Merge(qlDollar[5].Expr.Loc()),
@@ -928,9 +949,9 @@ qldefault:
 				Expression: qlDollar[5].Expr,
 			}
 		}
-	case 34:
+	case 36:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:338
+//line ql.y:344
 		{
 			qlVAL.ControlFlowExpr = &AssignExpr{
 				Location:   qlDollar[1].Token.Loc().Merge(qlDollar[3].Expr.Loc()),
@@ -939,9 +960,9 @@ qldefault:
 				Expression: qlDollar[3].Expr,
 			}
 		}
-	case 35:
+	case 37:
 		qlDollar = qlS[qlpt-2 : qlpt+1]
-//line ql.y:349
+//line ql.y:355
 		{
 			qlVAL.ControlFlowExpr = &ReturnExpr{
 				Location:   qlDollar[1].Token.Loc().Merge(qlDollar[2].Expr.Loc()),
@@ -949,9 +970,9 @@ qldefault:
 				Expression: qlDollar[2].Expr,
 			}
 		}
-	case 36:
+	case 38:
 		qlDollar = qlS[qlpt-4 : qlpt+1]
-//line ql.y:356
+//line ql.y:362
 		{
 			qlVAL.ControlFlowExpr = &ReturnExpr{
 				Location:   qlDollar[1].Token.Loc().Merge(qlDollar[4].Expr.Loc()),
@@ -961,23 +982,11 @@ qldefault:
 				Expression: qlDollar[4].Expr,
 			}
 		}
-	case 37:
-		qlDollar = qlS[qlpt-1 : qlpt+1]
-//line ql.y:368
-		{
-			qlVAL.Expr = qlDollar[1].Expr
-		}
-	case 38:
+	case 39:
 		qlDollar = qlS[qlpt-1 : qlpt+1]
 //line ql.y:374
 		{
-			qlVAL.Token = qlDollar[1].Token
-		}
-	case 39:
-		qlDollar = qlS[qlpt-1 : qlpt+1]
-//line ql.y:377
-		{
-			qlVAL.Token = qlDollar[1].Token
+			qlVAL.Expr = qlDollar[1].Expr
 		}
 	case 40:
 		qlDollar = qlS[qlpt-1 : qlpt+1]
@@ -999,13 +1008,13 @@ qldefault:
 		}
 	case 43:
 		qlDollar = qlS[qlpt-1 : qlpt+1]
-//line ql.y:392
+//line ql.y:389
 		{
 			qlVAL.Token = qlDollar[1].Token
 		}
 	case 44:
 		qlDollar = qlS[qlpt-1 : qlpt+1]
-//line ql.y:395
+//line ql.y:392
 		{
 			qlVAL.Token = qlDollar[1].Token
 		}
@@ -1023,25 +1032,37 @@ qldefault:
 		}
 	case 47:
 		qlDollar = qlS[qlpt-1 : qlpt+1]
-//line ql.y:408
+//line ql.y:404
+		{
+			qlVAL.Token = qlDollar[1].Token
+		}
+	case 48:
+		qlDollar = qlS[qlpt-1 : qlpt+1]
+//line ql.y:407
+		{
+			qlVAL.Token = qlDollar[1].Token
+		}
+	case 49:
+		qlDollar = qlS[qlpt-1 : qlpt+1]
+//line ql.y:414
 		{
 			qlVAL.Expr = &Identifier{
 				Location: qlDollar[1].Token.Location,
 				Value:    qlDollar[1].Token,
 			}
 		}
-	case 48:
+	case 50:
 		qlDollar = qlS[qlpt-1 : qlpt+1]
-//line ql.y:414
+//line ql.y:420
 		{
 			qlVAL.Expr = &Literal{
 				Location: qlDollar[1].Token.Location,
 				Value:    qlDollar[1].Token,
 			}
 		}
-	case 49:
+	case 51:
 		qlDollar = qlS[qlpt-4 : qlpt+1]
-//line ql.y:420
+//line ql.y:426
 		{
 			qlVAL.Expr = &TypeConversion{
 				Location:   qlDollar[1].Token.Loc().Merge(qlDollar[4].Token.Loc()),
@@ -1051,27 +1072,27 @@ qldefault:
 				RParen:     qlDollar[4].Token,
 			}
 		}
-	case 50:
-		qlDollar = qlS[qlpt-1 : qlpt+1]
-//line ql.y:429
-		{
-			qlVAL.Expr = qlDollar[1].ExprBlock
-		}
-	case 51:
-		qlDollar = qlS[qlpt-1 : qlpt+1]
-//line ql.y:432
-		{
-			qlVAL.Expr = qlDollar[1].ConditionalExpr
-		}
 	case 52:
 		qlDollar = qlS[qlpt-1 : qlpt+1]
 //line ql.y:435
 		{
-			qlVAL.Expr = qlDollar[1].ForExpr
+			qlVAL.Expr = qlDollar[1].ExprBlock
 		}
 	case 53:
-		qlDollar = qlS[qlpt-3 : qlpt+1]
+		qlDollar = qlS[qlpt-1 : qlpt+1]
 //line ql.y:438
+		{
+			qlVAL.Expr = qlDollar[1].ConditionalExpr
+		}
+	case 54:
+		qlDollar = qlS[qlpt-1 : qlpt+1]
+//line ql.y:441
+		{
+			qlVAL.Expr = qlDollar[1].ForExpr
+		}
+	case 55:
+		qlDollar = qlS[qlpt-3 : qlpt+1]
+//line ql.y:444
 		{
 			qlVAL.Expr = &Accessor{
 				Location:    qlDollar[1].Expr.Loc().Merge(qlDollar[3].Token.Loc()),
@@ -1080,9 +1101,9 @@ qldefault:
 				Name:        qlDollar[3].Token,
 			}
 		}
-	case 54:
+	case 56:
 		qlDollar = qlS[qlpt-4 : qlpt+1]
-//line ql.y:446
+//line ql.y:452
 		{
 			qlVAL.Expr = &Invocation{
 				Location:   qlDollar[1].Expr.Loc().Merge(qlDollar[4].Token.Loc()),
@@ -1092,21 +1113,21 @@ qldefault:
 				RParen:     qlDollar[4].Token,
 			}
 		}
-	case 55:
+	case 57:
 		qlDollar = qlS[qlpt-0 : qlpt+1]
-//line ql.y:458
+//line ql.y:464
 		{ // empty
 			qlVAL.Arguments = nil
 		}
-	case 56:
+	case 58:
 		qlDollar = qlS[qlpt-1 : qlpt+1]
-//line ql.y:461
+//line ql.y:467
 		{
 			qlVAL.Arguments = qlDollar[1].Arguments
 		}
-	case 57:
+	case 59:
 		qlDollar = qlS[qlpt-1 : qlpt+1]
-//line ql.y:467
+//line ql.y:473
 		{
 			qlVAL.Arguments = []*Argument{
 				&Argument{
@@ -1115,9 +1136,9 @@ qldefault:
 				},
 			}
 		}
-	case 58:
+	case 60:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:475
+//line ql.y:481
 		{
 			qlDollar[1].Arguments[len(qlDollar[1].Arguments)-1].Location = qlDollar[1].Arguments[len(qlDollar[1].Arguments)-1].Location.Merge(qlDollar[2].Token.Loc())
 			qlDollar[1].Arguments[len(qlDollar[1].Arguments)-1].Comma = qlDollar[2].Token
@@ -1127,37 +1148,15 @@ qldefault:
 					Expression: qlDollar[3].Expr,
 				})
 		}
-	case 59:
+	case 61:
 		qlDollar = qlS[qlpt-1 : qlpt+1]
-//line ql.y:488
+//line ql.y:494
 		{
 			qlVAL.Expr = qlDollar[1].Expr
 		}
-	case 60:
-		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:491
-		{
-			qlVAL.Expr = &BinaryExpr{
-				Location: qlDollar[1].Expr.Loc().Merge(qlDollar[3].Expr.Loc()),
-				Left:     qlDollar[1].Expr,
-				Op:       qlDollar[2].Token,
-				Right:    qlDollar[3].Expr,
-			}
-		}
-	case 61:
-		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:499
-		{
-			qlVAL.Expr = &BinaryExpr{
-				Location: qlDollar[1].Expr.Loc().Merge(qlDollar[3].Expr.Loc()),
-				Left:     qlDollar[1].Expr,
-				Op:       qlDollar[2].Token,
-				Right:    qlDollar[3].Expr,
-			}
-		}
 	case 62:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:507
+//line ql.y:497
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: qlDollar[1].Expr.Loc().Merge(qlDollar[3].Expr.Loc()),
@@ -1168,7 +1167,7 @@ qldefault:
 		}
 	case 63:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:515
+//line ql.y:505
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: qlDollar[1].Expr.Loc().Merge(qlDollar[3].Expr.Loc()),
@@ -1179,7 +1178,7 @@ qldefault:
 		}
 	case 64:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:523
+//line ql.y:513
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: qlDollar[1].Expr.Loc().Merge(qlDollar[3].Expr.Loc()),
@@ -1190,7 +1189,7 @@ qldefault:
 		}
 	case 65:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:531
+//line ql.y:521
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: qlDollar[1].Expr.Loc().Merge(qlDollar[3].Expr.Loc()),
@@ -1201,7 +1200,7 @@ qldefault:
 		}
 	case 66:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:539
+//line ql.y:529
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: qlDollar[1].Expr.Loc().Merge(qlDollar[3].Expr.Loc()),
@@ -1212,7 +1211,7 @@ qldefault:
 		}
 	case 67:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:547
+//line ql.y:537
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: qlDollar[1].Expr.Loc().Merge(qlDollar[3].Expr.Loc()),
@@ -1223,7 +1222,7 @@ qldefault:
 		}
 	case 68:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:555
+//line ql.y:545
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: qlDollar[1].Expr.Loc().Merge(qlDollar[3].Expr.Loc()),
@@ -1234,7 +1233,7 @@ qldefault:
 		}
 	case 69:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:563
+//line ql.y:553
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: qlDollar[1].Expr.Loc().Merge(qlDollar[3].Expr.Loc()),
@@ -1245,7 +1244,7 @@ qldefault:
 		}
 	case 70:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:571
+//line ql.y:561
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: qlDollar[1].Expr.Loc().Merge(qlDollar[3].Expr.Loc()),
@@ -1256,7 +1255,7 @@ qldefault:
 		}
 	case 71:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:579
+//line ql.y:569
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: qlDollar[1].Expr.Loc().Merge(qlDollar[3].Expr.Loc()),
@@ -1267,7 +1266,7 @@ qldefault:
 		}
 	case 72:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:587
+//line ql.y:577
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: qlDollar[1].Expr.Loc().Merge(qlDollar[3].Expr.Loc()),
@@ -1278,7 +1277,7 @@ qldefault:
 		}
 	case 73:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:595
+//line ql.y:585
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: qlDollar[1].Expr.Loc().Merge(qlDollar[3].Expr.Loc()),
@@ -1289,7 +1288,7 @@ qldefault:
 		}
 	case 74:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:603
+//line ql.y:593
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: qlDollar[1].Expr.Loc().Merge(qlDollar[3].Expr.Loc()),
@@ -1300,7 +1299,7 @@ qldefault:
 		}
 	case 75:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:611
+//line ql.y:601
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: qlDollar[1].Expr.Loc().Merge(qlDollar[3].Expr.Loc()),
@@ -1311,7 +1310,7 @@ qldefault:
 		}
 	case 76:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:619
+//line ql.y:609
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: qlDollar[1].Expr.Loc().Merge(qlDollar[3].Expr.Loc()),
@@ -1322,7 +1321,7 @@ qldefault:
 		}
 	case 77:
 		qlDollar = qlS[qlpt-3 : qlpt+1]
-//line ql.y:627
+//line ql.y:617
 		{
 			qlVAL.Expr = &BinaryExpr{
 				Location: qlDollar[1].Expr.Loc().Merge(qlDollar[3].Expr.Loc()),
@@ -1332,8 +1331,30 @@ qldefault:
 			}
 		}
 	case 78:
+		qlDollar = qlS[qlpt-3 : qlpt+1]
+//line ql.y:625
+		{
+			qlVAL.Expr = &BinaryExpr{
+				Location: qlDollar[1].Expr.Loc().Merge(qlDollar[3].Expr.Loc()),
+				Left:     qlDollar[1].Expr,
+				Op:       qlDollar[2].Token,
+				Right:    qlDollar[3].Expr,
+			}
+		}
+	case 79:
+		qlDollar = qlS[qlpt-3 : qlpt+1]
+//line ql.y:633
+		{
+			qlVAL.Expr = &BinaryExpr{
+				Location: qlDollar[1].Expr.Loc().Merge(qlDollar[3].Expr.Loc()),
+				Left:     qlDollar[1].Expr,
+				Op:       qlDollar[2].Token,
+				Right:    qlDollar[3].Expr,
+			}
+		}
+	case 80:
 		qlDollar = qlS[qlpt-2 : qlpt+1]
-//line ql.y:635
+//line ql.y:641
 		{
 			qlVAL.Expr = &UnaryExpr{
 				Location:   qlDollar[1].Token.Loc().Merge(qlDollar[2].Expr.Loc()),
@@ -1341,9 +1362,9 @@ qldefault:
 				Expression: qlDollar[2].Expr,
 			}
 		}
-	case 79:
+	case 81:
 		qlDollar = qlS[qlpt-2 : qlpt+1]
-//line ql.y:642
+//line ql.y:648
 		{
 			qlVAL.Expr = &UnaryExpr{
 				Location:   qlDollar[1].Token.Loc().Merge(qlDollar[2].Expr.Loc()),

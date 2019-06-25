@@ -138,6 +138,8 @@ var (
 		"for":    FOR,
 		"return": RETURN,
 		"byte":   BYTE_TYPE,
+		"string": STRING_TYPE,
+		"bool":   BOOL_TYPE,
 	}
 
 	// NOTE(patrick): This is a subset of the standard C escape sequence.
