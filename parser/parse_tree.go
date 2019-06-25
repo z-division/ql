@@ -57,13 +57,21 @@ func prettyFormatNode(prefix string, node Node, indent int) string {
 
 		addNewLine = true
 
-		fieldValue := nodeStruct.Field(i).Interface()
-		switch value := fieldValue.(type) {
+		fieldValue := nodeStruct.Field(i)
+		switch value := fieldValue.Interface().(type) {
 		case Node:
-			result += "\n" + prettyFormatNode(
-				field.Name+" = ",
-				value,
-				indent+1)
+			if fieldValue.IsNil() {
+				result += fmt.Sprintf(
+					"\n%s%s%s=<nil>",
+					indentLevel,
+					indentStr,
+					field.Name)
+			} else {
+				result += "\n" + prettyFormatNode(
+					field.Name+" = ",
+					value,
+					indent+1)
+			}
 		case []ControlFlowExpr:
 			result += fmt.Sprintf(
 				"\n%s%s%s = [",
@@ -229,10 +237,6 @@ func (token *Token) Name() string {
 }
 
 func (token *Token) prettyFormat(prefix string, indent int) string {
-	if token == nil {
-		return fmt.Sprintf("%s%s<nil>", formatIdent(indent), prefix)
-	}
-
 	if token.Type == NEWLINE {
 		return fmt.Sprintf(
 			"%s%s[%s (%v)%v]",
@@ -374,12 +378,22 @@ func (noop *Noop) String() string {
 	return prettyFormatNode("", noop, 0)
 }
 
+type ScopeDef struct {
+	Location
+
+	Name *Token
+	At   *Token
+}
+
+func (sd *ScopeDef) String() string {
+	return prettyFormatNode("", sd, 0)
+}
+
 type ExprBlock struct {
 	Location
 	controlFlowExpr
 
-	Label      *Token
-	At         *Token
+	*ScopeDef  // Optional
 	LBrace     *Token
 	Statements []ControlFlowExpr
 	RBrace     *Token
@@ -393,6 +407,7 @@ type ConditionalExpr struct {
 	Location
 	controlFlowExpr
 
+	*ScopeDef   // Optional
 	If          *Token
 	Predicate   Expr
 	TrueClause  ControlFlowExpr

@@ -5,6 +5,10 @@ package parser
 %union{
     *Token
 
+    *ScopeDef
+    *ExprBlock
+    *ConditionalExpr
+
     ControlFlowExpr
     Expr
 
@@ -64,12 +68,16 @@ package parser
 
 %type <Expr> expr unit_expr composable_expr
 
-
 %type <Statements> statement_list nonempty_statement_list
 %type <Arguments> argument_list nonempty_argument_list
 
+%type <ScopeDef> scope_def
+
+%type <ExprBlock> expr_block base_expr_block
+%type <ConditionalExpr> conditional_expr base_conditional_expr
+
 %type <ControlFlowExpr> statement control_flow_expr
-%type <ControlFlowExpr> expr_block conditional_expr assignment_expr return_expr
+%type <ControlFlowExpr> assignment_expr return_expr
 
 %%
 
@@ -146,7 +154,30 @@ control_flow_expr:
     }
     ;
 
+scope_def:
+    /* empty */ {
+        $$ = nil
+    }
+    | IDENT AT {
+        $$ = &ScopeDef{
+            Location: $1.Location.Merge($2.Location),
+            Name: $1,
+            At: $2,
+        }
+    }
+    ;
+
 expr_block:
+    scope_def base_expr_block {
+        $$ = $2
+        if $1 != nil {
+            $$.Location = $1.Location.Merge($2.Location)
+            $$.ScopeDef = $1
+        }
+    }
+    ;
+
+base_expr_block:
     L_BRACE statement_list R_BRACE {
         $$ = &ExprBlock{
             Location: $1.Loc().Merge($3.Loc()),
@@ -155,20 +186,20 @@ expr_block:
             RBrace: $3,
         }
     }
-    | IDENT AT L_BRACE statement_list R_BRACE {
-        $$ = &ExprBlock{
-            Location: $1.Loc().Merge($5.Loc()),
-            Label: $1,
-            At: $2,
-            LBrace: $3,
-            Statements: $4,
-            RBrace: $5,
+    ;
+
+conditional_expr:
+    scope_def base_conditional_expr {
+        $$ = $2
+        if $1 != nil {
+            $$.Location = $1.Location.Merge($2.Location)
+            $$.ScopeDef = $1
         }
     }
     ;
 
-conditional_expr:
-    IF composable_expr expr_block {
+base_conditional_expr:
+    IF composable_expr base_expr_block {
         $$ = &ConditionalExpr{
             Location: $1.Loc().Merge($3.Loc()),
             If: $1,
@@ -176,7 +207,7 @@ conditional_expr:
             TrueClause: $3,
         }
     }
-    | IF composable_expr NEWLINE expr_block {
+    | IF composable_expr NEWLINE base_expr_block {
         $$ = &ConditionalExpr{
             Location: $1.Loc().Merge($4.Loc()),
             If: $1,
@@ -184,7 +215,7 @@ conditional_expr:
             TrueClause: $4,
         }
     }
-    | IF composable_expr expr_block ELSE conditional_expr {
+    | IF composable_expr base_expr_block ELSE base_conditional_expr {
         $$ = &ConditionalExpr{
             Location: $1.Loc().Merge($5.Loc()),
             If: $1,
@@ -194,7 +225,7 @@ conditional_expr:
             FalseClause: $5,
         }
     }
-    | IF composable_expr NEWLINE expr_block ELSE conditional_expr {
+    | IF composable_expr NEWLINE base_expr_block ELSE base_conditional_expr {
         $$ = &ConditionalExpr{
             Location: $1.Loc().Merge($6.Loc()),
             If: $1,
@@ -204,7 +235,7 @@ conditional_expr:
             FalseClause: $6,
         }
     }
-    | IF composable_expr expr_block ELSE expr_block {
+    | IF composable_expr base_expr_block ELSE base_expr_block {
         $$ = &ConditionalExpr{
             Location: $1.Loc().Merge($5.Loc()),
             If: $1,
@@ -214,7 +245,7 @@ conditional_expr:
             FalseClause: $5,
         }
     }
-    | IF composable_expr NEWLINE expr_block ELSE expr_block {
+    | IF composable_expr NEWLINE base_expr_block ELSE base_expr_block {
         $$ = &ConditionalExpr{
             Location: $1.Loc().Merge($6.Loc()),
             If: $1,
@@ -261,9 +292,6 @@ expr:
     composable_expr {
         $$ = $1
     }
-    | conditional_expr {
-        $$ = $1
-    }
     ;
 
 // TODO(patrick): tuples.  maybe list slicing
@@ -305,6 +333,9 @@ unit_expr:
         }
     }
     | expr_block {
+        $$ = $1
+    }
+    | conditional_expr {
         $$ = $1
     }
     | unit_expr DOT IDENT {
