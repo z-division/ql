@@ -130,8 +130,8 @@ var (
 	// keywords are case insensitive
 	keywords = map[string]int{
 		"let":    LET,
-		"true":   BOOL,
-		"false":  BOOL,
+		"true":   BOOL_LITERAL,
+		"false":  BOOL_LITERAL,
 		"if":     IF,
 		"else":   ELSE,
 		"return": RETURN,
@@ -358,7 +358,7 @@ func parseHex(tok *rawTokenizer) (*Token, error) {
 	}
 
 	return &Token{
-		Type: INT,
+		Type: INT_LITERAL,
 		Location: Location{
 			Filename: tok.filename,
 			Start:    start,
@@ -397,7 +397,7 @@ func parseOct(tok *rawTokenizer) (*Token, error) {
 	}
 
 	return &Token{
-		Type: INT,
+		Type: INT_LITERAL,
 		Location: Location{
 			Filename: tok.filename,
 			Start:    start,
@@ -445,9 +445,9 @@ func parseNumber(tok *rawTokenizer) (*Token, error) {
 		return nil, err
 	}
 
-	numType := INT
+	numType := INT_LITERAL
 	if len(fractional) > 0 || len(exponent) > 0 {
-		numType = FLOAT
+		numType = FLOAT_LITERAL
 		value = append(value, fractional...)
 		value = append(value, exponent...)
 	}
@@ -495,7 +495,7 @@ func parseDot(tok *rawTokenizer) (*Token, error) {
 	}
 
 	return &Token{
-		Type: FLOAT,
+		Type: FLOAT_LITERAL,
 		Location: Location{
 			Filename: tok.filename,
 			Start:    start,
@@ -543,7 +543,7 @@ func parseChar(tok *rawTokenizer) (*Token, error) {
 
 		tok.consumeN(4)
 		return &Token{
-			Type: CHAR,
+			Type: CHAR_LITERAL,
 			Location: Location{
 				Filename: tok.filename,
 				Start:    start,
@@ -563,7 +563,7 @@ func parseChar(tok *rawTokenizer) (*Token, error) {
 
 	tok.consumeN(3)
 	return &Token{
-		Type: CHAR,
+		Type: CHAR_LITERAL,
 		Location: Location{
 			Filename: tok.filename,
 			Start:    start,
@@ -641,7 +641,7 @@ func parseString(tok *rawTokenizer) (*Token, error) {
 
 		if end {
 			return &Token{
-				Type: STRING,
+				Type: STRING_LITERAL,
 				Location: Location{
 					Filename: tok.filename,
 					Start:    start,
