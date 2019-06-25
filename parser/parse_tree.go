@@ -410,13 +410,27 @@ type ConditionalExpr struct {
 	*ScopeDef   // Optional
 	If          *Token
 	Predicate   Expr
-	TrueClause  ControlFlowExpr
-	Else        *Token
-	FalseClause ControlFlowExpr
+	TrueClause  *ExprBlock
+	Else        *Token          // Optional
+	FalseClause ControlFlowExpr // Optional
 }
 
 func (cond *ConditionalExpr) String() string {
 	return prettyFormatNode("", cond, 0)
+}
+
+type ForExpr struct {
+	Location
+	controlFlowExpr
+
+	*ScopeDef // Optional
+	For       *Token
+	Predicate Expr
+	Body      *ExprBlock
+}
+
+func (fe *ForExpr) String() string {
+	return prettyFormatNode("", fe, 0)
 }
 
 // <expr>
@@ -436,7 +450,7 @@ type AssignExpr struct {
 	Location
 	controlFlowExpr
 
-	Let        *Token
+	Let        *Token // Optional
 	Name       *Token
 	Assign     *Token
 	Expression Expr
