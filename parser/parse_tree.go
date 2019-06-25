@@ -260,7 +260,3 @@ func (token *Token) prettyFormat(prefix string, indent int) string {
 func (op *Token) String() string {
 	return prettyFormatNode("", op, 0)
 }
-
-type TypeSpec struct {
-	// TODO
-}
