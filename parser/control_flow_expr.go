@@ -100,7 +100,7 @@ type AssignExpr struct {
 
 	Let        *Token // Optional
 	Name       *Token
-	*TypeSpec  // Optional
+	TypeSpec   TypeSpec // Optional (disallow implicit embedded field access)
 	Assign     *Token
 	Expression Expr
 }
