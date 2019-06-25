@@ -374,6 +374,10 @@ type Noop struct {
 	Value *Token
 }
 
+func (noop *Noop) String() string {
+	return prettyFormatNode("", noop, 0)
+}
+
 type ScopeDef struct {
 	Location
 
