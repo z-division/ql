@@ -177,13 +177,6 @@ declaration:
             Body: $7,
         }
     }
-    | control_flow_expr terminator {
-        // TODO(patrick): remove this
-        $$ = &FakeDeclaration{
-            Location: $1.Loc(),
-            Expression: $1,
-        }
-    }
     ;
 
 parameter_list:
