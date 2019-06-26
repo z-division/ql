@@ -1,24 +1,25 @@
-
-//
-// scalar type spec
-//
-
-let x string = "foo"
-
-let y byte = byte(65)  // 'A'
-
-let z float64 = float(1)
-
-let a int64 = int64(5)
-
-let b uint64 = uint64(10)
-
-let c bool = true
-
-//
-// Named type spec
-//
-
 type CustomType string
 
-let d CustomType = "blah"
+func TypeSpecDemo() {
+    //
+    // scalar type spec
+    //
+
+    let x string = "foo"
+
+    let y byte = byte(65)  // 'A'
+
+    let z float64 = float(1)
+
+    let a int64 = int64(5)
+
+    let b uint64 = uint64(10)
+
+    let c bool = true
+
+    //
+    // Named type spec
+    //
+
+    let d CustomType = "blah"
+}
