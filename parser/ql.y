@@ -14,6 +14,9 @@ package parser
     ControlFlowExpr
     Expr
 
+    Declaration
+    Declarations []Declaration
+
     Statements []ControlFlowExpr
     Arguments []*Argument
 
@@ -38,6 +41,7 @@ package parser
 %token <Token> IF ELSE
 %token <Token> FOR
 %token <Token> RETURN
+%token <Token> TYPE
 
 %left <Token> OR
 %left <Token> AND
@@ -91,11 +95,13 @@ package parser
 
 %type <TypeSpec> type_spec
 
+%type <Declaration> declaration
+%type <Declarations> declaration_list nonempty_declaration_list
 %%
 
 // TODO(patrick): actual declarations
 start:
-    statement_list {
+    declaration_list {
         nodes := make([]Node, 0, len($1))
         for _, node := range $1 {
             nodes = append(nodes, node)
@@ -104,12 +110,62 @@ start:
     }
     ;
 
-statement_list:
+declaration_list:
     /* empty */ {
         $$ = nil
     }
-    |
-    nonempty_statement_list {
+    | nonempty_declaration_list {
+        $$ = $1
+    }
+
+nonempty_declaration_list:
+    declaration {
+        if $1 != nil {
+            $$ = append($$, $1)
+        }
+    }
+    | nonempty_declaration_list declaration {
+        if $2 != nil {
+            $$ = append($1, $2)
+        }
+    }
+    ;
+
+declaration:
+    NEWLINE {
+        // do nothing
+        $$ = nil
+    }
+    | TYPE IDENT type_spec {
+        $$ = &TypeDef{
+            Location: $1.Loc().Merge($3.Loc()),
+            Type: $1,
+            Name: $2,
+            TypeSpec: $3,
+        }
+    }
+    | TYPE IDENT NEWLINE type_spec {
+        $$ = &TypeDef{
+            Location: $1.Loc().Merge($4.Loc()),
+            Type: $1,
+            Name: $2,
+            TypeSpec: $4,
+        }
+    }
+    | control_flow_expr terminator {
+        // TODO(patrick): remove this
+        $$ = &FakeDeclaration{
+            Location: $1.Loc(),
+            Expression: $1,
+        }
+    }
+    ;
+
+statement_list:
+    /* empty */ {  // NOTE: empty expr block evals to unit
+        $$ = nil
+    }
+    | nonempty_statement_list {
         $$ = $1
     }
     ;
@@ -203,6 +259,12 @@ scalar_type:
 type_spec:
     scalar_type {
         $$ = &ScalarType{
+            Location: $1.Loc(),
+            Type: $1,
+        }
+    }
+    | IDENT {
+        $$ = &NamedType{
             Location: $1.Loc(),
             Type: $1,
         }
@@ -347,6 +409,17 @@ assignment_expr:
             TypeSpec: $3,
             Assign: $4,
             Expression: $5,
+        }
+    }
+    |
+    LET IDENT NEWLINE type_spec ASSIGN expr {
+        $$ = &AssignExpr{
+            Location: $1.Loc().Merge($6.Loc()),
+            Let: $1,
+            Name: $2,
+            TypeSpec: $4,
+            Assign: $5,
+            Expression: $6,
         }
     }
     |

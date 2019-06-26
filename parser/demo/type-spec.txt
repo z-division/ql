@@ -1,3 +1,4 @@
+
 //
 // scalar type spec
 //
@@ -13,3 +14,11 @@ let a int64 = int64(5)
 let b uint64 = uint64(10)
 
 let c bool = true
+
+//
+// Named type spec
+//
+
+type CustomType string
+
+let d CustomType = "blah"
