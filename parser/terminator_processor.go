@@ -25,6 +25,7 @@ var (
 		RETURN:  struct{}{},
 		L_BRACE: struct{}{}, // expression block needs special parser handling
 		TYPE:    struct{}{},
+		FUNC:    struct{}{},
 	}
 
 	// Tokens that are sensitive to terminators on the trailing side of the
