@@ -1,0 +1,10 @@
+func Hello() string {
+    "hello"
+}
+
+func Foo(x int) int {
+    return 1
+}
+
+func Blah(arg1 float, arg2 byte, arg3 CustomType) {
+}

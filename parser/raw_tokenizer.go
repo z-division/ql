@@ -141,6 +141,7 @@ var (
 		"string": STRING_TYPE,
 		"bool":   BOOL_TYPE,
 		"type":   TYPE,
+		"func":   FUNC,
 	}
 
 	// NOTE(patrick): This is a subset of the standard C escape sequence.

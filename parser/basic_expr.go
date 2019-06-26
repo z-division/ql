@@ -77,7 +77,7 @@ func (accessor *Accessor) String() string {
 type Argument struct {
 	Location
 	Expression Expr
-	Comma      *Token
+	Comma      *Token // Optional
 }
 
 type TypeConversion struct {

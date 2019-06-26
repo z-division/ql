@@ -89,6 +89,23 @@ func prettyFormatNode(prefix string, node Node, indent int) string {
 				}
 				result += "\n" + indentStr + indentLevel + "]"
 			}
+		case []*Parameter:
+			result += fmt.Sprintf(
+				"\n%s%s%s = [",
+				indentStr,
+				indentLevel,
+				field.Name)
+			if len(value) == 0 {
+				result += "]"
+			} else {
+				for _, arg := range value {
+					result += "\n" + prettyFormatNode(
+						"",
+						arg,
+						indent+2)
+				}
+				result += "\n" + indentStr + indentLevel + "]"
+			}
 		case []*Argument:
 			result += fmt.Sprintf(
 				"\n%s%s%s = [",

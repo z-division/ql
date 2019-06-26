@@ -19,6 +19,7 @@ package parser
 
     Statements []ControlFlowExpr
     Arguments []*Argument
+    Parameters []*Parameter
 
     TypeSpec
 }
@@ -41,7 +42,7 @@ package parser
 %token <Token> IF ELSE
 %token <Token> FOR
 %token <Token> RETURN
-%token <Token> TYPE
+%token <Token> TYPE FUNC
 
 %left <Token> OR
 %left <Token> AND
@@ -83,6 +84,7 @@ package parser
 
 %type <Statements> statement_list nonempty_statement_list
 %type <Arguments> argument_list nonempty_argument_list
+%type <Parameters> parameter_list nonempty_parameter_list
 
 %type <ScopeDef> scope_def
 
@@ -152,12 +154,66 @@ declaration:
             TypeSpec: $4,
         }
     }
+    | FUNC IDENT L_PAREN parameter_list R_PAREN base_expr_block {
+        $$ = &FuncDef{
+            Location: $1.Loc().Merge($6.Loc()),
+            Func: $1,
+            Name: $2,
+            LParen: $3,
+            Parameters: $4,
+            RParen: $5,
+            Body: $6,
+        }
+    }
+    | FUNC IDENT L_PAREN parameter_list R_PAREN type_spec base_expr_block {
+        $$ = &FuncDef{
+            Location: $1.Loc().Merge($7.Loc()),
+            Func: $1,
+            Name: $2,
+            LParen: $3,
+            Parameters: $4,
+            RParen: $5,
+            ReturnType: $6,
+            Body: $7,
+        }
+    }
     | control_flow_expr terminator {
         // TODO(patrick): remove this
         $$ = &FakeDeclaration{
             Location: $1.Loc(),
             Expression: $1,
         }
+    }
+    ;
+
+parameter_list:
+    /* empty */ {
+        $$ = nil
+    }
+    | nonempty_parameter_list {
+        $$ = $1
+    }
+    ;
+
+nonempty_parameter_list:
+    IDENT type_spec {
+        $$ = []*Parameter{
+            &Parameter{
+                Location: $1.Loc().Merge($2.Loc()),
+                Name: $1,
+                TypeSpec: $2,
+            },
+        }
+    }
+    | nonempty_parameter_list COMMA IDENT type_spec {
+        $1[len($1)-1].Location = $1[len($1)-1].Location.Merge($2.Loc())
+        $1[len($1)-1].Comma = $2
+        $$ = append($1,
+            &Parameter{
+                Location: $3.Loc().Merge($4.Loc()),
+                Name: $3,
+                TypeSpec: $4,
+            })
     }
     ;
 
