@@ -93,16 +93,18 @@ func (eval *EvalExpr) String() string {
 	return prettyFormatNode("", eval, 0)
 }
 
-// let <name> = <expr>
+// (var|const) <name> = <expr>.  NOTE: var can only be a statement within
+// an expression block, const can be a declaration or a statement.
 type AssignExpr struct {
 	Location
 	controlFlowExpr
+	declaration
 
-	Let        *Token // Optional
-	Name       *Token
-	TypeSpec   TypeSpec // Optional (disallow implicit embedded field access)
-	Assign     *Token
-	Expression Expr
+	AssignmentType *Token // Optional (const or var)
+	Name           *Token
+	TypeSpec       TypeSpec // Optional (disallow implicit embedded field access)
+	Assign         *Token
+	Expression     Expr
 }
 
 func (assign *AssignExpr) String() string {

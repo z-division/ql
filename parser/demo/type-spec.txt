@@ -5,81 +5,81 @@ func TypeSpecDemo() {
     // scalar type
     //
 
-    let x string = "foo"
+    var x string = "foo"
 
-    let y byte = byte(65)  // 'A'
+    var y byte = byte(65)  // 'A'
 
-    let z float64 = float(1)
+    var z float64 = float(1)
 
-    let a int64 = int64(5)
+    var a int64 = int64(5)
 
-    let b uint64 = uint64(10)
+    var b uint64 = uint64(10)
 
-    let c bool = true
+    var c bool = true
 
     //
     // Named type
     //
 
-    let d CustomType = "blah"
+    var d CustomType = "blah"
 
     //
     // Iterable type
     //
 
     // declare empty list of int64
-    let l1 Iter[int64] = ()
+    var l1 Iter[int64] = ()
 
     // declare list of unknown type, infer element type as int64
-    let l2 Iter = (1, 2, 3)
+    var l2 Iter = (1, 2, 3)
 
     // infer list of int64
-    let l3 = (1, 2, 3)
-    let l4 = Iter(1, 2, 3)
-    let l5 = Iter[int64](1, 2, 3)
+    var l3 = (1, 2, 3)
+    var l4 = Iter(1, 2, 3)
+    var l5 = Iter[int64](1, 2, 3)
 
     //
     // Record (unordered struct) type
     //
 
     // declare record with Field1 and Field2
-    let r1 Record<Field1 int64, Field2 string> = (1, "str")
+    var r1 Record<Field1 int64, Field2 string> = (1, "str")
 
     // declare record wth unknown number of fields,
     // infer field names and types from named argument list
-    let r2 Record = (Field1=1, Field2="str")
+    var r2 Record = (Field1=1, Field2="str")
 
     // infer record, field names and types
-    let r3 = (Field1=1, Field2="str")
-    let r4 = Record(Field1=1, Field2="str")
-    let r5 = Record<Field1 int, Field2 string>(1, "str")
-    let r6 = Record<Field1 int, Field2 string>(Field=1, Field2="str")
+    var r3 = (Field1=1, Field2="str")
+    var r4 = Record(Field1=1, Field2="str")
+    var r5 = Record<Field1 int, Field2 string>(1, "str")
+    var r6 = Record<Field1 int, Field2 string>(Field=1, Field2="str")
 
     //
     // A table/view is just Iter[Record<...>]
     //
 
     // fully declare user table
-    let users1 Iter[Record<Uid int64, Name string>] = (
+    var users1 Iter[Record<Uid int64, Name string>] = (
         (1, "alice"),
         (2, "bob")
     )
 
     // declare user table as list of unknown record, infer record field names
     // and types
-    let users2 Iter[Record] = (
+    var users2 Iter[Record] = (
         (Uid=1, Name="alice"),
         (Uid=2, Name="bob")
     )
 
     // declare user table as list, infer element type as record
-    let users2 Iter = (
+    var users2 Iter = (
         (Uid=1, Name="alice"),
         (Uid=2, Name="bob")
     )
 
     // infer list of records
-    let users2 = (
+    var users2 = (
         (Uid=1, Name="alice"),
         (Uid=2, Name="bob")
     )

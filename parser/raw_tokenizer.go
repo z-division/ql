@@ -130,7 +130,8 @@ var (
 
 	// keywords are case insensitive
 	keywords = map[string]int{
-		"let":    LET,
+		"var":    VAR,
+		"const":  CONST,
 		"true":   BOOL_LITERAL,
 		"false":  BOOL_LITERAL,
 		"if":     IF,

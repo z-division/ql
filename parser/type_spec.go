@@ -43,7 +43,7 @@ type RecordType struct {
 
 	// The following are optional if the field names and types are not
 	// binded yet.
-	Lt *Token
+	Lt     *Token
 	Fields []*Parameter
-	Gt *Token
+	Gt     *Token
 }
