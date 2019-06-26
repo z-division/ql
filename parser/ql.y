@@ -179,6 +179,35 @@ declaration:
             Body: $7,
         }
     }
+    | CONST IDENT ASSIGN expr {
+        $$ = &AssignExpr{
+            Location: $1.Loc().Merge($4.Loc()),
+            AssignmentType: $1,
+            Name: $2,
+            Assign: $3,
+            Expression: $4,
+        }
+    }
+    | CONST IDENT type_spec ASSIGN expr {
+        $$ = &AssignExpr{
+            Location: $1.Loc().Merge($5.Loc()),
+            AssignmentType: $1,
+            Name: $2,
+            TypeSpec: $3,
+            Assign: $4,
+            Expression: $5,
+        }
+    }
+    | CONST IDENT NEWLINE type_spec ASSIGN expr {
+        $$ = &AssignExpr{
+            Location: $1.Loc().Merge($6.Loc()),
+            AssignmentType: $1,
+            Name: $2,
+            TypeSpec: $4,
+            Assign: $5,
+            Expression: $6,
+        }
+    }
     ;
 
 parameter_list:
@@ -497,8 +526,7 @@ assignment_expr:
             Expression: $4,
         }
     }
-    |
-    assignment_type IDENT type_spec ASSIGN expr {
+    | assignment_type IDENT type_spec ASSIGN expr {
         $$ = &AssignExpr{
             Location: $1.Loc().Merge($5.Loc()),
             AssignmentType: $1,
@@ -508,8 +536,7 @@ assignment_expr:
             Expression: $5,
         }
     }
-    |
-    assignment_type IDENT NEWLINE type_spec ASSIGN expr {
+    | assignment_type IDENT NEWLINE type_spec ASSIGN expr {
         $$ = &AssignExpr{
             Location: $1.Loc().Merge($6.Loc()),
             AssignmentType: $1,
@@ -518,8 +545,7 @@ assignment_expr:
             Assign: $5,
             Expression: $6,
         } }
-    |
-    IDENT ASSIGN expr {
+    | IDENT ASSIGN expr {
         $$ = &AssignExpr{
             Location: $1.Loc().Merge($3.Loc()),
             Name: $1,

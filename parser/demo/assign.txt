@@ -1,3 +1,5 @@
+const str = "string"
+
 func AssignDemo() int {
     // type inferred from expression
     var x = 5
