@@ -22,3 +22,28 @@ type NamedType struct {
 
 	Type *Token
 }
+
+type IterType struct {
+	Location
+	typeSpec
+
+	Iter *Token
+
+	// The following are optional if the element type is not binded yet.
+	LBracket    *Token
+	ElementType TypeSpec
+	RBracket    *Token
+}
+
+type RecordType struct {
+	Location
+	typeSpec
+
+	Iter *Token
+
+	// The following are optional if the field names and types are not
+	// binded yet.
+	Lt *Token
+	Fields []*Parameter
+	Gt *Token
+}

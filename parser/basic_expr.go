@@ -76,32 +76,22 @@ func (accessor *Accessor) String() string {
 
 type Argument struct {
 	Location
+	Name       *Token // Optional
+	Assign     *Token // Optional
 	Expression Expr
 	Comma      *Token // Optional
-}
-
-type TypeConversion struct {
-	Location
-	expr
-
-	Type       *Token
-	LParen     *Token
-	Expression Expr
-	RParen     *Token
-}
-
-func (tc *TypeConversion) String() string {
-	return prettyFormatNode("", tc, 0)
 }
 
 type Invocation struct {
 	Location
 	expr
 
-	Expression Expr
-	LParen     *Token
-	Arguments  []*Argument
-	RParen     *Token
+	// Optional (nil if it's an implicit list/record literal)
+	ExprOrTypeSpec Node
+
+	LParen    *Token
+	Arguments []*Argument
+	RParen    *Token
 }
 
 func (invoke *Invocation) String() string {

@@ -20,12 +20,24 @@ var (
 	// Tokens that are sensitive to terminators on the leading side of the
 	// token
 	leadingTerminatorSensitive = map[int]struct{}{
-		LET:     struct{}{},
-		IF:      struct{}{},
-		RETURN:  struct{}{},
-		L_BRACE: struct{}{}, // expression block needs special parser handling
-		TYPE:    struct{}{},
-		FUNC:    struct{}{},
+		LET:    struct{}{},
+		IF:     struct{}{},
+		RETURN: struct{}{},
+		TYPE:   struct{}{},
+		FUNC:   struct{}{},
+
+		// expression block needs special parser handling
+		L_BRACE: struct{}{},
+
+		// type specs are leading newline sensitive depending on context
+		BOOL_TYPE:   struct{}{},
+		INT_TYPE:    struct{}{},
+		UINT_TYPE:   struct{}{},
+		FLOAT_TYPE:  struct{}{},
+		BYTE_TYPE:   struct{}{},
+		STRING_TYPE: struct{}{},
+		ITER_TYPE:   struct{}{},
+		RECORD_TYPE: struct{}{},
 	}
 
 	// Tokens that are sensitive to terminators on the trailing side of the
