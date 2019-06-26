@@ -142,6 +142,8 @@ var (
 		"bool":   BOOL_TYPE,
 		"type":   TYPE,
 		"func":   FUNC,
+		"iter":   ITER_TYPE,
+		"record": RECORD_TYPE,
 	}
 
 	// NOTE(patrick): This is a subset of the standard C escape sequence.
