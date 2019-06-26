@@ -140,6 +140,7 @@ var (
 		"byte":   BYTE_TYPE,
 		"string": STRING_TYPE,
 		"bool":   BOOL_TYPE,
+		"type":   TYPE,
 	}
 
 	// NOTE(patrick): This is a subset of the standard C escape sequence.

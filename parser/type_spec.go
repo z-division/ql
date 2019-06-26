@@ -15,3 +15,10 @@ type ScalarType struct {
 
 	Type *Token
 }
+
+type NamedType struct {
+	Location
+	typeSpec
+
+	Type *Token
+}
