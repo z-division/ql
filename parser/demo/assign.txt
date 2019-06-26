@@ -1,10 +1,12 @@
 func AssignDemo() int {
     // type inferred from expression
-    let x = 5
+    var x = 5
 
     // explicit type specification
-    let y uint64 = 6.0
+    var y uint64 = 6.0
 
-    // inherit type from original let statement
-    z = 7
+    // inherit type from original var statement
+    x = 7
+
+    const z = "constant"
 }

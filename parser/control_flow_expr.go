@@ -98,11 +98,11 @@ type AssignExpr struct {
 	Location
 	controlFlowExpr
 
-	Let        *Token // Optional
-	Name       *Token
-	TypeSpec   TypeSpec // Optional (disallow implicit embedded field access)
-	Assign     *Token
-	Expression Expr
+	AssignmentType *Token // Optional (const or var)
+	Name           *Token
+	TypeSpec       TypeSpec // Optional (disallow implicit embedded field access)
+	Assign         *Token
+	Expression     Expr
 }
 
 func (assign *AssignExpr) String() string {

@@ -20,7 +20,8 @@ var (
 	// Tokens that are sensitive to terminators on the leading side of the
 	// token
 	leadingTerminatorSensitive = map[int]struct{}{
-		LET:    struct{}{},
+		VAR:    struct{}{},
+		CONST:  struct{}{},
 		IF:     struct{}{},
 		RETURN: struct{}{},
 		TYPE:   struct{}{},
