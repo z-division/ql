@@ -1,4 +1,4 @@
-func Assign() int {
+func AssignDemo() int {
     // type inferred from expression
     let x = 5
 
