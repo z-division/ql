@@ -3,9 +3,11 @@ package state_machine
 // "Log sequence number".  Unlike traditional lsn, this includes the owner id
 // and state machine name since each owner may host multiple state machines
 // and state machines may interact each other (e.g., the database is a
-// long-lived state machine, and each transaction is also a short-lived state
-// machine.  LSNs are total order only if the LSNs' (OwnerId, StateMachineName)
-// are the same.  LSNs are partially ordered otherwise.
+// long-lived state machine, each local transaction is also a short-lived state
+// machine, and a distributed transaction's 2PC coordinator is also a
+// short-lived state machine).  LSNs are total order only if the LSNs'
+// (OwnerId, StateMachineName) are the same.  LSNs are partially ordered
+// otherwise.
 //
 // XXX(patrick): maybe optimize this if it's too bloated
 type LSN struct {
