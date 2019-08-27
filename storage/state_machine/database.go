@@ -152,7 +152,6 @@ type Transaction interface {
 //    # pessimistic transactions must specify all the keys upfront
 //    db.CreateTransaction(...)
 //
-//    # XXX(patrick): maybe use this workflow for occ as well
 //    for true {
 //        txn, err = db.GetTransaction(...)
 //        if err != nil {
