@@ -108,6 +108,31 @@ type Database interface {
         error)
 }
 
+// Transaction workflow:
+//    # pessimistic transactions must specify all the keys upfront
+//    db.CreateTransaction(...)
+//
+//    for true {
+//        txn, err = db.GetTransaction(...)
+//        if err != nil {
+//            if err == NotReady {  # pessimistic transaction not ready
+//                wait
+//                continue
+//            }
+//            return err
+//        }
+//        break
+//    }
+//
+//    ...
+//    do stuff with txn (in pessimistic model, this errors if
+//    accessing/modifying data outside of range specified in CreateTransaction)
+//    ...
+//
+//    txn.Finalize()
+//    db.Prepare(...)
+//    db.Commit(...)  # or Abort
+//
 // XXX(patrick): Maybe expose snapshotId to enable users to read at
 // different snapshot points.
 type Transaction interface {
@@ -147,31 +172,6 @@ type Transaction interface {
         ScanContinutationToken,
         error)
 }
-
-// Transaction workflow:
-//    # pessimistic transactions must specify all the keys upfront
-//    db.CreateTransaction(...)
-//
-//    for true {
-//        txn, err = db.GetTransaction(...)
-//        if err != nil {
-//            if err == NotReady {  # pessimistic transaction not ready
-//                wait
-//                continue
-//            }
-//            return err
-//        }
-//        break
-//    }
-//
-//    ...
-//    do stuff with txn (in pessimistic model, this errors if
-//    accessing/modifying data outside of range specified in CreateTransaction)
-//    ...
-//
-//    txn.Finalize()
-//    db.Prepare(...)
-//    db.Commit(...)  # or Abort
 
 // TODO(patrick): figure out the details
 type TransactionOptions struct {
