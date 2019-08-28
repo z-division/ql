@@ -48,11 +48,12 @@ type StateMachine interface {
 // For simplicity, the database may have at most two active schema running
 // concurrently (only during alteration).
 //
-// self-reminder: schema alternation may cause record ordering to change across
+// self-reminder: schema alteration may cause record ordering to change across
 // levels.  We have to be careful with how the tree is scanned / compacted.
 // For compaction, rather than resorting an entire level, we can cheat and
 // rewrite the level as mutliple levels with non-overlapping keys (and sort
-// piecemeal)
+// piecemeal).  We can further simplify matter if we avoid compacting levels
+// with different schemas.
 //
 // XXX(patrick): Does the checkpointing API make sense?
 type Database interface {
@@ -113,7 +114,7 @@ type Database interface {
 	Abort(dbLsn LSN, clientLsn LSN) error
 
 	// Signal to the database that it should aler the tree using the new
-	// schema.  The alternation are done as part of compaction.
+	// schema.  The alteration are done as part of compaction.
 	//
 	// NOTE(patrick): The serving schema remains unmodified until
 	// FinishSchemaAlteration is called.
@@ -123,9 +124,12 @@ type Database interface {
 	// If GetSchema's servingLevelCount is non-zero, this returns an error.
 	FinishSchemaAlteration(dbLsn LSN) error
 
-	Compact(
+	// Optimize rewrites the a chunk of the database's data into a more
+	// optimal format.  The rewrite could be a compaction, or a change in the
+	// data layout (e.g., due to schema alteration), etc.
+	Optimize(
 		dbLsn LSN,
-		candidate CompactionCandidate) (
+		candidate OptimizeCandidate) (
 		ContinuationToken,
 		error)
 
@@ -168,8 +172,8 @@ type Database interface {
 		alteringToLevelCount int,
 		err error)
 
-	GetCompactionCandidates(minExpectedDbLsn LSN) (
-		[]CompactionCandidate,
+	GetOptimizeCandidates(minExpectedDbLsn LSN) (
+		[]OptimizeCandidate,
 		error)
 
 	IsCheckpointReady(minExpectedLsn LSN) (bool, error)
@@ -185,7 +189,7 @@ type Database interface {
 		error)
 }
 
-type CompactionCandidate struct {
+type OptimizeCandidate struct {
 	Level    int
 	InMemory bool
 	ContinuationToken
