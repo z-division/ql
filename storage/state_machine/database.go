@@ -78,6 +78,9 @@ type Database interface {
 	//
 	// If the client lsn is smaller than the latest known lsn for that client,
 	// this does nothing and return an invalid argument error.
+	//
+	// If the schemaVersion does not match the serving schema version, this
+	// returns an error.
 	CreateTransaction(
 		dbLsn LSN,
 		clientLsn LSN,
@@ -224,14 +227,12 @@ type Transaction interface {
 	// e.g., after each sql modification statement.
 	ExposeUpdates(txnLsn LSN) error
 
-	// NOTE(patrick): Put conforms to schema version speified in
-	// CreateTransaction.  Tuple fields are positionally ordered the same as
-	// the schema.
+	// NOTE(patrick): Put conforms to the serving schema.  Tuple fields are
+	// positionally ordered the same as the schema.
 	Put(txnLsn LSN, fullRecord Tuple) error
 
-	// NOTE(patrick): Delete conforms to schema version speified in
-	// CreateTransaction.  Tuple fields are positionally ordered the same as
-	// the schema.
+	// NOTE(patrick): Delete conforms to the serving schema.  Tuple fields are
+	// positionally ordered the same as the schema.
 	Delete(txnLsn, key Tuple) error
 
 	// This is used for implementing serializable OCC transactions, to "grab
@@ -304,6 +305,7 @@ type SchemaVersion struct {
 }
 
 // We assume that tuple fields are positionally ordered the same as the schema
+// (or the column projection)
 type Tuple interface {
 	NumColumns() int
 
